@@ -11,13 +11,16 @@ app.use(morgan('tiny'))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 const dbConn = require('./server/connection/connection')
+const path = require("path")
+
 dbConn()
-app.listen(5000, (req, res) => {
-    console.log('server on 5000')
+app.use(express.static(path.join(__dirname, 'client', 'build')))
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
 })
 
-app.get('/api/test', (req, res) => {
-    res.status(200).send(JSON.stringify({ message: 'hello'} ))
+app.listen(8080, (req, res) => {
+    console.log('server on 8080')
 })
 
 app.post('/api/register', async (req, res) => {
