@@ -75,13 +75,19 @@ app.post('/api/login', async (req, res) => {
 app.get('/api/getUser', async (req, res) => {
     const token = req.headers['authorization']
     console.log(token)
-    console.log(jwt.verify(token, 'uagvreigvlaegrvkae'))
-    const houseNo = jwt.verify(token, 'uagvreigvlaegrvkae').houseNo
+
     try {
-        const user = await model.userModel.findOne({houseNo: houseNo})
-        res.status(200).send(user)
+
+        const houseNo = jwt.verify(token, 'uagvreigvlaegrvkae').houseNo
+        try {
+            const user = await model.userModel.findOne({houseNo: houseNo})
+            res.status(200).send(user)
+        } catch (e) {
+            res.status(404).send(e)
+        }
     } catch (e) {
-        res.status(404).send(e)
+        res.status(401).send(e)
     }
+
 
 })
