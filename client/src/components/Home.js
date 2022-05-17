@@ -16,6 +16,7 @@ const Home = () => {
             })
             if (res.status === 200) {
                 const data = await res.json()
+                console.log(data)
                 setHouseNo(data.houseNo)
                 setNames(data.names)
             }
@@ -23,11 +24,16 @@ const Home = () => {
         fetchData()
     }, [])
 
-
+    function Names() {
+        return (
+            names.map(i => (<p key={i._id}>{i.name}</p>))
+        )
+    }
     return (
         <>
+
             <h1>{houseNo}</h1>
-            <p>{names}</p>
+            <Names/>
         </>
     )
 }

@@ -29,7 +29,7 @@ app.post('/api/register', async (req, res) => {
     if (!req.body) {
         res.status(400).send({message: 'no body'})
     }
-
+    console.log(req.body)
     const newUser = model.userModel({
         houseNo: req.body.houseNo,
         email: req.body.email,
