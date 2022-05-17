@@ -9,6 +9,7 @@ import App from './App';
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
+import VerifyEmailLink from "./components/VerifyEmailLink";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render (
@@ -18,6 +19,7 @@ root.render (
             <Route path={'/login'} element={<Login/>}/>
             <Route path={'/register'} element={<Register/>}/>
             <Route path={'/home'} element={<Home/>}/>
+            <Route path={'/api/:id/verify/:token'} element={<VerifyEmailLink/>}/>
         </Routes>
 
     </BrowserRouter>

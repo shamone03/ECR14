@@ -2,9 +2,11 @@ const express = require('express')
 const morgan = require('morgan')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const app = express()
-const cors = require('cors')
 const model = require('./server/model/model')
+const sendEmail = require('./server/utils/sendEmail')
+const crypto = require('crypto')
+const cors = require('cors')
+const app = express()
 
 app.use(cors({origin: '*'}))
 app.use(morgan('tiny'))
@@ -12,6 +14,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 const dbConn = require('./server/connection/connection')
 const path = require("path")
+const {tokenModel} = require("./server/model/model");
 
 dbConn()
 app.use(express.static(path.join(__dirname, 'client', 'build')))
@@ -30,7 +33,7 @@ app.post('/api/register', async (req, res) => {
         res.status(400).send({message: 'no body'})
     }
     console.log(req.body)
-    const newUser = model.userModel({
+    let newUser = model.userModel({
         houseNo: req.body.houseNo,
         email: req.body.email,
         password: await bcrypt.hash(req.body.password, 10),
@@ -38,7 +41,15 @@ app.post('/api/register', async (req, res) => {
     })
 
     try {
-        await newUser.save()
+        newUser = await newUser.save()
+        const token = await new model.tokenModel({
+            userId: newUser._id,
+            token: crypto.randomBytes(32).toString("hex")
+        }).save()
+
+        const url = `http://localhost:8080/api/${newUser._id}/verify/${token.token}`
+        await sendEmail(newUser.email, 'verify email', url)
+
         res.status(200).send({message: 'user saved'})
         
     } catch (e) {
@@ -73,6 +84,8 @@ app.post('/api/login', async (req, res) => {
 })
 
 app.get('/api/getUser', async (req, res) => {
+    res.header("Access-Control-Allow-Origin", `*`)
+    res.header('Access-Control-Allow-Headers', 'Content-Type')
     const token = req.headers['authorization']
     console.log(token)
 
@@ -89,5 +102,57 @@ app.get('/api/getUser', async (req, res) => {
         res.status(401).send(e)
     }
 
+
+})
+
+app.get('/api/:id/verify/:token', async (req, res) => {
+    try {
+        const user = await model.userModel.findOne({_id: req.params.id})
+        if (!user) {
+            res.status(400).send({message: 'no user found'})
+        }
+        const token = await model.tokenModel.findOne({userId: user._id, token: req.params.token})
+        if (!token) {
+            res.status(400).send({message: 'verification failed'})
+
+        }
+
+        await model.userModel.updateOne({_id: user._id}, {verified: true})
+        await token.remove()
+        res.status(200).send({message: 'email verified'})
+    } catch (e) {
+        res.status(500).send({message: 'verification failed'})
+    }
+})
+
+app.get('/api/verifyEmail', async (req, res) => {
+    res.header("Access-Control-Allow-Origin", `*`)
+    res.header('Access-Control-Allow-Headers', 'Content-Type')
+    const jwtToken = req.headers['authorization']
+
+    try {
+        const houseNo = jwt.verify(jwtToken, 'uagvreigvlaegrvkae').houseNo
+        try {
+            const user = await model.userModel.findOne({houseNo: houseNo})
+            if (!user.verified) {
+                let token = await model.tokenModel.findOne({userId: user._id})
+                if (!token) {
+                    token = await new model.tokenModel({
+                        userId: newUser._id,
+                        token: crypto.randomBytes(32).toString("hex")
+                    }).save()
+
+                    const url = `http://localhost:8080/api/${user._id}/verify/${token.token}`
+                    await sendEmail(user.email, 'verify email', url)
+                }
+                return res.status(400).send({message: 'email already sent'})
+            }
+
+        } catch (e) {
+            res.status(500).send({error: e})
+        }
+    } catch (e) {
+        res.status(401).send({message: 'token invalid'})
+    }
 
 })
