@@ -20,5 +20,23 @@ const tokenSchema = new mongoose.Schema({
     createdAt: {type: Date, default: Date.now(), expiresIn: 3600} //1hour
 })
 
+const nomineeSchema = new mongoose.Schema({
+    name: {type: String, required: true},
+    houseNo: {type: String, required: true},
+    votes: {type: Number, required: true, default: 0},
+    voters: [{type: String}],
+    description: {type: String}
+}, {collection: 'nominees'}
+)
+
+const surveySchema = new mongoose.Schema({
+    houseNo: {type: String, required: true, unique: true},
+    number: {type: String, default:''},
+    email: {type: String, default: ''},
+    response: {type: String, default: 'No'}
+}, {collection: 'surveys'})
+
+exports.surveyModel = mongoose.model('survey', surveySchema)
+exports.nomineeModel = mongoose.model('nominee', nomineeSchema)
 exports.userModel = mongoose.model('resident', userSchema)
 exports.tokenModel = mongoose.model('token', tokenSchema)

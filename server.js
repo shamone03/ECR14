@@ -14,21 +14,20 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 const dbConn = require('./server/connection/connection')
 const path = require("path")
-const {tokenModel} = require("./server/model/model");
+const {tokenModel, nomineeModel, surveyModel} = require("./server/model/model");
 
 dbConn()
-app.use(express.static(path.join(__dirname, 'client', 'build')))
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
-})
+// app.use(express.static(path.join(__dirname, 'client', 'build')))
+// app.get('/', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+// })
 
 app.listen(8080, (req, res) => {
     console.log('server on 8080')
 })
 
 app.post('/api/register', async (req, res) => {
-    res.header("Access-Control-Allow-Origin", `*`)
-    res.header('Access-Control-Allow-Headers', 'Content-Type')
+
     if (!req.body) {
         res.status(400).send({message: 'no body'})
     }
@@ -58,8 +57,7 @@ app.post('/api/register', async (req, res) => {
 })
 
 app.post('/api/login', async (req, res) => {
-    res.header("Access-Control-Allow-Origin", `*`)
-    res.header('Access-Control-Allow-Headers', 'Content-Type')
+
     if (!req.body) {
         res.status(500).send({message: 'no body'})
     }
@@ -84,8 +82,7 @@ app.post('/api/login', async (req, res) => {
 })
 
 app.get('/api/getUser', async (req, res) => {
-    res.header("Access-Control-Allow-Origin", `*`)
-    res.header('Access-Control-Allow-Headers', 'Content-Type')
+
     const token = req.headers['authorization']
     console.log(token)
 
@@ -126,8 +123,7 @@ app.get('/api/:id/verify/:token', async (req, res) => {
 })
 
 app.get('/api/verifyEmail', async (req, res) => {
-    res.header("Access-Control-Allow-Origin", `*`)
-    res.header('Access-Control-Allow-Headers', 'Content-Type')
+
     const jwtToken = req.headers['authorization']
 
     try {
@@ -155,4 +151,88 @@ app.get('/api/verifyEmail', async (req, res) => {
         res.status(401).send({message: 'token invalid'})
     }
 
+})
+
+app.post('/api/addNominee', async (req, res) => {
+
+
+    const nominee = new model.nomineeModel({
+        name: req.body.name,
+        houseNo: req.body.houseNo,
+        description: req.body.description
+    })
+
+    try {
+        await nominee.save()
+        res.status(200).send({message: 'nominee saved'})
+    } catch (e) {
+        res.status(500).send({message: 'nominee not saved'})
+    }
+})
+
+app.post('/api/vote', async (req, res) => {
+
+
+    try {
+        await nomineeModel.updateOne({name: req.body.nominees[0].rep1},{ $addToSet: {voters: req.body.houseNo}})
+        await nomineeModel.updateOne({name: req.body.nominees[1].rep2},{ $addToSet: {voters: req.body.houseNo}})
+        await nomineeModel.updateOne({name: req.body.nominees[2].rep3},{ $addToSet: {voters: req.body.houseNo}})
+        await nomineeModel.aggregate([
+            {$addFields: {votes: { "$size": "voters"}}},
+            {$out: "nominees"}
+        ])
+        res.status(200).send({message: 'vote increased'})
+    } catch (e) {
+        console.log(e)
+        res.status(500).send({message: e})
+    }
+})
+
+app.post('/api/survey', async (req, res) => {
+
+
+    try {
+        const newSurvey = new surveyModel({
+            houseNo: req.body.houseNo,
+            number: req.body.number,
+            email: req.body.email,
+            response: req.body.response
+        })
+        await newSurvey.save()
+        res.status(200).send({message: 'saved'})
+    } catch (e) {
+        // console.log(e)
+        if (e.code === 11000) {
+            try {
+                await surveyModel.findOneAndUpdate({houseNo: req.body.houseNo}, {
+                    number: req.body.number,
+                    email: req.body.email,
+                    response: req.body.response
+                })
+                res.status(200).send({message: 'updated'})
+            } catch (e) {
+                res.status(500).send({message: 'did not update', e})
+            }
+        } else {
+            res.status(500).send({message: 'did not save', e})
+        }
+
+    }
+
+})
+
+app.get('/api/surveyDetails', async (req, res) => {
+
+
+    try {
+        const yes = await surveyModel.find({response: 'Yes'})
+        const no = await surveyModel.find({response: 'No'})
+        const notSure = await surveyModel.find({response: 'Not Sure'})
+        console.log('yes ' + yes)
+        console.log('no ' + no)
+        console.log('notSure ' + notSure)
+        res.status(200).send({yes, no, notSure})
+    } catch (e) {
+        res.status(500).send(e)
+    }
 })

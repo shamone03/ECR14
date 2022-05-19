@@ -68,7 +68,6 @@ const Register = () => {
         width: "25%",
         display: "flex",
         flexDirection: "column",
-
     }
 
     const flexColumn = {

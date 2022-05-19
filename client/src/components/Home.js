@@ -1,6 +1,9 @@
 import {useEffect, useState} from "react";
 import React from 'react';
 
+import Voting from "./Voting";
+import {Link} from "react-router-dom";
+
 const Home = () => {
     const [houseNo, setHouseNo] = useState('')
     const [names, setNames] = useState([])
@@ -34,6 +37,7 @@ const Home = () => {
 
             <h1>{houseNo}</h1>
             <Names/>
+            <Link to={'/vote'}>vote now</Link>
         </>
     )
 }

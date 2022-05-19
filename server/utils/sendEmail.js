@@ -1,6 +1,23 @@
 const nodemailer = require('nodemailer')
+const { google } = require("googleapis")
+const OAuth2 = google.auth.OAuth2
+
+
 
 module.exports = async (email, subject, text) => {
+    const oAuth2Client = new OAuth2(
+        "895699940676-5dbevjl83o11k1a3flvqrh0eak9oqs9t.apps.googleusercontent.com",
+        "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",
+        "https://developers.google.com/oauthplayground"
+    )
+
+    oAuth2Client.setCredentials({
+        refresh_token: "1//04Kv-XU115MbCCgYIARAAGAQSNwF-L9IrcbEs6cszu1pq33CMNO0wE9iE5MgdBO7Mow9vGjTnQK_cN0zsHmApNgIWTCQcQNSAUrE"
+    })
+
+
+    const accessToken = await oAuth2Client.getAccessToken()
+    console.log(accessToken)
     try {
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
@@ -13,7 +30,10 @@ module.exports = async (email, subject, text) => {
                 clientID: "895699940676-5dbevjl83o11k1a3flvqrh0eak9oqs9t.apps.googleusercontent.com",
                 clientSecret: "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",
                 refreshToken: "1//04Kv-XU115MbCCgYIARAAGAQSNwF-L9IrcbEs6cszu1pq33CMNO0wE9iE5MgdBO7Mow9vGjTnQK_cN0zsHmApNgIWTCQcQNSAUrE",
-                accessToken: "ya29.a0ARrdaM-xpkcg65jAA2wSmE5_ZyxX7DQwModCdbeUQVWQjnFzU040rh-2UFMeUZsGJQi6Il7vU_I_VCOhVFem1wGoJlrE9lX38qqXd6oO3_i7xRcgiN9Y3iV92qZZDfYj-p2YsinoIEiwDOhDxQmUrS6yzqo-"
+                accessToken: accessToken.token
+            },
+            tls: {
+                rejectUnauthorized: false
             }
         })
         await transporter.sendMail({
