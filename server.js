@@ -203,16 +203,16 @@ app.post('/api/survey', async (req, res) => {
     } catch (e) {
         // console.log(e)
         if (e.code === 11000) {
-            try {
-                await surveyModel.findOneAndUpdate({houseNo: req.body.houseNo}, {
-                    number: req.body.number,
-                    email: req.body.email,
-                    response: req.body.response
-                })
-                res.status(200).send({message: 'updated'})
-            } catch (e) {
-                res.status(500).send({message: 'did not update', e})
-            }
+            // try {
+            //     await surveyModel.findOneAndUpdate({email: req.body.email,houseNo: req.body.houseNo}, {
+            //         number: req.body.number,
+            //         response: req.body.response
+            //     })
+            //     res.status(200).send({message: 'updated'})
+            // } catch (e) {
+            //     res.status(500).send({message: 'did not update', e})
+            // }
+            res.status(200).send({message: 'exists'})
         } else {
             res.status(500).send({message: 'did not save', e})
         }

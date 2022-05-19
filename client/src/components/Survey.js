@@ -14,7 +14,7 @@ const Survey = () => {
 
         const normHouseNo = houseNo.charAt(0).toUpperCase() + houseNo.slice(1)
         console.log(normHouseNo)
-        if (normHouseNo.length > 5 || normHouseNo.length < 5) {
+        if (normHouseNo.length > 5) {
             return false
         }
         if (!blocks.includes(normHouseNo.charAt(0))) {
@@ -65,8 +65,8 @@ const Survey = () => {
 
             const data = await res.json()
             console.log(data)
-            if (data.message === 'updated') {
-                alert('Your submission has been updated')
+            if (data.message === 'exists') {
+                alert('You have already submitted this form')
             }
             if (data.message === 'saved') {
                 alert('You submission has been saved')
