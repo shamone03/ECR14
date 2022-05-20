@@ -46,7 +46,7 @@ app.post('/api/register', async (req, res) => {
             token: crypto.randomBytes(32).toString("hex")
         }).save()
 
-        const url = `http://localhost:8080/api/${newUser._id}/verify/${token.token}`
+        const url = `https://ecr14.org/api/${newUser._id}/verify/${token.token}`
         await sendEmail(newUser.email, 'verify email', url)
 
         res.status(200).send({message: 'user saved'})

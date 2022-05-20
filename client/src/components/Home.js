@@ -10,7 +10,7 @@ const Home = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await fetch('http://localhost:8080/api/getUser', {
+            const res = await fetch('https://ecr14.org/api/getUser', {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",

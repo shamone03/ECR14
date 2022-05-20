@@ -1,0 +1,23 @@
+runtime: nodejs16
+handlers:
+  - url: /home
+    static_files: client/build/index.html
+    upload: client/build/index.html
+  - url: /login
+    static_files: client/build/index.html
+    upload: client/build/index.html
+  - url: /register
+    static_files: client/build/index.html
+    upload: client/build/index.html
+  - url: /survey
+    static_files: client/build/index.html
+    upload: client/build/index.html
+  - url: /vote
+    static_files: client/build/index.html
+    upload: client/build/index.html
+  - url: /static
+    static_dir: client/build/static
+  - url: /.*
+    secure: always
+    redirect_http_response_code: 301
+    script: auto
