@@ -24,7 +24,7 @@ root.render (
             <Route path={'/home'} element={<Home/>}/>
             <Route path={'/vote'} element={<Voting/>}/>
             <Route path={'/survey'} element={<Survey/>}/>
-            <Route path={'/api/:id/verify/:token'} element={<VerifyEmailLink/>}/>
+            <Route path={'/:id/verify/:token'} element={<VerifyEmailLink/>}/>
         </Routes>
 
     </BrowserRouter>

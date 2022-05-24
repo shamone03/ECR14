@@ -53,7 +53,6 @@ const Home = () => {
 
     return (
         <>
-
             <h1>{houseNo}</h1>
             <Names/>
             <Link to={'/vote'}>vote now</Link>

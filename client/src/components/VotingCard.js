@@ -2,7 +2,7 @@ import {Button, Card} from "react-bootstrap";
 import image from "../assets/placeholder.png";
 import React from "react";
 
-const VotingCard = ({name, votes, incrementVote}) => {
+const VotingCard = ({name, votes, incrementVote, description}) => {
     const sendVote = () => {
         // console.log(name)
         incrementVote(name)
@@ -13,6 +13,7 @@ const VotingCard = ({name, votes, incrementVote}) => {
             <Card.Img src={image}/>
             <Card.Body>
                 <Card.Title>{name}</Card.Title>
+                <Card.Subtitle>{description}</Card.Subtitle>
             </Card.Body>
             <Button className={'mb-3 mx-auto'} style={{width:'80%'}} onClick={sendVote}>Vote</Button>
             <Card.Footer>{votes}</Card.Footer>

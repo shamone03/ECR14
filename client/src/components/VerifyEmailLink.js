@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Link, useParams} from "react-router-dom";
+import {Link, Navigate, useParams} from "react-router-dom";
 
 const VerifyEmailLink = () => {
     const [validURL, setValidURL] = useState(false)
@@ -8,7 +8,7 @@ const VerifyEmailLink = () => {
     useEffect(() => {
         const verifyEmailLink = async () => {
             try {
-                const res = await fetch(`https://ecr14.org/api/${params.id}/verify/${params.token}`, {
+                const res = await fetch(`http://localhost:8080/api/${params.id}/verify/${params.token}`, {
                     method: 'GET',
                     headers: {
                         "Content-Type": "application/json",
@@ -32,8 +32,7 @@ const VerifyEmailLink = () => {
         <>
             {validURL ? (
                 <>
-                    <h1>verified</h1>
-                    <Link to={'/login'}>login</Link>
+                    <Navigate to={'/login'}/>
                 </>
             ) : (
                 <h1>invalid link</h1>

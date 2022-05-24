@@ -46,7 +46,7 @@ app.post('/api/register', async (req, res) => {
             token: crypto.randomBytes(32).toString("hex")
         }).save()
 
-        const url = `https://ecr14.org/api/${newUser._id}/verify/${token.token}`
+        const url = `http://localhost:3000/${newUser._id}/verify/${token.token}`
         await sendEmail(newUser.email, 'verify email', url)
 
         res.status(200).send({message: 'user saved'})
@@ -55,52 +55,6 @@ app.post('/api/register', async (req, res) => {
         console.log(e)
         res.status(500).send({message: 'not saved', e})
     }
-})
-
-app.post('/api/login', async (req, res) => {
-
-    if (!req.body) {
-        res.status(500).send({message: 'no body'})
-    }
-
-    const user = await model.userModel.findOne({houseNo: req.body.houseNo})
-    console.log(user)
-    if (!user) {
-        console.log('no user')
-        res.status(404).send({message: 'no user found'})
-    } else {
-        if (await bcrypt.compare(req.body.password, user.password)) {
-            console.log('password correct')
-            const token = jwt.sign({houseNo: user.houseNo, _id: user._id}, 'uagvreigvlaegrvkae', { expiresIn: '86400s'})
-            // console.log(res.header)
-            console.log('token ' + token)
-            res.status(200).send({message: 'success', token: token})
-        } else {
-            console.log('password incorrect')
-            res.status(401).send({message: 'password incorrect'})
-        }
-    }
-})
-
-app.get('/api/getUser', async (req, res) => {
-
-    const token = req.headers['authorization']
-    console.log(token)
-
-    try {
-
-        const houseNo = jwt.verify(token, 'uagvreigvlaegrvkae').houseNo
-        try {
-            const user = await model.userModel.findOne({houseNo: houseNo})
-            res.status(200).send(user)
-        } catch (e) {
-            res.status(404).send(e)
-        }
-    } catch (e) {
-        res.status(401).send(e)
-    }
-
-
 })
 
 app.get('/api/:id/verify/:token', async (req, res) => {
@@ -120,6 +74,31 @@ app.get('/api/:id/verify/:token', async (req, res) => {
         res.status(200).send({message: 'email verified'})
     } catch (e) {
         res.status(500).send({message: 'verification failed'})
+    }
+})
+
+app.post('/api/login', async (req, res) => {
+
+    if (!req.body) {
+        res.status(500).send({message: 'no body'})
+    }
+
+    const user = await model.userModel.findOne({houseNo: req.body.houseNo})
+    console.log(user)
+    if (!user) {
+        console.log('no user')
+        res.status(404).send({message: 'no user found'})
+    } else {
+        if (await bcrypt.compare(req.body.password, user.password)) {
+            console.log('password correct')
+            const token = jwt.sign({houseNo: user.houseNo, _id: user._id, isAdmin: user.isAdmin}, 'uagvreigvlaegrvkae', { expiresIn: '86400s'})
+            // console.log(res.header)
+            console.log('token ' + token)
+            res.status(200).send({message: 'success', token: token})
+        } else {
+            console.log('password incorrect')
+            res.status(401).send({message: 'password incorrect'})
+        }
     }
 })
 
@@ -154,13 +133,55 @@ app.get('/api/verifyEmail', async (req, res) => {
 
 })
 
+app.get('/api/getUser', async (req, res) => {
+
+    const token = req.headers['authorization']
+    console.log(token)
+
+    try {
+
+        const houseNo = jwt.verify(token, 'uagvreigvlaegrvkae').houseNo
+        try {
+            const user = await model.userModel.findOne({houseNo: houseNo})
+            res.status(200).send(user)
+        } catch (e) {
+            res.status(404).send(e)
+        }
+    } catch (e) {
+        res.status(401).send(e)
+    }
+
+
+})
+
+app.post('/api/addPoll', async (req, res) => {
+    const _id = jwt.decode(req.headers['authorization'])._id
+    const isAdmin = jwt.decode(req.headers['authorization']).isAdmin
+    if (!isAdmin) {
+        res.status(401).send({message: 'not admin'})
+        return
+    }
+    const poll = new model.pollModel({
+        createdBy: _id,
+        position: req.body.position,
+        forBlock: req.body.forBlock,
+    })
+
+    try {
+        const savedPoll = await poll.save()
+        res.status(200).send(savedPoll)
+    } catch (e) {
+        console.log(e)
+        res.status(500).send(e)
+    }
+})
+
 app.post('/api/addNominee', async (req, res) => {
-
-
     const nominee = new model.nomineeModel({
         name: req.body.name,
         houseNo: req.body.houseNo,
-        description: req.body.description
+        description: req.body.description,
+        poll: req.body.pollId
     })
 
     try {
@@ -171,8 +192,27 @@ app.post('/api/addNominee', async (req, res) => {
     }
 })
 
-app.post('/api/vote', async (req, res) => {
+app.get('/api/getNominees', async (req, res) => {
+    const block = jwt.decode(req.headers['authorization']).houseNo.charAt(0)
+    const isAdmin = jwt.decode(req.headers['authorization']).isAdmin
+    try {
+        const nominees = await model.nomineeModel.find().populate('poll')
+        if (isAdmin) {
+            console.log(nominees)
+            res.status(200).send(nominees)
+        } else {
+            const userNominees = nominees.filter((n) => n.poll.forBlock === block)
+            console.log(userNominees)
+            res.status(200).send(userNominees)
+        }
+    } catch (e) {
+        res.status(500).send({e})
+    }
+})
 
+app.post('/api/vote', async (req, res) => {
+    const pollId = req.body.pollId
+    const nomineeId = req.body.nomineeId
 
     try {
         await nomineeModel.updateOne({name: req.body.nominees[0].rep1},{ $addToSet: {voters: req.body.houseNo}})
