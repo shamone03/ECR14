@@ -1,21 +1,23 @@
 import './App.css';
-import React, { Component }  from 'react';
+import React from 'react';
 import { Link } from "react-router-dom"
-import {useEffect, useState} from "react"
+import styles from './css/App.module.css'
+
 
 function App() {
 
-
-
     return (
         <div className="App">
-            <h1>{'ECR14'}</h1>
-            <nav>
-                <Link to={'/home'}>Home</Link>
-                <Link to={'/login'}>Login</Link>
-                <Link to={'/register'}>Register</Link>
+            <nav className={'d-flex flex-column'}>
+                <div className={'d-flex justify-content-end'}>
+                    <Link to={'/login'} className={`${styles.linkStyle} my-3 mx-3 btn`}>Login</Link>
+                    <Link to={'/register'} className={'my-3 mx-3 btn btn-primary'}>Register</Link>
+                </div>
             </nav>
+            <h1 className={`mb-5 ${styles.headingStyle}`}>ECR14</h1>
+
         </div>
+
     );
 }
 

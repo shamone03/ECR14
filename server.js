@@ -52,7 +52,8 @@ app.post('/api/register', async (req, res) => {
         res.status(200).send({message: 'user saved'})
         
     } catch (e) {
-        res.status(500).send({message: 'not saved', error: e})
+        console.log(e)
+        res.status(500).send({message: 'not saved', e})
     }
 })
 
@@ -177,14 +178,24 @@ app.post('/api/vote', async (req, res) => {
         await nomineeModel.updateOne({name: req.body.nominees[0].rep1},{ $addToSet: {voters: req.body.houseNo}})
         await nomineeModel.updateOne({name: req.body.nominees[1].rep2},{ $addToSet: {voters: req.body.houseNo}})
         await nomineeModel.updateOne({name: req.body.nominees[2].rep3},{ $addToSet: {voters: req.body.houseNo}})
-        await nomineeModel.aggregate([
-            {$addFields: {votes: { "$size": "voters"}}},
-            {$out: "nominees"}
+        await model.nomineeModel.aggregate([
+            { $addFields: {votes: {$size: "$voters"}}},
+            { $out: "nominees"}
         ])
         res.status(200).send({message: 'vote increased'})
     } catch (e) {
         console.log(e)
         res.status(500).send({message: e})
+    }
+})
+
+app.get('/api/getVotes', async (req, res) => {
+    try {
+        const result = await nomineeModel.find({$project: { voters: 1, votes: 1 }})
+        res.status(200).send(result)
+    } catch (e) {
+        console.log(e)
+        res.status(500).send({message: 'could not get votes', e})
     }
 })
 

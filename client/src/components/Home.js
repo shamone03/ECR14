@@ -1,7 +1,5 @@
 import {useEffect, useState} from "react";
 import React from 'react';
-
-import Voting from "./Voting";
 import {Link} from "react-router-dom";
 
 const Home = () => {
@@ -32,6 +30,27 @@ const Home = () => {
             names.map(i => (<p key={i._id}>{i.name}</p>))
         )
     }
+
+    const Nominate = () => {
+        return (
+            <>
+
+            </>
+
+            // <Form>
+            //     <Form.Label>Choose a name from your house to nominate</Form.Label>
+            //     <Dropdown>
+            //         <Dropdown.Toggle>
+            //             {chosenName}
+            //         </Dropdown.Toggle>
+            //         <Dropdown.Menu>
+            //             {names.map(i => (<Dropdown.Item onClick={() => setChosenName(i)}>{i}</Dropdown.Item>))}
+            //         </Dropdown.Menu>
+            //     </Dropdown>
+            // </Form>
+        )
+    }
+
     return (
         <>
 

@@ -1,6 +1,4 @@
-import {Button, Card} from "react-bootstrap";
 import React, {useState} from 'react'
-import image from '../assets/placeholder.png'
 import VotingCard from "./VotingCard";
 const Voting = () => {
     const [noms, setNoms] = useState([

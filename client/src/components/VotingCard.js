@@ -1,10 +1,8 @@
 import {Button, Card} from "react-bootstrap";
 import image from "../assets/placeholder.png";
-import React, {useState} from "react";
+import React from "react";
 
 const VotingCard = ({name, votes, incrementVote}) => {
-    const [buttonClicked, setButtonClicked] = useState(false)
-
     const sendVote = () => {
         // console.log(name)
         incrementVote(name)

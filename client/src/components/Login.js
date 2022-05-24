@@ -1,7 +1,8 @@
 import {useState} from "react";
 import React from 'react';
-import {Button, Card, Form} from "react-bootstrap";
+import {Button, Form} from "react-bootstrap";
 import {Navigate} from "react-router-dom";
+import styles from '../css/Login.module.css'
 const Login = () => {
     const [houseNo, setHouseNo] = useState('')
     const [password, setPassword] = useState('')
@@ -35,37 +36,23 @@ const Login = () => {
     }
 
     return (
-        // <>
-        //     <h1 className="text-center" id="login-heading">Login</h1>
-        //     <div>
-        //         <small>House number</small>
-        //         <input type="text" onChange={e => setHouseNo(e.target.value)}/>
-        //         <small>Password</small>
-        //         <input type="password" onChange={e => setPassword(e.target.value)}/>
-        //         <Button variant={"outline-dark"} onClick={loginUser}>Login</Button>{' '}
-        //     </div>
-        // </>
-        <>
+        <div>
             <RedirectHome/>
-            <div style={{height: "300px"}}>
-                <Form className={"mx-auto d-flex flex-column justify-content-between align-items-center"}>
-                    <h1>ECR14</h1>
-                    <Form.Group className={"mb-3 mt-5" }>
+            <h1 className={'text-center'}>ECR14</h1>
+            <div className={`${styles.formWrapper} mx-auto`}>
+                <Form className={`${styles.formStyle} mx-auto d-flex flex-column justify-content-between align-items-center`}>
+                    <Form.Group className={"mb-3 mt-5"} >
                         <Form.Label>Enter Apartment Number</Form.Label>
-                        <Form.Control type={"text"} placeholder={"example: J606"} onChange={e => setHouseNo(e.target.value)}/>
+                        <Form.Control className={styles.inputStyle} type={"text"} placeholder={"example: J606"} onChange={e => setHouseNo(e.target.value)}/>
                     </Form.Group>
-                    <Form.Group className={"mb-3"}>
+                    <Form.Group className={"mb-4"} >
                         <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" onChange={e => setPassword(e.target.value)}/>
+                        <Form.Control className={styles.inputStyle} type="password" placeholder="Password" onChange={e => setPassword(e.target.value)}/>
                     </Form.Group>
-                    <Button variant={"outline-dark"} onClick={loginUser}>Submit</Button>
-
+                    <Button variant={"outline-light"} onClick={loginUser} className={'mb-5'}>Submit</Button>
                 </Form>
             </div>
-        </>
-
-
-
+        </div>
     )
 }
 
