@@ -6,13 +6,13 @@ const OAuth2 = google.auth.OAuth2
 
 module.exports = async (email, subject, text) => {
     const oAuth2Client = new OAuth2(
-        "895699940676-5dbevjl83o11k1a3flvqrh0eak9oqs9t.apps.googleusercontent.com",
-        "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",
+        process.env.CLIENT_ID,
+        process.env.CLIENT_SECRET,
         "https://developers.google.com/oauthplayground"
     )
 
     oAuth2Client.setCredentials({
-        refresh_token: "1//04kFJA7ier3BsCgYIARAAGAQSNwF-L9Iri0LuI8bsxDemYHL2lUFOGUE5qeXiuS4qznr9uW07vM7FlzK7xE4QNAWnQYQdCtCohXM"
+        refresh_token: process.env.REFRESH_TOKEN
     })
 
 
@@ -27,9 +27,9 @@ module.exports = async (email, subject, text) => {
             auth: {
                 type: "OAuth2",
                 user:'ecr14.ecr14@gmail.com',
-                clientID: "895699940676-5dbevjl83o11k1a3flvqrh0eak9oqs9t.apps.googleusercontent.com",
-                clientSecret: "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",
-                refreshToken: "1//04Kv-XU115MbCCgYIARAAGAQSNwF-L9IrcbEs6cszu1pq33CMNO0wE9iE5MgdBO7Mow9vGjTnQK_cN0zsHmApNgIWTCQcQNSAUrE",
+                clientID: process.env.CLIENT_ID,
+                clientSecret: process.env.CLIENT_SECRET,
+                refreshToken: process.env.REFRESH_TOKEN,
                 accessToken: accessToken.token
             },
             tls: {
