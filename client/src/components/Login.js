@@ -10,11 +10,11 @@ const Login = () => {
 
     const loginUser = async (e) => {
         e.preventDefault()
-        const res = await fetch(`https://ecr14.org/api/login`, {
+        const res = await fetch(`http://localhost:8080/api/login`, {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
-                "houseNo": houseNo,
+                "houseNo": houseNo.charAt(0).toUpperCase() + houseNo.slice(1),
                 "password": password
             })
         })

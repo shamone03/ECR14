@@ -13,7 +13,7 @@ const Home = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await fetch('https://ecr14.org/api/getUser', {
+            const res = await fetch('http://localhost:8080/api/getUser', {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
@@ -95,6 +95,9 @@ const Home = () => {
                         <Offcanvas.Title>Menu</Offcanvas.Title>
                     </Offcanvas.Header>
                     <Offcanvas.Body>
+                        <div>
+
+                        </div>
                         <div className={'text-center'}>
                             <Button variant={'dark'} onClick={() => setShowNames(!showNames)}>Show residents</Button>
                             <Names/>

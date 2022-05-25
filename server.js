@@ -7,6 +7,7 @@ const sendEmail = require('./server/utils/sendEmail')
 const crypto = require('crypto')
 const cors = require('cors')
 const app = express()
+require('dotenv').config()
 
 app.use(cors({origin: '*'}))
 app.use(morgan('tiny'))
@@ -17,10 +18,10 @@ const path = require("path")
 const {tokenModel, nomineeModel, surveyModel} = require("./server/model/model");
 
 dbConn()
-app.use(express.static(path.join(__dirname, 'client', 'build')))
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
-})
+// app.use(express.static(path.join(__dirname, 'client', 'build')))
+// app.get('/', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+// })
 
 app.listen(8080, (req, res) => {
     console.log('server on 8080')
@@ -46,7 +47,7 @@ app.post('/api/register', async (req, res) => {
             token: crypto.randomBytes(32).toString("hex")
         }).save()
 
-        const url = `https://ecr14.org/${newUser._id}/verify/${token.token}`
+        const url = `http://localhost:8080/verify/${newUser._id}/verify/${token.token}`
         await sendEmail(newUser.email, 'verify email', url)
 
         res.status(200).send({message: 'user saved'})
@@ -91,7 +92,7 @@ app.post('/api/login', async (req, res) => {
     } else {
         if (await bcrypt.compare(req.body.password, user.password)) {
             console.log('password correct')
-            const token = jwt.sign({houseNo: user.houseNo, _id: user._id, isAdmin: user.isAdmin, verified: user.verified}, 'uagvreigvlaegrvkae', { expiresIn: '86400s'})
+            const token = jwt.sign({houseNo: user.houseNo, _id: user._id, isAdmin: user.isAdmin, verified: user.verified}, process.env.JWT_SECRET, { expiresIn: '86400s'})
             // console.log(res.header)
             console.log('token ' + token)
             res.status(200).send({message: 'success', token: token})
@@ -108,10 +109,11 @@ const verifyToken = (req, res, next) => {
         return res.status(401).send({message: 'no token found'})
     }
     try {
-        console.log(token)
-        jwt.verify(token, 'uagvreigvlaegrvkae')
+        // console.log(token)
+        jwt.verify(token, process.env.JWT_SECRET)
     } catch (e) {
-        return res.status(401).send({message: 'invalid token'})
+        console.log('error' + e)
+        return res.status(401).send({message: 'invalid token', e})
     }
     return next()
 }
@@ -150,11 +152,9 @@ app.get('/api/verifyEmail', verifyToken, async (req, res) => {
 app.get('/api/getUser', verifyToken, async (req, res) => {
 
     const token = req.headers['authorization']
-    console.log(token)
-
     try {
 
-        const houseNo = jwt.verify(token, 'uagvreigvlaegrvkae').houseNo
+        const houseNo = jwt.verify(token, process.env.JWT_SECRET).houseNo
         try {
             const user = await model.userModel.findOne({houseNo: houseNo}, {password: 0})
             res.status(200).send(user)

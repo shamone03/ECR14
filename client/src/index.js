@@ -14,6 +14,7 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import Voting from "./components/Voting";
 import Survey from "./components/Survey";
 import Admin from "./components/Admin";
+import Construction from "./components/Construction";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render (
@@ -27,7 +28,8 @@ root.render (
             {/*<Route path={'/admin'} element={<Admin/>}/>*/}
             {/*<Route path={'/vote'} element={<Voting/>}/>*/}
             <Route path={'/survey'} element={<Survey/>}/>
-            <Route path={'/:id/verify/:token'} element={<VerifyEmailLink/>}/>
+            <Route path={'/verify/:id/verify/:token'} element={<VerifyEmailLink/>}/>
+            <Route path={'/construction'} element={<Construction/>}/>
         </Routes>
 
     </BrowserRouter>

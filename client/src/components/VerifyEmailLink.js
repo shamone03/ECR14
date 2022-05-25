@@ -8,7 +8,7 @@ const VerifyEmailLink = () => {
     useEffect(() => {
         const verifyEmailLink = async () => {
             try {
-                const res = await fetch(`https://ecr14.org/api/${params.id}/verify/${params.token}`, {
+                const res = await fetch(`http://localhost:8080/api/${params.id}/verify/${params.token}`, {
                     method: 'GET',
                     headers: {
                         "Content-Type": "application/json",

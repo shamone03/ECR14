@@ -15,7 +15,10 @@ handlers:
   - url: /vote
     static_files: client/build/index.html
     upload: client/build/index.html
-  - url: /:id/verify/:token
+  - url: /construction
+    static_files: client/build/index.html
+    upload: client/build/index.html
+  - url: /verify/(.*)/verify/(.*)
     static_files: client/build/index.html
     upload: client/build/index.html
   - url: /static
