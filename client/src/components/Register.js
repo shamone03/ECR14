@@ -116,7 +116,7 @@ const Register = () => {
             return
         }
         e.preventDefault()
-        const res = await fetch('http://localhost:8080/api/register', {
+        const res = await fetch('https://ecr14.org/api/register', {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
@@ -129,7 +129,8 @@ const Register = () => {
         if (res.status === 200) {
             const data = await res.json()
             alert('Click the link on the email sent to your account to finish signing up')
-        } else {
+        }
+        if (res.status === 500) {
             const data = await res.json()
             if (data.e.code === 11000) {
                 alert('Apartment Number or Email already exists')
@@ -159,11 +160,11 @@ const Register = () => {
                             {members.map((m) =>
                                 <div className={'d-flex flex-row justify-content-end align-items-end'} key={m.key}>
                                     <Form.Control className={`${styles.inputStyle} mb-1 mx-1`} type={'text'} placeholder={'Name'} onChange={e => setName(m.key, e.target.value)}/>
-                                    <Button className={'mb-1'} onClick={() => removeName(m.key)}>❌</Button>
+                                    <Button className={'mb-1'} variant={'outline-light'} onClick={() => removeName(m.key)}>❌</Button>
                                 </div>
                             )}
                         </div>
-                        <Button style={memberStyle} className={'w-100'} onClick={addMember}>Add</Button>
+                        <Button style={memberStyle} variant={'outline-light'} className={'w-100'} onClick={addMember}>Add</Button>
                     </Form.Group>
                     <Form.Group className={'mb-3'}>
                         <Form.Label>Enter Password</Form.Label>
@@ -173,7 +174,7 @@ const Register = () => {
                         <Form.Label>Confirm Password</Form.Label>
                         <Form.Control style={passwordStyle} className={styles.inputStyle} type={"password"} onChange={e => setPasswordConfirm(e.target.value)}/>
                     </Form.Group>
-                    <Button onClick={registerUser}>Submit</Button>
+                    <Button variant={'outline-light'} onClick={registerUser}>Submit</Button>
                 </Form>
             </div>
 

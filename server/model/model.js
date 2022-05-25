@@ -23,7 +23,7 @@ const tokenSchema = new mongoose.Schema({
 
 const nomineeSchema = new mongoose.Schema({
     name: {type: String, required: true},
-    houseNo: {type: String, required: true},
+    houseNo: {type: String, required: true, unique: true},
     votes: {type: Number, required: true, default: 0},
     voters: [{type: String}],
     description: {type: String},

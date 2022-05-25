@@ -7,14 +7,14 @@ import styles from './css/App.module.css'
 function App() {
 
     return (
-        <div className="App">
+        <div className={`${styles.App} App`}>
             <nav className={'d-flex flex-column'}>
                 <div className={'d-flex justify-content-end'}>
                     <Link to={'/login'} className={`${styles.linkStyle} my-3 mx-3 btn`}>Login</Link>
-                    <Link to={'/register'} className={'my-3 mx-3 btn btn-primary'}>Register</Link>
+                    <Link to={'/register'} className={'my-3 mx-3 btn btn-outline-dark'}>Register</Link>
                 </div>
             </nav>
-            <h1 className={`mb-5 ${styles.headingStyle}`}>ECR14</h1>
+            {/*<h1 className={`mb-5 ${styles.headingStyle}`}>ECR14</h1>*/}
 
         </div>
 

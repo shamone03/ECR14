@@ -17,10 +17,10 @@ const path = require("path")
 const {tokenModel, nomineeModel, surveyModel} = require("./server/model/model");
 
 dbConn()
-// app.use(express.static(path.join(__dirname, 'client', 'build')))
-// app.get('/', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
-// })
+app.use(express.static(path.join(__dirname, 'client', 'build')))
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+})
 
 app.listen(8080, (req, res) => {
     console.log('server on 8080')
@@ -46,7 +46,7 @@ app.post('/api/register', async (req, res) => {
             token: crypto.randomBytes(32).toString("hex")
         }).save()
 
-        const url = `http://localhost:3000/${newUser._id}/verify/${token.token}`
+        const url = `https://ecr14.org/${newUser._id}/verify/${token.token}`
         await sendEmail(newUser.email, 'verify email', url)
 
         res.status(200).send({message: 'user saved'})
@@ -91,7 +91,7 @@ app.post('/api/login', async (req, res) => {
     } else {
         if (await bcrypt.compare(req.body.password, user.password)) {
             console.log('password correct')
-            const token = jwt.sign({houseNo: user.houseNo, _id: user._id, isAdmin: user.isAdmin}, 'uagvreigvlaegrvkae', { expiresIn: '86400s'})
+            const token = jwt.sign({houseNo: user.houseNo, _id: user._id, isAdmin: user.isAdmin, verified: user.verified}, 'uagvreigvlaegrvkae', { expiresIn: '86400s'})
             // console.log(res.header)
             console.log('token ' + token)
             res.status(200).send({message: 'success', token: token})
@@ -102,7 +102,21 @@ app.post('/api/login', async (req, res) => {
     }
 })
 
-app.get('/api/verifyEmail', async (req, res) => {
+const verifyToken = (req, res, next) => {
+    const token = req.headers['authorization']
+    if (!token) {
+        return res.status(401).send({message: 'no token found'})
+    }
+    try {
+        console.log(token)
+        jwt.verify(token, 'uagvreigvlaegrvkae')
+    } catch (e) {
+        return res.status(401).send({message: 'invalid token'})
+    }
+    return next()
+}
+
+app.get('/api/verifyEmail', verifyToken, async (req, res) => {
 
     const jwtToken = req.headers['authorization']
 
@@ -133,7 +147,7 @@ app.get('/api/verifyEmail', async (req, res) => {
 
 })
 
-app.get('/api/getUser', async (req, res) => {
+app.get('/api/getUser', verifyToken, async (req, res) => {
 
     const token = req.headers['authorization']
     console.log(token)
@@ -142,10 +156,11 @@ app.get('/api/getUser', async (req, res) => {
 
         const houseNo = jwt.verify(token, 'uagvreigvlaegrvkae').houseNo
         try {
-            const user = await model.userModel.findOne({houseNo: houseNo})
+            const user = await model.userModel.findOne({houseNo: houseNo}, {password: 0})
             res.status(200).send(user)
         } catch (e) {
-            res.status(404).send(e)
+            console.log(e)
+            res.status(404).send({e})
         }
     } catch (e) {
         res.status(401).send(e)
@@ -154,7 +169,7 @@ app.get('/api/getUser', async (req, res) => {
 
 })
 
-app.post('/api/addPoll', async (req, res) => {
+app.post('/api/addPoll', verifyToken, async (req, res) => {
     const _id = jwt.decode(req.headers['authorization'])._id
     const isAdmin = jwt.decode(req.headers['authorization']).isAdmin
     if (!isAdmin) {
@@ -176,7 +191,7 @@ app.post('/api/addPoll', async (req, res) => {
     }
 })
 
-app.post('/api/addNominee', async (req, res) => {
+app.post('/api/addNominee', verifyToken, async (req, res) => {
     const nominee = new model.nomineeModel({
         name: req.body.name,
         houseNo: req.body.houseNo,
@@ -188,11 +203,11 @@ app.post('/api/addNominee', async (req, res) => {
         await nominee.save()
         res.status(200).send({message: 'nominee saved'})
     } catch (e) {
-        res.status(500).send({message: 'nominee not saved'})
+        res.status(500).send({message: 'nominee not saved', e})
     }
 })
 
-app.get('/api/getNominees', async (req, res) => {
+app.get('/api/getNominees', verifyToken, async (req, res) => {
     const block = jwt.decode(req.headers['authorization']).houseNo.charAt(0)
     const isAdmin = jwt.decode(req.headers['authorization']).isAdmin
     try {
@@ -210,14 +225,20 @@ app.get('/api/getNominees', async (req, res) => {
     }
 })
 
-app.post('/api/vote', async (req, res) => {
-    const pollId = req.body.pollId
-    const nomineeId = req.body.nomineeId
+app.post('/api/vote', verifyToken, async (req, res) => {
+    const nomineeIds = req.body.nomineeIds
 
     try {
-        await nomineeModel.updateOne({name: req.body.nominees[0].rep1},{ $addToSet: {voters: req.body.houseNo}})
-        await nomineeModel.updateOne({name: req.body.nominees[1].rep2},{ $addToSet: {voters: req.body.houseNo}})
-        await nomineeModel.updateOne({name: req.body.nominees[2].rep3},{ $addToSet: {voters: req.body.houseNo}})
+
+        // const nominee = await nomineeModel.findOne({_id: nomineeId}).populate('poll').exec()
+
+        console.log(nomineeIds)
+
+        for (let nominee of nomineeIds) {
+            console.log(await nomineeModel.findOne({_id: nominee.rep}).populate('poll').exec())
+            await nomineeModel.updateOne({_id: nominee.rep},{ $addToSet: {voters: req.body.houseNo}})
+        }
+
         await model.nomineeModel.aggregate([
             { $addFields: {votes: {$size: "$voters"}}},
             { $out: "nominees"}
@@ -229,7 +250,7 @@ app.post('/api/vote', async (req, res) => {
     }
 })
 
-app.get('/api/getVotes', async (req, res) => {
+app.get('/api/getVotes', verifyToken, async (req, res) => {
     try {
         const result = await nomineeModel.find({$project: { voters: 1, votes: 1 }})
         res.status(200).send(result)
@@ -239,7 +260,7 @@ app.get('/api/getVotes', async (req, res) => {
     }
 })
 
-app.post('/api/survey', async (req, res) => {
+app.post('/api/survey', verifyToken, async (req, res) => {
 
 
     try {
@@ -272,7 +293,7 @@ app.post('/api/survey', async (req, res) => {
 
 })
 
-app.get('/api/surveyDetails', async (req, res) => {
+app.get('/api/surveyDetails', verifyToken, async (req, res) => {
 
 
     try {
