@@ -2,6 +2,10 @@ import {useEffect, useState} from "react";
 import React from 'react';
 import {Link, Navigate} from "react-router-dom";
 import {Button, Offcanvas} from "react-bootstrap";
+import styles from '../css/Home.module.css'
+import RedirectLogin from "./RedirectLogin";
+import {url} from "../assets/js/url";
+
 
 const Home = () => {
     const [houseNo, setHouseNo] = useState('')
@@ -13,13 +17,16 @@ const Home = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await fetch('http://localhost:8080/api/getUser', {
+            const res = await fetch(`http://${url}/api/getUser`, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": localStorage.getItem('token')
                 }
             })
+            if (res.status === 401) {
+                setLoggedIn(false)
+            }
             if (res.status === 200) {
                 const data = await res.json()
                 console.log(data)
@@ -29,85 +36,40 @@ const Home = () => {
                 setNames(data.names)
 
             }
-            if (res.status === 401) {
-                setLoggedIn(false)
-            }
         }
         fetchData()
     }, [])
 
-    function Names() {
-        if (showNames) {
-            return (
-                <ul className={'list-group mx-auto mt-2 text-center'}>
-                    {names.map(i => <li className={'text-center list-group-item list-group-item-action list-group-item-dark'} key={i._id}>{i.name}</li>)}
-                </ul>
-            )
-        } else {
-            return (
-                <></>
-            )
-        }
 
-    }
 
-    const RedirectLogin = () => {
-        return (
-            <>
-                {!loggedIn ? (<Navigate to={'/login'}/>) : ('')}
-            </>
-        )
-    }
 
-    const Settings = () => {
-
-    }
-
-    const Nominate = () => {
-        return (
-            <>
-
-            </>
-
-            // <Form>
-            //     <Form.Label>Choose a name from your house to nominate</Form.Label>
-            //     <Dropdown>
-            //         <Dropdown.Toggle>
-            //             {chosenName}
-            //         </Dropdown.Toggle>
-            //         <Dropdown.Menu>
-            //             {names.map(i => (<Dropdown.Item onClick={() => setChosenName(i)}>{i}</Dropdown.Item>))}
-            //         </Dropdown.Menu>
-            //     </Dropdown>
-            // </Form>
-        )
-    }
 
     return (
         <>
-            <RedirectLogin/>
+            <RedirectLogin loggedIn={loggedIn}/>
             <div className={'text-center mx-auto'} style={{width: '50%'}}>
                 <h1>{houseNo}</h1>
 
                 <Button variant={'light'} onClick={() => setShowMenu(true)}>Menu</Button>
                 <Offcanvas show={showMenu} onHide={() => setShowMenu(false)} style={{backgroundColor: '#161b22'}}>
-                    <Offcanvas.Header closeButton>
+                    <Offcanvas.Header className={'d-flex justify-content-between'}>
                         <Offcanvas.Title>Menu</Offcanvas.Title>
+                        <Button variant={'outline-light'} onClick={() => setShowMenu(false)}>❌</Button>
                     </Offcanvas.Header>
-                    <Offcanvas.Body>
+                    <Offcanvas.Body className={'d-flex flex-column align-content-stretch'}>
                         <div>
-
+                            <Link className={`${styles.linkStyle} mt-3 btn btn-light`} to={'/vote'}>Voting</Link>
                         </div>
-                        <div className={'text-center'}>
-                            <Button variant={'dark'} onClick={() => setShowNames(!showNames)}>Show residents</Button>
-                            <Names/>
+                        <div>
+                            <Link className={`${styles.linkStyle} mt-3 btn btn-light`} to={'/settings'}>Profile Settings</Link>
                         </div>
-                        <div className={'mt-3 text-center'}>
-                            {verified ? (<h3>You are verified</h3>) : (<h3>You are not verified</h3>)}
+                        <div>
+                            <Link className={`${styles.linkStyle} mt-3 btn btn-light`} to={'/construction'}>Document Archive</Link>
+                        </div>
+                        <div>
+                            <Link className={`${styles.linkStyle} mt-3 btn btn-light`} to={'/construction'}>Events</Link>
                         </div>
                     </Offcanvas.Body>
-
-
                 </Offcanvas>
             </div>
         </>

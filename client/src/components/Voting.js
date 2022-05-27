@@ -1,41 +1,42 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import VotingCard from "./VotingCard";
+import {url} from "../assets/js/url";
+
+
 const Voting = () => {
-    const [noms, setNoms] = useState([
-        {
-            id: 1,
-            name: 'A',
-            votes: 0
-        },
-        {
-            id: 2,
-            name: 'B',
-            votes: 0
-        },
-        {
-            id: 3,
-            name: 'C',
-            votes: 0
-        },
-        {
-            id: 4,
-            name: 'D',
-            votes: 0
+    const [nominees, setNominees] = useState([])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await fetch(`http://${url}/api/getNominees`, {
+                method: 'GET',
+                headers: {
+                    "Authorization": localStorage.getItem('token'),
+                    "Content-Type": "application/json"
+                }
+            })
+            if (res.status === 200) {
+                const data = await res.json()
+                console.log(data)
+                setNominees(data.userNominees)
+            }
         }
-    ])
+        fetchData()
+        console.log(nominees)
+    }, [])
 
-    const incrementVote = (name) => {
-        let newNoms = [...noms]
-        newNoms = noms.map((i) => {
+    const nominate = async () => {
 
-        })
-        console.log(newNoms)
     }
 
     return (
-        <div className={"d-flex flex-row"}>
-            {noms.map((i) => (<VotingCard key={i.id} name={i.name} votes={i.votes} incrementVote={incrementVote}/>))}
-        </div>
+        <>
+            <h1 className={'text-center'}>Vote</h1>
+            <div className={'d-flex flex-row'}>
+
+                {nominees.map(i => (<VotingCard key={i._id} name={i.name} _id={i._id} votes={i.votes} description={i.description}/>))}
+            </div>
+        </>
     )
 }
 

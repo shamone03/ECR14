@@ -47,7 +47,7 @@ app.post('/api/register', async (req, res) => {
             token: crypto.randomBytes(32).toString("hex")
         }).save()
 
-        const url = `http://localhost:8080/verify/${newUser._id}/verify/${token.token}`
+        const url = `${process.env.BASE_URL}/verify/${newUser._id}/verify/${token.token}`
         await sendEmail(newUser.email, 'verify email', url)
 
         res.status(200).send({message: 'user saved'})
@@ -134,7 +134,7 @@ app.get('/api/verifyEmail', verifyToken, async (req, res) => {
                         token: crypto.randomBytes(32).toString("hex")
                     }).save()
 
-                    const url = `http://localhost:8080/api/${user._id}/verify/${token.token}`
+                    const url = `${process.env.BASE_URL}/verify/${user._id}/verify/${token.token}`
                     await sendEmail(user.email, 'verify email', url)
                 }
                 return res.status(400).send({message: 'email already sent'})
@@ -157,10 +157,14 @@ app.get('/api/getUser', verifyToken, async (req, res) => {
         const houseNo = jwt.verify(token, process.env.JWT_SECRET).houseNo
         try {
             const user = await model.userModel.findOne({houseNo: houseNo}, {password: 0})
-            res.status(200).send(user)
+            if (user) {
+                res.status(200).send(user)
+            } else {
+                res.status(401).send({message: 'empty user'})
+            }
         } catch (e) {
             console.log(e)
-            res.status(404).send({e})
+            res.status(401).send({e})
         }
     } catch (e) {
         res.status(401).send(e)
@@ -213,12 +217,12 @@ app.get('/api/getNominees', verifyToken, async (req, res) => {
     try {
         const nominees = await model.nomineeModel.find().populate('poll')
         if (isAdmin) {
-            console.log(nominees)
-            res.status(200).send(nominees)
+            // console.log(nominees)
+            res.status(200).send({nominees})
         } else {
             const userNominees = nominees.filter((n) => n.poll.forBlock === block)
             console.log(userNominees)
-            res.status(200).send(userNominees)
+            res.status(200).send({userNominees})
         }
     } catch (e) {
         res.status(500).send({e})

@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Button, Form} from "react-bootstrap";
 import styles from '../css/Register.module.css'
 import validator from "validator/es"
+import {url} from "../assets/js/url";
 
 const Register = () => {
     const [houseNo, setHouseNo] = useState('')
@@ -135,7 +136,7 @@ const Register = () => {
         if (!validate()) {
             return
         }
-        const res = await fetch('http://localhost:8080/api/register', {
+        const res = await fetch(`http://${url}/api/register`, {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
@@ -193,7 +194,7 @@ const Register = () => {
                         <Form.Label>Confirm Password</Form.Label>
                         <Form.Control style={passwordStyle} className={styles.inputStyle} type={"password"} onChange={e => validatePasswords(password, e.target.value)}/>
                     </Form.Group>
-                    <Button variant={'outline-light'} onClick={registerUser}>Submit</Button>
+                    <Button variant={'outline-light'} onClick={registerUser}>Register</Button>
                 </Form>
             </div>
 

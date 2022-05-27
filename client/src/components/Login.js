@@ -3,6 +3,8 @@ import React from 'react';
 import {Button, Form} from "react-bootstrap";
 import {Navigate} from "react-router-dom";
 import styles from '../css/Login.module.css'
+import {url} from "../assets/js/url";
+
 const Login = () => {
     const [houseNo, setHouseNo] = useState('')
     const [password, setPassword] = useState('')
@@ -10,7 +12,7 @@ const Login = () => {
 
     const loginUser = async (e) => {
         e.preventDefault()
-        const res = await fetch(`http://localhost:8080/api/login`, {
+        const res = await fetch(`http://${url}/api/login`, {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
@@ -38,7 +40,7 @@ const Login = () => {
     return (
         <div>
             <RedirectHome/>
-            <h1 className={'text-center'}>ECR14</h1>
+            <h1 className={'text-center'}>Login</h1>
             <div className={`${styles.formWrapper} mx-auto`}>
                 <Form className={`${styles.formStyle} mx-auto d-flex flex-column justify-content-between align-items-center`}>
                     <Form.Group className={"mb-3 mt-5"} >
@@ -49,7 +51,7 @@ const Login = () => {
                         <Form.Label>Password</Form.Label>
                         <Form.Control className={styles.inputStyle} type="password" placeholder="Password" onChange={e => setPassword(e.target.value)}/>
                     </Form.Group>
-                    <Button variant={"outline-light"} onClick={loginUser} className={'mb-5'}>Submit</Button>
+                    <Button variant={"outline-light"} onClick={loginUser} className={'mb-5'}>Login</Button>
                 </Form>
             </div>
         </div>

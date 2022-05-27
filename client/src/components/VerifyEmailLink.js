@@ -1,5 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {Link, Navigate, useParams} from "react-router-dom";
+import {url} from "../assets/js/url";
+
+
 
 const VerifyEmailLink = () => {
     const [validURL, setValidURL] = useState(false)
@@ -8,7 +11,7 @@ const VerifyEmailLink = () => {
     useEffect(() => {
         const verifyEmailLink = async () => {
             try {
-                const res = await fetch(`http://localhost:8080/api/${params.id}/verify/${params.token}`, {
+                const res = await fetch(`http://${url}/api/${params.id}/verify/${params.token}`, {
                     method: 'GET',
                     headers: {
                         "Content-Type": "application/json",

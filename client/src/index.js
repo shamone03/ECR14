@@ -11,10 +11,12 @@ import Register from "./components/Register";
 import Home from "./components/Home";
 import VerifyEmailLink from "./components/VerifyEmailLink";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
-import Voting from "./components/Voting";
+import VoteMenu from "./components/VoteMenu";
 import Survey from "./components/Survey";
 import Admin from "./components/Admin";
 import Construction from "./components/Construction";
+import Voting from "./components/Voting";
+import Settings from "./components/Settings";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render (
@@ -26,7 +28,9 @@ root.render (
             <Route path={'/register'} element={<Register/>}/>
             <Route path={'/home'} element={<Home/>}/>
             {/*<Route path={'/admin'} element={<Admin/>}/>*/}
-            {/*<Route path={'/vote'} element={<Voting/>}/>*/}
+            <Route path={'/vote'} element={<VoteMenu/>}/>
+            <Route path={'/settings'} element={<Settings/>}/>
+            <Route path={'/vote/vote-now'} element={<Voting/>}/>
             <Route path={'/survey'} element={<Survey/>}/>
             <Route path={'/verify/:id/verify/:token'} element={<VerifyEmailLink/>}/>
             <Route path={'/construction'} element={<Construction/>}/>

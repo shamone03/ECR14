@@ -1,0 +1,17 @@
+.linkStyle {
+    text-decoration: none;
+    color: aliceblue;
+    width: 100%;
+    border: none !important;
+}
+
+.linkStyle:hover {
+    background-color: lightblue !important;
+    border: none;
+    transition: all !important;
+    transition-timing-function: ease-in-out !important;
+}
+
+.divButtonStyle {
+    /*background-color: #787878;*/
+}

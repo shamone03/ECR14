@@ -1,18 +1,17 @@
 .linkStyle {
     text-decoration: none !important;
-    color: black !important;
+    color: aliceblue !important;
 }
 
-.App {
-    height: 100vh;
-    background-image: url("../assets/background.png");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
+/*.App {*/
+/*    height: 100vh;*/
+/*    background-image: url("../assets/background.png");*/
+/*    background-position: center;*/
+/*    background-repeat: no-repeat;*/
+/*    background-size: cover;*/
+/*}*/
 
 .headingStyle {
-    font-family: 'Bad Script', cursive;
     color: aliceblue !important;
 }
 
