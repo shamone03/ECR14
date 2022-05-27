@@ -15,93 +15,24 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 const dbConn = require('./server/connection/connection')
 const path = require("path")
-const {tokenModel, nomineeModel, surveyModel} = require("./server/model/model");
+const {nomineeModel, surveyModel} = require("./server/model/model");
+const {register, verifyEmail, login} = require("./server/controllers/user");
 
 dbConn()
-app.use(express.static(path.join(__dirname, 'client', 'build')))
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+// app.use(express.static(path.join(__dirname, 'client', 'build')))
+// app.get('/', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+// })
+
+app.listen(process.env.PORT, (req, res) => {
+    console.log(`server on ${process.env.PORT}`)
 })
 
-app.listen(8080, (req, res) => {
-    console.log('server on 8080')
-})
+app.post('/api/register', register)
 
-app.post('/api/register', async (req, res) => {
+app.get('/api/:id/verify/:token', verifyEmail)
 
-    if (!req.body) {
-        res.status(400).send({message: 'no body'})
-    }
-    console.log(req.body)
-    let newUser = model.userModel({
-        houseNo: req.body.houseNo,
-        email: req.body.email,
-        password: await bcrypt.hash(req.body.password, 10),
-        names: req.body.names
-    })
-
-    try {
-        newUser = await newUser.save()
-        const token = await new model.tokenModel({
-            userId: newUser._id,
-            token: crypto.randomBytes(32).toString("hex")
-        }).save()
-
-        const url = `${process.env.CLIENT_URL}/verify/${newUser._id}/verify/${token.token}`
-        await sendEmail(newUser.email, 'verify email', url)
-
-        res.status(200).send({message: 'user saved'})
-        
-    } catch (e) {
-        console.log(e)
-        res.status(500).send({message: 'not saved', e})
-    }
-})
-
-app.get('/api/:id/verify/:token', async (req, res) => {
-    try {
-        const user = await model.userModel.findOne({_id: req.params.id})
-        if (!user) {
-            res.status(400).send({message: 'no user found'})
-        }
-        const token = await model.tokenModel.findOne({userId: user._id, token: req.params.token})
-        if (!token) {
-            res.status(400).send({message: 'verification failed'})
-
-        }
-
-        await model.userModel.updateOne({_id: user._id}, {verified: true})
-        await token.remove()
-        res.status(200).send({message: 'email verified'})
-    } catch (e) {
-        res.status(500).send({message: 'verification failed'})
-    }
-})
-
-app.post('/api/login', async (req, res) => {
-
-    if (!req.body) {
-        res.status(500).send({message: 'no body'})
-    }
-
-    const user = await model.userModel.findOne({houseNo: req.body.houseNo})
-    console.log(user)
-    if (!user) {
-        console.log('no user')
-        res.status(404).send({message: 'no user found'})
-    } else {
-        if (await bcrypt.compare(req.body.password, user.password)) {
-            console.log('password correct')
-            const token = jwt.sign({houseNo: user.houseNo, _id: user._id, isAdmin: user.isAdmin, verified: user.verified}, process.env.JWT_SECRET, { expiresIn: '86400s'})
-            // console.log(res.header)
-            console.log('token ' + token)
-            res.status(200).send({message: 'success', token: token})
-        } else {
-            console.log('password incorrect')
-            res.status(401).send({message: 'password incorrect'})
-        }
-    }
-})
+app.post('/api/login', login)
 
 const verifyToken = (req, res, next) => {
     const token = req.headers['authorization']
@@ -134,7 +65,7 @@ app.get('/api/verifyEmail', verifyToken, async (req, res) => {
                         token: crypto.randomBytes(32).toString("hex")
                     }).save()
 
-                    const url = `${process.env.BASE_URL}/verify/${user._id}/verify/${token.token}`
+                    const url = `${process.env.CLIENT_URL}/verify/${user._id}/verify/${token.token}`
                     await sendEmail(user.email, 'verify email', url)
                 }
                 return res.status(400).send({message: 'email already sent'})

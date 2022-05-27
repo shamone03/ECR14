@@ -1,6 +1,6 @@
 import {useState} from "react";
 import React from 'react';
-import {Button, Form} from "react-bootstrap";
+import {Button, Form, Spinner} from "react-bootstrap";
 import {Navigate} from "react-router-dom";
 import styles from '../css/Login.module.css'
 import {url} from "../assets/js/url";
@@ -9,9 +9,11 @@ const Login = () => {
     const [houseNo, setHouseNo] = useState('')
     const [password, setPassword] = useState('')
     const [loggedIn, setLoggedIn] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const loginUser = async (e) => {
         e.preventDefault()
+        setLoading(true)
         const res = await fetch(`${url}/api/login`, {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
@@ -23,8 +25,10 @@ const Login = () => {
         if (res.status === 200) {
             const data = await res.json()
             localStorage.setItem('token', data.token)
+            setLoading(false)
             setLoggedIn(true)
         } else {
+            setLoading(false)
             alert('invalid houseNo or password')
         }
     }
@@ -51,7 +55,14 @@ const Login = () => {
                         <Form.Label>Password</Form.Label>
                         <Form.Control className={styles.inputStyle} type="password" placeholder="Password" onChange={e => setPassword(e.target.value)}/>
                     </Form.Group>
-                    <Button variant={"outline-light"} onClick={loginUser} className={'mb-5'}>Login</Button>
+                    {loading ? (
+                            <>
+                                <Button className={'mt-5'} variant="outline-light" disabled>
+                                    <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true"/>
+                                    Loading...
+                                </Button>
+                            </>) :
+                        (<Button variant={'outline-light'} className={'mt-5'} onClick={loginUser}>Login</Button>)}
                 </Form>
             </div>
         </div>
