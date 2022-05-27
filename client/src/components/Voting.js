@@ -8,7 +8,7 @@ const Voting = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await fetch(`http://${url}/api/getNominees`, {
+            const res = await fetch(`${url}/api/getNominees`, {
                 method: 'GET',
                 headers: {
                     "Authorization": localStorage.getItem('token'),

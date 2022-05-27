@@ -136,7 +136,7 @@ const Register = () => {
         if (!validate()) {
             return
         }
-        const res = await fetch(`http://${url}/api/register`, {
+        const res = await fetch(`${url}/api/register`, {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({

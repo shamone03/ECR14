@@ -18,10 +18,10 @@ const path = require("path")
 const {tokenModel, nomineeModel, surveyModel} = require("./server/model/model");
 
 dbConn()
-// app.use(express.static(path.join(__dirname, 'client', 'build')))
-// app.get('/', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
-// })
+app.use(express.static(path.join(__dirname, 'client', 'build')))
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+})
 
 app.listen(8080, (req, res) => {
     console.log('server on 8080')
@@ -47,7 +47,7 @@ app.post('/api/register', async (req, res) => {
             token: crypto.randomBytes(32).toString("hex")
         }).save()
 
-        const url = `${process.env.BASE_URL}/verify/${newUser._id}/verify/${token.token}`
+        const url = `${process.env.CLIENT_URL}/verify/${newUser._id}/verify/${token.token}`
         await sendEmail(newUser.email, 'verify email', url)
 
         res.status(200).send({message: 'user saved'})

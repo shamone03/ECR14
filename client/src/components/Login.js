@@ -12,7 +12,7 @@ const Login = () => {
 
     const loginUser = async (e) => {
         e.preventDefault()
-        const res = await fetch(`http://${url}/api/login`, {
+        const res = await fetch(`${url}/api/login`, {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({

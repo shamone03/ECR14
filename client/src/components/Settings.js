@@ -14,7 +14,7 @@ const Settings = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await fetch(`http://${url}/api/getUser`, {
+            const res = await fetch(`${url}/api/getUser`, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
