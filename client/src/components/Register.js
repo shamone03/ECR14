@@ -149,7 +149,6 @@ const Register = () => {
             })
         })
         if (res.status === 200) {
-            const data = await res.json()
             setLoading(false)
             alert('Click the link on the email sent to your account to finish signing up')
         }

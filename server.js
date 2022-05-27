@@ -1,6 +1,5 @@
 const express = require('express')
 const morgan = require('morgan')
-const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const model = require('./server/model/model')
 const sendEmail = require('./server/utils/sendEmail')
@@ -14,17 +13,17 @@ app.use(morgan('tiny'))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 const dbConn = require('./server/connection/connection')
-const path = require("path")
 const {nomineeModel, surveyModel} = require("./server/model/model");
 const {register, verifyEmail, login} = require("./server/controllers/user");
 
 dbConn()
+// const path = require("path")
 // app.use(express.static(path.join(__dirname, 'client', 'build')))
 // app.get('/', (req, res) => {
 //     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
 // })
 
-app.listen(process.env.PORT, (req, res) => {
+app.listen(process.env.PORT, () => {
     console.log(`server on ${process.env.PORT}`)
 })
 
@@ -168,6 +167,8 @@ app.post('/api/vote', verifyToken, async (req, res) => {
         // const nominee = await nomineeModel.findOne({_id: nomineeId}).populate('poll').exec()
 
         console.log(nomineeIds)
+
+        if (nomineeIds.length)
 
         for (let nominee of nomineeIds) {
             console.log(await nomineeModel.findOne({_id: nominee.rep}).populate('poll').exec())

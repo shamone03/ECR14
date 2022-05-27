@@ -3,13 +3,39 @@
     color: aliceblue !important;
 }
 
-/*.App {*/
-/*    height: 100vh;*/
-/*    background-image: url("../assets/background.png");*/
-/*    background-position: center;*/
-/*    background-repeat: no-repeat;*/
-/*    background-size: cover;*/
-/*}*/
+.dropDown {
+    background-color: transparent !important;
+    border-color: transparent !important;
+}
+
+.buttonStyle {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: aliceblue !important;
+}
+
+.buttonStyle:hover {
+    color: gray !important;
+    transition: all !important;
+    transition-timing-function: ease-in-out !important;
+}
+
+.buttonStyle:focus {
+    box-shadow: none !important;
+}
+
+.backgroundImg {
+    height: 100vh;
+    min-width: 100vw;
+    background-image: url("../assets/hero-bg.jpg");
+    /*background-position: center;*/
+    /*background-repeat: no-repeat;*/
+    background-attachment: fixed;
+    background-position: 50% 0;
+    /*background-blend-mode: darken;*/
+    /*backdrop-filter: grayscale(50%);*/
+    /*background-color: rgba(255, 255, 255, 0.5);*/
+}
 
 .headingStyle {
     color: aliceblue !important;
@@ -25,7 +51,7 @@
 
 
 body {
-    background-color: #0d1117 !important;
+    background-color: #181a1b !important;
     color: aliceblue !important;
 }
 
@@ -33,4 +59,8 @@ body {
     color: gray !important;
     transition: all !important;
     transition-timing-function: ease-in-out !important;
+}
+
+.navBar {
+    background-color: #161b22;
 }

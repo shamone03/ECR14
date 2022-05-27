@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import React from 'react';
 import {Button, Form, Spinner} from "react-bootstrap";
 import {Navigate} from "react-router-dom";
@@ -10,6 +10,12 @@ const Login = () => {
     const [password, setPassword] = useState('')
     const [loggedIn, setLoggedIn] = useState(false)
     const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        if (localStorage.hasOwnProperty('token')) {
+            setLoggedIn(true)
+        }
+    })
 
     const loginUser = async (e) => {
         e.preventDefault()
