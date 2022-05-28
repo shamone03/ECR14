@@ -173,7 +173,7 @@ const Register = () => {
         } else {
             setAgeStyle({})
         }
-        if (!validateName(name)) {
+        if (validateName(name)) {
             setNameStyle({border: 'solid 3px red'})
             return false
         } else {
