@@ -15,3 +15,18 @@
 .divButtonStyle {
     background-color: #787878;
 }
+
+.closeButtonStyle {
+    border: none !important;
+    background-color: transparent !important;
+}
+
+.closeButtonStyle:hover {
+    background-color: transparent !important;
+    border: none !important;
+    color: gray !important;
+}
+
+.closeButtonStyle:focus {
+    box-shadow: none !important;
+}

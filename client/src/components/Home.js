@@ -5,6 +5,7 @@ import {Button, Offcanvas} from "react-bootstrap";
 import styles from '../css/Home.module.css'
 import RedirectLogin from "./RedirectLogin";
 import {url} from "../assets/js/url";
+import {AiOutlineClose} from "react-icons/all";
 
 
 const Home = () => {
@@ -52,9 +53,9 @@ const Home = () => {
 
                 <Button variant={'light'} onClick={() => setShowMenu(true)}>Menu</Button>
                 <Offcanvas show={showMenu} onHide={() => setShowMenu(false)} style={{backgroundColor: '#161b22'}}>
-                    <Offcanvas.Header className={'d-flex justify-content-between'}>
+                    <Offcanvas.Header className={'d-flex justify-content-between'} closeVariant={'white'}>
                         <Offcanvas.Title>Menu</Offcanvas.Title>
-                        <Button variant={'outline-light'} onClick={() => setShowMenu(false)}>❌</Button>
+                        <Button variant={`outline-light ${styles.closeButtonStyle}`} onClick={() => setShowMenu(false)}><AiOutlineClose size={25}/></Button>
                     </Offcanvas.Header>
                     <Offcanvas.Body className={'d-flex flex-column align-content-stretch'}>
                         <div>

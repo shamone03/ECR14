@@ -12,8 +12,20 @@ const Login = () => {
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        if (localStorage.hasOwnProperty('token')) {
-            setLoggedIn(true)
+        const fetchData = async () => {
+            const res = await fetch(`${url}/api/getUser`, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": localStorage.getItem('token')
+                }
+            })
+            if (res.status === 401) {
+                setLoggedIn(false)
+            }
+            if (res.status === 200) {
+                setLoggedIn(true)
+            }
         }
     })
 

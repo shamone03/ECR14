@@ -7,6 +7,10 @@
 
 }
 
+.selectStyle {
+    width: 100% !important;
+}
+
 .formWrapper {
     width: 50%;
 

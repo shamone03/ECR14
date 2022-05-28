@@ -1,6 +1,72 @@
 .linkStyle {
     text-decoration: none !important;
     color: aliceblue !important;
+    transition: all !important;
+    transition-timing-function: ease-in-out !important;
+}
+
+.linkStyle:hover {
+    color: gray !important;
+}
+
+.footer {
+    border-top: solid 1px gray;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.aboutTitle {
+    padding-bottom: 30px;
+    text-align: center;
+}
+
+.about {
+    padding-top: 80px;
+    padding-bottom: 80px;
+}
+
+.title {
+    margin-top: 100px;
+}
+
+.containerStyle {
+    margin-top: 200px;
+}
+
+.cardStyle {
+    margin-bottom: 2%;
+}
+
+.description {
+    color: lightblue;
+}
+
+.innerCard {
+    background-color: #161b22;
+    padding: 50px 30px;
+    transition: all 0.3s ease-in-out;
+    border-radius: 8px;
+    height: 100%;
+}
+
+.innerCard:hover {
+    transform: scale(1.08);
+
+}
+
+.closeButtonStyle, .menuButtonStyle {
+    border: none !important;
+    background-color: transparent !important;
+}
+
+.closeButtonStyle:hover, .menuButtonStyle:hover {
+    background-color: transparent !important;
+    border: none !important;
+    color: gray !important;
+}
+
+.closeButtonStyle:focus, .menuButtonStyle:focus {
+    box-shadow: none !important;
 }
 
 .dropDown {
@@ -25,8 +91,7 @@
 }
 
 .backgroundImg {
-    height: 100vh;
-    min-width: 100vw;
+
     background-image: url("../assets/hero-bg.jpg");
     /*background-position: center;*/
     /*background-repeat: no-repeat;*/
@@ -55,12 +120,19 @@ body {
     color: aliceblue !important;
 }
 
-.linkStyle:hover {
-    color: gray !important;
-    transition: all !important;
-    transition-timing-function: ease-in-out !important;
-}
+
 
 .navBar {
     background-color: #161b22;
+}
+
+@media only screen and (max-width: 600px) {
+    .containerStyle {
+        margin-top: 50px;
+    }
+
+    .innerCard {
+        width: 80%;
+        margin: auto;
+    }
 }
