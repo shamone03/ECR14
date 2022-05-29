@@ -174,8 +174,8 @@ function App() {
                                     Kanchipuram
                                     <br/>
                                     <br/>
-                                    <strong>Phone:</strong> +91 9600026021<br/>
-                                    <strong>Email:</strong> ecr14.ecr14@gmail.com<br/>
+                                    <strong>Phone:</strong> +91 99999999<br/>
+                                    <strong>Email:</strong> ecr14.org@gmail.com<br/>
                                 </p>
                             </div>
                         </div>
