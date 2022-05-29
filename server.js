@@ -83,7 +83,7 @@ app.get('/api/verifyEmail', verifyToken, async (req, res) => {
             res.status(500).send({error: e})
         }
     } catch (e) {
-        res.status(401).send({message: 'token invalid'})
+        res.status(401).send({message: 'jwt token invalid'})
     }
 
 })

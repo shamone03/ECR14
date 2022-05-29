@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {Button, Spinner} from "react-bootstrap";
 import RedirectLogin from "./RedirectLogin";
 import {url} from "../assets/js/url";
+import {Link} from "react-router-dom";
 
 
 const Settings = () => {
@@ -96,6 +97,7 @@ const Settings = () => {
         <>
             <RedirectLogin loggedIn={loggedIn}/>
             <div className={'w-50 mx-auto d-flex align-items-center justify-content-center flex-column'}>
+                <Link to={'/home'} className={'btn btn-outline-light mt-2'}>Home</Link>
                 <Button variant={'dark'} className={'mt-5 mx-auto'} onClick={() => setShowNames(!showNames)}>Show residents</Button>
                 <Names/>
                 <p className={'mt-5'}>
