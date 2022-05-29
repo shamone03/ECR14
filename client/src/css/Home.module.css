@@ -1,6 +1,7 @@
 .linkStyle {
+    background-color: #787878 !important;
     text-decoration: none;
-    color: aliceblue;
+    color: aliceblue !important;
     width: 100%;
     border: none !important;
 }

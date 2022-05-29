@@ -11,6 +11,9 @@ const Settings = () => {
     const [showNames, setShowNames] = useState(false)
     const [loggedIn, setLoggedIn] = useState(true)
     const [showMenu, setShowMenu] = useState(false)
+    const [residentType, setResidentType] = useState('')
+    const [number, setNumber] = useState('')
+    const [email, setEmail] = useState('')
 
     useEffect(() => {
         const fetchData = async () => {
@@ -31,7 +34,9 @@ const Settings = () => {
                 setLoggedIn(true)
                 setHouseNo(data.houseNo)
                 setNames(data.names)
-
+                setResidentType(data.residentType)
+                setNumber(data.number)
+                setEmail(data.email)
             }
         }
         fetchData()
@@ -40,7 +45,7 @@ const Settings = () => {
     const Names = () => {
         if (showNames) {
             return (
-                <ul className={'list-group mx-auto mt-2 text-center'}>
+                <ul className={'list-group mx-auto mt-2 text-center w-100'}>
                     {names.map(i => <li className={'text-center list-group-item list-group-item-action list-group-item-dark'} key={i._id}>{i.name}</li>)}
                 </ul>
             )
@@ -55,9 +60,14 @@ const Settings = () => {
     return (
         <>
             <RedirectLogin loggedIn={loggedIn}/>
-            <div className={'w-50 mx-auto'}>
-                <Button variant={'dark'} className={'mx-auto'} onClick={() => setShowNames(!showNames)}>Show residents</Button>
+            <div className={'w-50 mx-auto d-flex align-items-center justify-content-center flex-column'}>
+                <Button variant={'dark'} className={'mt-5 mx-auto'} onClick={() => setShowNames(!showNames)}>Show residents</Button>
                 <Names/>
+                <p className={'mt-5'}>
+                    <strong>Resident Type: </strong>{residentType} <br/><br/>
+                    <strong>Number: </strong>{number} <br/><br/>
+                    <strong>Email: </strong>{email}
+                </p>
             </div>
 
             <div className={'mt-3 text-center'}>
