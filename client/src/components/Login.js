@@ -27,6 +27,7 @@ const Login = () => {
                 setLoggedIn(true)
             }
         }
+        fetchData()
     })
 
     const loginUser = async (e) => {

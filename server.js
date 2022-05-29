@@ -55,24 +55,31 @@ app.get('/api/verifyEmail', verifyToken, async (req, res) => {
     const jwtToken = req.headers['authorization']
 
     try {
-        const houseNo = jwt.verify(jwtToken, 'uagvreigvlaegrvkae').houseNo
+        const houseNo = jwt.verify(jwtToken, process.env.JWT_SECRET).houseNo
         try {
-            const user = await model.userModel.findOne({houseNo: houseNo})
+            const user = await model.userModel.findOne({houseNo: houseNo}, {password: 0})
+            console.log(user)
+            console.log(user.verified)
             if (!user.verified) {
                 let token = await model.tokenModel.findOne({userId: user._id})
-                if (!token) {
-                    token = await new model.tokenModel({
-                        userId: newUser._id,
-                        token: crypto.randomBytes(32).toString("hex")
-                    }).save()
-
-                    const url = `${process.env.CLIENT_URL}/verify/${user._id}/verify/${token.token}`
-                    await sendEmail(user.email, 'verify email', url)
+                if (token) {
+                    await token.remove()
                 }
-                return res.status(400).send({message: 'email already sent'})
+
+                token = await new model.tokenModel({
+                    userId: user._id,
+                    token: crypto.randomBytes(32).toString("hex")
+                }).save()
+                const url = `${process.env.CLIENT_URL}/verify/${user._id}/verify/${token.token}`
+                await sendEmail(user.email, 'verify email', url)
+                res.status(200).send({message: 'email sent'})
+
+            } else {
+                return res.status(400).send({message: 'already verified'})
             }
 
         } catch (e) {
+            console.log(e)
             res.status(500).send({error: e})
         }
     } catch (e) {

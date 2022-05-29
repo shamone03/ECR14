@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {Button} from "react-bootstrap";
+import {Button, Spinner} from "react-bootstrap";
 import RedirectLogin from "./RedirectLogin";
 import {url} from "../assets/js/url";
 
@@ -14,6 +14,7 @@ const Settings = () => {
     const [residentType, setResidentType] = useState('')
     const [number, setNumber] = useState('')
     const [email, setEmail] = useState('')
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,6 +43,24 @@ const Settings = () => {
         fetchData()
     }, [])
 
+    const sendEmail = async () => {
+        setLoading(true)
+        const res = await fetch(`${url}/api/verifyEmail`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": localStorage.getItem('token')
+            }
+        })
+        if (res.status === 200) {
+            setLoading(false)
+            alert('Click the link on your email to verify')
+        } else {
+            setLoading(false)
+            alert('Server error try again later')
+        }
+    }
+
     const Names = () => {
         if (showNames) {
             return (
@@ -55,6 +74,22 @@ const Settings = () => {
             )
         }
 
+    }
+
+    const LoadingButton = ({loading, text, onClick}) => {
+        if (loading) {
+            return (
+                <Button className={'mt-5'} variant="outline-light" disabled>
+                    <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true"/>
+                    Loading...
+                </Button>
+            )
+        }
+        if (!loading) {
+            return (
+                <Button onClick={onClick} className={'mt-5'} variant={'outline-light'}>{text}</Button>
+            )
+        }
     }
 
     return (
@@ -71,7 +106,7 @@ const Settings = () => {
             </div>
 
             <div className={'mt-3 text-center'}>
-                {verified ? (<h3>You are verified</h3>) : (<h3>You are not verified</h3>)}
+                {verified ? (<h3>You are verified</h3>) : (<LoadingButton onClick={sendEmail} text={'Resend Verification Email'} loading={loading}/> )}
             </div>
         </>
     )
