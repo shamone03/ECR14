@@ -78,7 +78,13 @@ const Register = () => {
     }
 
     const validateName = (name) => {
+        if (!name) {
+            setName(name)
+            setNameStyle({border: 'solid 3px red'})
+            return false
+        }
         if (name.length < 3) {
+            setName(name)
             setNameStyle({border: 'solid 3px red'})
             return false
         } else {
@@ -173,7 +179,8 @@ const Register = () => {
         } else {
             setAgeStyle({})
         }
-        if (validateName(name)) {
+        if (!validateName(name)) {
+            alert('Name should be at least 3 characters')
             setNameStyle({border: 'solid 3px red'})
             return false
         } else {
@@ -219,7 +226,7 @@ const Register = () => {
 
     const registerUser = async (e) => {
         e.preventDefault()
-        console.log({houseNo, email, password, passwordConfirm, members})
+        console.log({houseNo, email, password, passwordConfirm, members, name, age, residentType, number})
         if (!validate()) {
             return
         }
@@ -234,7 +241,7 @@ const Register = () => {
                 number: number,
                 age: age,
                 residentType: residentType,
-                name: name
+                names: Array.of({name})
             })
         })
         if (res.status === 200) {

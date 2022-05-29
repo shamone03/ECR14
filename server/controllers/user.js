@@ -14,7 +14,7 @@ exports.register = async (req, res) => {
         houseNo: req.body.houseNo,
         email: req.body.email,
         password: await bcrypt.hash(req.body.password, 10),
-        name: req.body.name,
+        names: req.body.names,
         number: req.body.number,
         age: parseInt(req.body.age),
         residentType: req.body.residentType

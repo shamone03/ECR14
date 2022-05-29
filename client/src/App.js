@@ -30,7 +30,7 @@ function App() {
                     <Button variant={`outline-light ${styles.closeButtonStyle}`} onClick={() => setShowMenu(false)}><AiOutlineClose size={25}/></Button>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
-                    <div className={'d-flex flex-column justify-content-between h-100'}>
+                    <div className={'d-flex flex-column h-100'}>
                         <div className={'text-center'}>
                             <Dropdown>
                                 <Dropdown.Toggle className={`btn my-3 ${styles.buttonStyle}`}>
@@ -45,10 +45,6 @@ function App() {
                             </Dropdown>
                             <a className={`${styles.linkStyle} my-3 btn ${styles.buttonStyle}`} href={'mailto:ecr14.ecr14@gmail.com'}>Contact</a>
                         </div>
-                        <div className={'d-flex flex-row justify-content-center align-items-center'}>
-                            <Link to={'/login'} className={`${styles.linkStyle} my-3 btn ${styles.buttonStyle}`}>Login</Link>
-                            <Link to={'/register'} className={'my-3 mx-3 btn btn-outline-light'}>Register</Link>
-                        </div>
                     </div>
                 </Offcanvas.Body>
             </Offcanvas>
@@ -61,7 +57,18 @@ function App() {
                 <h2 className={'mx-3 my-3'} style={{color: 'lightblue'}}>ECR14</h2>
                 <div className={`d-flex flex-row justify-content-end align-items-center`}>
                     {showMenu ? (<MobileMenu/>) : (<></>)}
-                    {isTabletOrMobile ? (<Button onClick={() => setShowMenu(true)} className={styles.menuButtonStyle}><AiOutlineMenu size={25}/></Button>) : (
+                    {isTabletOrMobile ? (
+                        <>
+                            <div className={'d-flex justify-content-end'}>
+                                <div className={'d-flex flex-row justify-content-center align-items-center'}>
+                                    <Link to={'/login'} className={`${styles.linkStyle} my-3 btn ${styles.buttonStyle}`}>Login</Link>
+                                    <Link to={'/register'} className={'my-3 mx-3 btn btn-outline-light'}>Register</Link>
+                                </div>
+                            <Button onClick={() => setShowMenu(true)} className={styles.menuButtonStyle}><AiOutlineMenu size={25}/></Button>
+                            </div>
+                        </>
+
+                    ) : (
                         <>
                             <Dropdown>
                                 <Dropdown.Toggle className={`btn my-3 ${styles.buttonStyle}`}>
