@@ -97,7 +97,7 @@ function App() {
                 <div className={`text-center ${styles.title}`}>
                     <h1 style={{fontSize: '56px', fontWeight: '600', color: 'black'}}>Site is under construction!</h1>
                     <h1 style={{color: 'lightblue'}}>ECR 14</h1>
-                    <Button>Start your journal</Button>
+                    <Button href={'#about'}>Start your journal</Button>
                 </div>
                 <div className={`container ${styles.containerStyle}`}>
                     <div className={'row'}>
@@ -135,7 +135,7 @@ function App() {
                     </div>
                 </div>
             </div>
-            <div className={`${styles.about}`}>
+            <div className={`${styles.about}`} id={'about'}>
                 <div className={`container`}>
                     <div className={`${styles.aboutTitle}`}>
                         <h1 style={{color: 'lightblue'}}>ECR14</h1>
@@ -143,19 +143,19 @@ function App() {
                     </div>
                     <div className={'container'}>
                         <div className={'row'}>
-                            <div className={'col-lg-6'}>
+                            {/*<div className={'col-lg-6'}>*/}
+                            {/*    <p>*/}
+                            {/*        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.*/}
+                            {/*    </p>*/}
+                            {/*    <ul className={'list-unstyled'}>*/}
+                            {/*        <li><MdArrowRight/> Ullamco laboris nisi ut aliquip ex ea commodo consequat</li>*/}
+                            {/*        <li><MdArrowRight/> Ullamco laboris nisi ut aliquip ex ea commodo consequat</li>*/}
+                            {/*        <li><MdArrowRight/> Ullamco laboris nisi ut aliquip ex ea commodo consequat</li>*/}
+                            {/*    </ul>*/}
+                            {/*</div>*/}
+                            <div className={'col-lg-12 pt-4 pt-lg-0'}>
                                 <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                </p>
-                                <ul className={'list-unstyled'}>
-                                    <li><MdArrowRight/> Ullamco laboris nisi ut aliquip ex ea commodo consequat</li>
-                                    <li><MdArrowRight/> Ullamco laboris nisi ut aliquip ex ea commodo consequat</li>
-                                    <li><MdArrowRight/> Ullamco laboris nisi ut aliquip ex ea commodo consequat</li>
-                                </ul>
-                            </div>
-                            <div className={'col-lg-6 pt-4 pt-lg-0'}>
-                                <p>
-                                    Ullamco laboris nisi ut aliquip ex ea commodo consequat. Ullamco laboris nisi ut aliquip ex ea commodo consequat. Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                    Ever afters amidst of Beaufort scale of wind, ECR 14 is progressing towards all ever afters. Best of residential amenities, family neighbours and it’s happening place always for 577 families. Younger ones can enrich themselves through play, digital games, gym, swimming, board games, and a library to be part of ‘What a Wonderful world’. The best of the intellectuals from the community guides every way of living through all seasons/celebrations. Wiser ones with age can find exceptional quality of life around them. It is always admirable about the spirit of the community leads a life together. We are happy to welcome you to ECR 14, Start your Journal here!
                                 </p>
                             </div>
                         </div>

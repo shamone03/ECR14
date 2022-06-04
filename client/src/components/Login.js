@@ -28,7 +28,7 @@ const Login = () => {
             }
         }
         fetchData()
-    })
+    },[])
 
     const loginUser = async (e) => {
         e.preventDefault()
@@ -66,7 +66,7 @@ const Login = () => {
             <h1 className={'text-center'}>Login</h1>
             <div className={`${styles.formWrapper} mx-auto`}>
                 <Form className={`${styles.formStyle} mx-auto d-flex flex-column justify-content-between align-items-center`}>
-                    <Form.Group className={"mb-3 mt-5"} >
+                    <Form.Group className={"mb-3 mt-5"}>
                         <Form.Label>Enter Apartment Number</Form.Label>
                         <Form.Control className={styles.inputStyle} type={"text"} placeholder={"example: J606"} onChange={e => setHouseNo(e.target.value)}/>
                     </Form.Group>

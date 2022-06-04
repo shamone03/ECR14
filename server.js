@@ -15,8 +15,8 @@ app.use(morgan('tiny'))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 const dbConn = require('./server/connection/connection')
-const {nomineeModel, surveyModel} = require("./server/model/model");
-const {register, verifyEmail, login} = require("./server/controllers/user");
+const {nomineeModel, surveyModel, pollModel} = require("./server/model/model");
+const {register, verifyEmail, login, registered, resetPassword, verifyReset} = require("./server/controllers/user");
 
 dbConn()
 // const path = require("path")
@@ -32,6 +32,12 @@ app.listen(process.env.PORT, () => {
 app.post('/api/register', register)
 
 app.get('/api/:id/verify/:token', verifyEmail)
+
+app.post('/api/resetPassword', resetPassword)
+
+app.post('/api/:id/reset/:token', verifyReset)
+
+app.get('/api/registered', registered)
 
 app.post('/api/login', login)
 
@@ -123,6 +129,7 @@ app.post('/api/addPoll', verifyToken, async (req, res) => {
         createdBy: _id,
         position: req.body.position,
         forBlock: req.body.forBlock,
+        representatives: req.body.representatives
     })
 
     try {
@@ -132,6 +139,36 @@ app.post('/api/addPoll', verifyToken, async (req, res) => {
         console.log(e)
         res.status(500).send(e)
     }
+})
+
+app.get('/api/getPolls', verifyToken, async (req, res) => {
+    const _id = jwt.decode(req.headers['authorization'])._id
+    const isAdmin = jwt.decode(req.headers['authorization']).isAdmin
+    const block = jwt.decode(req.headers['authorization']).houseNo.charAt(0).toUpperCase()
+    const polls = await pollModel.find()
+    try {
+        if (isAdmin) {
+            const userPolls = []
+            for (let poll of polls) {
+                if (poll.forBlock === block) {
+                    userPolls.push(poll)
+                }
+            }
+            return res.status(200).send({polls, userPolls})
+        } else {
+            const userPolls = []
+            for (let poll of polls) {
+                if (poll.forBlock === block) {
+                    userPolls.push(poll)
+                }
+            }
+            return res.status(200).send({userPolls})
+        }
+    } catch (e) {
+        // console.log(e)
+        res.status(500).send({e})
+    }
+
 })
 
 app.post('/api/addNominee', verifyToken, async (req, res) => {
@@ -155,12 +192,12 @@ app.get('/api/getNominees', verifyToken, async (req, res) => {
     const isAdmin = jwt.decode(req.headers['authorization']).isAdmin
     try {
         const nominees = await model.nomineeModel.find().populate('poll')
+        const userNominees = nominees.filter((n) => n.poll.forBlock === block)
         if (isAdmin) {
             // console.log(nominees)
-            res.status(200).send({nominees})
+            res.status(200).send({userNominees, nominees})
         } else {
-            const userNominees = nominees.filter((n) => n.poll.forBlock === block)
-            console.log(userNominees)
+            // console.log(userNominees)
             res.status(200).send({userNominees})
         }
     } catch (e) {
@@ -169,19 +206,23 @@ app.get('/api/getNominees', verifyToken, async (req, res) => {
 })
 
 app.post('/api/vote', verifyToken, async (req, res) => {
+    const houseNo = jwt.decode(req.headers['authorization']).houseNo
     const nomineeIds = req.body.nomineeIds
-
+    console.log(req.body)
     try {
 
-        // const nominee = await nomineeModel.findOne({_id: nomineeId}).populate('poll').exec()
+        const nominee = await nomineeModel.findOne({_id: nomineeIds[0]}).populate('poll').exec()
 
-        console.log(nomineeIds)
+        // console.log(nomineeIds)
 
-        if (nomineeIds.length)
+        if (nomineeIds.length !== nominee.poll.representatives) {
+            res.status(400).send({message: `sent reps ${nomineeIds.length} and required reps ${nominee.poll.representatives} do not match`})
+            return
+        }
 
         for (let nominee of nomineeIds) {
-            console.log(await nomineeModel.findOne({_id: nominee.rep}).populate('poll').exec())
-            await nomineeModel.updateOne({_id: nominee.rep},{ $addToSet: {voters: req.body.houseNo}})
+            await nomineeModel.updateOne({_id: nominee},{ $addToSet: {voters: houseNo}})
+            console.log(await nomineeModel.findOne({_id: nominee}).populate('poll').exec())
         }
 
         await model.nomineeModel.aggregate([

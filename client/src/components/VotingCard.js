@@ -1,11 +1,15 @@
 import {Button, Card} from "react-bootstrap";
 import image from "../assets/placeholder.png";
-import React from "react";
+import React, {useState} from "react";
 
-const VotingCard = ({name, _id, votes, incrementVote, description}) => {
-    const sendVote = () => {
-        // console.log(name)
-        incrementVote(name)
+const VotingCard = ({name, _id, votes, sendVote, reps, description}) => {
+
+    const [chosenReps, setChosenReps] = useState([])
+
+    const addRep = (_id) => {
+        if (chosenReps.includes(_id)) {
+
+        }
     }
 
     const cardStyle = {
@@ -21,7 +25,7 @@ const VotingCard = ({name, _id, votes, incrementVote, description}) => {
                 <Card.Title>{name}</Card.Title>
                 <Card.Subtitle>{description}</Card.Subtitle>
             </Card.Body>
-            <Button className={'mb-3 mx-auto'} style={{width:'80%'}} onClick={sendVote}>Vote</Button>
+            <Button className={'mb-3 mx-auto'} style={{width:'80%'}} onClick={() => sendVote(_id)}>Vote</Button>
             <Card.Footer>{votes}</Card.Footer>
         </Card>
     )

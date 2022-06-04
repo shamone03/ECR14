@@ -1,13 +1,36 @@
 import React, {useEffect, useState} from 'react'
 import VotingCard from "./VotingCard";
 import {url} from "../assets/js/url";
+import {Button, Modal, Offcanvas, Spinner} from "react-bootstrap";
+import styles from "../css/Voting.module.css";
+import {AiOutlineClose} from "react-icons/all";
 
 
 const Voting = () => {
     const [nominees, setNominees] = useState([])
+    const [polls, setPolls] = useState([])
+    const [chosenPoll, setChosenPoll] = useState('')
+    const [chosenNoms, setChosenNoms] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [showModal, setShowModal] = useState(false)
+    const [fullScreen, setFullScreen] = useState(true)
+    const [chosenReps, setChosenReps] = useState([])
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchPolls = async () => {
+            const res = await fetch(`${url}/api/getPolls`, {
+                method: 'GET',
+                headers: {
+                    "Authorization": localStorage.getItem('token'),
+                    "Content-Type": "application/json"
+                }
+            })
+            if (res.status === 200) {
+                const data = await res.json()
+                setPolls([...data.userPolls])
+            }
+        }
+        const fetchNominees = async () => {
             const res = await fetch(`${url}/api/getNominees`, {
                 method: 'GET',
                 headers: {
@@ -17,25 +40,100 @@ const Voting = () => {
             })
             if (res.status === 200) {
                 const data = await res.json()
-                console.log(data)
-                setNominees(data.userNominees)
+                setNominees([...data.userNominees])
             }
         }
-        fetchData()
-        console.log(nominees)
+        setLoading(true)
+        fetchPolls()
+        fetchNominees()
+        setLoading(false)
+        // console.log(polls)
+        // console.log(nominees)
     }, [])
 
-    const nominate = async () => {
+    useEffect(() => {
+        // console.log(chosenPoll)
+        // console.log(polls)
+        // console.log(nominees)
+    }, [chosenPoll, polls, nominees])
 
+    const sendVote = async () => {
+        const res = await fetch(`${url}/api/vote`, {
+            method: 'POST',
+            headers: {
+                "Authorization": localStorage.getItem('token'),
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                nomineeIds: chosenNoms
+            })
+        })
     }
+
+
+    const handleShow = (poll) => {
+        setChosenPoll(poll)
+        clearChosenNoms()
+        setShowModal(true)
+    }
+
+
+    const addNom = (i) => {
+        setChosenNoms([...chosenNoms, i._id])
+    }
+
+    const clearChosenNoms = () => {
+        setChosenNoms([])
+    }
+
+    const Nominees = ({chosenPoll}) => {
+        let nomineesCopy = nominees
+        nomineesCopy = nomineesCopy.filter((i) => i.poll._id === chosenPoll._id)
+        return (
+            nomineesCopy.map(i => (<li onClick={() => addNom(i)} className={'text-center list-group-item list-group-item-action list-group-item-dark'} key={i._id}>{i.name}</li>))
+        )
+    }
+
 
     return (
         <>
-            <h1 className={'text-center'}>Vote</h1>
-            <div className={'d-flex flex-row'}>
+            <div>
 
-                {nominees.map(i => (<VotingCard key={i._id} name={i.name} _id={i._id} votes={i.votes} description={i.description}/>))}
+                <h1 className={'text-center'}>Vote</h1>
+                <div className={'container'}>
+                    <h1 className={'text-center'}>Choose position to vote for</h1>
+                    <div className={'row align-items-center'}>
+
+                        <ul className={'list-group mt-2 text-center w-100'}>
+                            {polls.map(i => (<li onClick={() => handleShow(i)} className={'text-center list-group-item list-group-item-action list-group-item-dark'} key={i._id}>{i.position}</li>))}
+                        </ul>
+
+                    </div>
+
+                    {/*{nominees.map(i => (<VotingCard key={i._id} name={i.name} _id={i._id} votes={i.votes} description={i.description} reps={i.poll.representatives} sendVote={sendVote}/>))}*/}
+                </div>
             </div>
+            <Modal show={showModal} fullscreen={fullScreen} onHide={() => setShowModal(false)} contentClassName={styles.votingModal}>
+                <Modal.Header className={'d-flex justify-content-between'} closeVariant={'white'} style={{border: 'none'}}>
+                    <Modal.Title>Voting for {chosenPoll.position}</Modal.Title>
+                    <Button variant={`outline-light ${styles.closeButtonStyle}`} onClick={() => setShowModal(false)}><AiOutlineClose size={25}/></Button>
+                </Modal.Header>
+                <Modal.Body>
+                    <Button variant={'outline-light'} onClick={sendVote}>Submit vote</Button>
+                    <div className={'container'}>
+                        <h1 className={'text-center'}>Nominees</h1>
+
+                        <h2 className={'text-center'}>Choose {chosenPoll.representatives} representatives</h2>
+                        <div className={'row align-items-center'}>
+                            <ul className={'list-group mt-2 text-center w-100'}>
+                                <Nominees chosenPoll={chosenPoll}/>
+                            </ul>
+                        </div>
+
+                        {/*{nominees.map(i => (<VotingCard key={i._id} name={i.name} _id={i._id} votes={i.votes} description={i.description} reps={i.poll.representatives} sendVote={sendVote}/>))}*/}
+                    </div>
+                </Modal.Body>
+            </Modal>
         </>
     )
 }

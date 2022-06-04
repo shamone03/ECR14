@@ -37,6 +37,10 @@ handlers:
     secure: always
     static_files: client/build/index.html
     upload: client/build/index.html
+  - url: /settings
+    secure: always
+    static_files: client/build/index.html
+    upload: client/build/index.html
   - url: /verify/(.*)/verify/(.*)
     static_files: client/build/index.html
     upload: client/build/index.html

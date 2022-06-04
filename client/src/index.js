@@ -17,8 +17,11 @@ import Admin from "./components/Admin";
 import Construction from "./components/Construction";
 import Voting from "./components/Voting";
 import Settings from "./components/Settings";
+import Register2 from "./components/Register2";
+import ResetPassword from "./components/ResetPassword";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render (
     <BrowserRouter>
 
@@ -33,6 +36,7 @@ root.render (
             <Route path={'/vote/vote-now'} element={<Voting/>}/>
             <Route path={'/survey'} element={<Survey/>}/>
             <Route path={'/verify/:id/verify/:token'} element={<VerifyEmailLink/>}/>
+            <Route path={'/reset/:id/reset/:token'} element={<ResetPassword/>}/>
             <Route path={'/construction'} element={<Construction/>}/>
         </Routes>
 

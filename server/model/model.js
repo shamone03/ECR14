@@ -5,12 +5,12 @@ const userSchema = new mongoose.Schema({
     houseNo: {type: String, required: true, unique: true},
     email: { type: String, required: true, unique: true},
     password: {type: String, required: true},
-    names: [{name:{type: String}}],
+    names: [{name:{type: String}, age:{type:Number}}],
     verified: {type: Boolean, default: false},
     isAdmin: {type: Boolean, default: false},
     number: {type: String},
     residentType: {type: String},
-    age: {type: Number}
+    registeredArtificially: {type: Boolean, default: false}
 }, { collection: 'residents'})
 
 const tokenSchema = new mongoose.Schema({

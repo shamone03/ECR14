@@ -92,9 +92,10 @@
 
 .backgroundImg {
 
-    background-image: url("../assets/hero-bg.jpg");
+    background-image: url("../assets/WhatsApp Image 2022-05-30 at 9.22.01 PM.jpeg");
     /*background-position: center;*/
-    /*background-repeat: no-repeat;*/
+    background-size: cover;
+    background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: 50% 0;
     /*background-blend-mode: darken;*/
