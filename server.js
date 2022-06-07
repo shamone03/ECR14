@@ -8,7 +8,6 @@ const cors = require('cors')
 const app = express()
 const nocache = require('nocache')
 require('dotenv').config()
-
 app.use(cors({origin: '*'}))
 app.use(nocache())
 app.use(morgan('tiny'))
@@ -44,16 +43,28 @@ app.post('/api/login', login)
 const verifyToken = (req, res, next) => {
     const token = req.headers['authorization']
     if (!token) {
+        console.log('no token')
         return res.status(401).send({message: 'no token found'})
     }
     try {
         // console.log(token)
         jwt.verify(token, process.env.JWT_SECRET)
     } catch (e) {
-        console.log('error' + e)
+        console.log('error ' + e)
         return res.status(401).send({message: 'invalid token', e})
     }
     return next()
+}
+
+const checkVerified = (req, res, next) => {
+    const verified = jwt.decode(req.headers['authorization']).verified
+    if (verified) {
+        console.log('verified')
+        return next()
+    } else {
+        console.log('not verified')
+        return res.status(401).send({message: 'not verified'})
+    }
 }
 
 app.get('/api/verifyEmail', verifyToken, async (req, res) => {
@@ -146,22 +157,23 @@ app.get('/api/getPolls', verifyToken, async (req, res) => {
     const isAdmin = jwt.decode(req.headers['authorization']).isAdmin
     const block = jwt.decode(req.headers['authorization']).houseNo.charAt(0).toUpperCase()
     const polls = await pollModel.find()
+    const userPolls = []
+    for (let poll of polls) {
+        if (poll.forBlock === block) {
+            userPolls.push(poll)
+        }
+    }
     try {
         if (isAdmin) {
-            const userPolls = []
-            for (let poll of polls) {
-                if (poll.forBlock === block) {
-                    userPolls.push(poll)
-                }
-            }
+
             return res.status(200).send({polls, userPolls})
         } else {
             const userPolls = []
-            for (let poll of polls) {
-                if (poll.forBlock === block) {
-                    userPolls.push(poll)
-                }
-            }
+            // for (let poll of polls) {
+            //     if (poll.forBlock === block) {
+            //         userPolls.push(poll)
+            //     }
+            // }
             return res.status(200).send({userPolls})
         }
     } catch (e) {
@@ -246,7 +258,7 @@ app.get('/api/getVotes', verifyToken, async (req, res) => {
     }
 })
 
-app.post('/api/survey', verifyToken, async (req, res) => {
+app.post('/api/survey', verifyToken, checkVerified, async (req, res) => {
 
 
     try {

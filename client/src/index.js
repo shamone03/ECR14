@@ -17,7 +17,6 @@ import Admin from "./components/Admin";
 import Construction from "./components/Construction";
 import Voting from "./components/Voting";
 import Settings from "./components/Settings";
-import Register2 from "./components/Register2";
 import ResetPassword from "./components/ResetPassword";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -33,7 +32,7 @@ root.render (
             {/*<Route path={'/admin'} element={<Admin/>}/>*/}
             <Route path={'/vote'} element={<VoteMenu/>}/>
             <Route path={'/settings'} element={<Settings/>}/>
-            <Route path={'/vote/vote-now'} element={<Voting/>}/>
+            <Route path={'/vote/vote-now'} element={<Construction/>}/>
             <Route path={'/survey'} element={<Survey/>}/>
             <Route path={'/verify/:id/verify/:token'} element={<VerifyEmailLink/>}/>
             <Route path={'/reset/:id/reset/:token'} element={<ResetPassword/>}/>

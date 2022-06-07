@@ -356,6 +356,7 @@ const Register = () => {
     if (page === 3) {
         return (
             <>
+                <RedirectLogin loggedIn={!loggedIn}/>
                 <h1 className={'text-center'}>Register</h1>
                 <div className={`d-flex justify-content-center align-items-center ${styles.formWrapper} mx-auto`}>
                     <Form className={`container`}>
