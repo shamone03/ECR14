@@ -36,8 +36,7 @@ const nomineeSchema = new mongoose.Schema({
 const surveySchema = new mongoose.Schema({
     surveyName: {type: String, required: true},
     houseNo: {type: String, required: true, unique: true},
-    responses: [{question:{type: String}, answer:{type: String}}],
-    remarks: {type: String}
+    responses: [{question:{type: String}, answer:{type: String}, remarks: {type: String}}],
 }, {collection: 'surveys'})
 
 const pollSchema = new mongoose.Schema({

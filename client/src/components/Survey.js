@@ -3,16 +3,16 @@ import {Button, Form} from "react-bootstrap";
 import {url} from '../assets/js/url'
 import LoadingButton from "./LoadingButton";
 import {useNavigate} from "react-router-dom";
+import styles from '../css/InputText.module.css'
 
 const Survey = () => {
     const [responses, setResponses] = useState([
-        {question: 'q1', answer: ''},
-        {question: 'q2', answer: ''},
-        {question: 'q3', answer: ''},
-        {question: 'q4', answer: ''},
-        {question: 'q5', answer: ''}
+        {question: 'q1', answer: '', remarks: ''},
+        {question: 'q2', answer: '', remarks: ''},
+        {question: 'q3', answer: '', remarks: ''},
+        {question: 'q4', answer: '', remarks: ''},
+        {question: 'q5', answer: '', remarks: ''}
     ])
-    const [remarks, setRemarks] = useState('')
     const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
@@ -22,6 +22,18 @@ const Survey = () => {
         for (let i = 0; i < responsesCopy.length; i++) {
             if (responsesCopy[i].question === q) {
                 responsesCopy[i].answer = a
+                setResponses(responsesCopy)
+                console.log(responses)
+                return
+            }
+        }
+    }
+
+    const setRemarks = (q, r) => {
+        const responsesCopy = responses
+        for (let i = 0; i < responsesCopy.length; i++) {
+            if (responsesCopy[i].question === q) {
+                responsesCopy[i].remarks = r
                 setResponses(responsesCopy)
                 console.log(responses)
                 return
@@ -51,7 +63,6 @@ const Survey = () => {
                 "Authorization": localStorage.getItem('token')
             },
             body: JSON.stringify({
-                remarks: remarks,
                 responses: responses
             })
         })
@@ -82,11 +93,10 @@ const Survey = () => {
 
                 <Form.Group key={i.question} style={{width:"80%"}} className={"my-3 mx-auto"}>
                     <Form.Label>{i.question}</Form.Label>
-                    <Form.Check type={'radio'} label={'1'} name={i.question} onClick={() => setAnswer(i.question, '1')}/>
-                    <Form.Check type={'radio'} label={'2'} name={i.question} onClick={() => setAnswer(i.question, '2')}/>
-                    <Form.Check type={'radio'} label={'3'} name={i.question} onClick={() => setAnswer(i.question, '3')}/>
-                    <Form.Check type={'radio'} label={'4'} name={i.question} onClick={() => setAnswer(i.question, '4')}/>
-                    <Form.Check type={'radio'} label={'5'} name={i.question} onClick={() => setAnswer(i.question, '5')}/>
+                    <Form.Check type={'radio'} label={'Yes'} name={i.question} onClick={() => setAnswer(i.question, 'Yes')}/>
+                    <Form.Check type={'radio'} label={'No'} name={i.question} onClick={() => setAnswer(i.question, 'No')}/>
+                    <Form.Check type={'radio'} label={'Not Sure'} name={i.question} onClick={() => setAnswer(i.question, 'Not Sure')}/>
+                    <Form.Control type={'text'} className={`${styles.inputStyle}`} placeholder={'Remarks'} onChange={(e) => setRemarks(i.question, e.target.value)}/>
                 </Form.Group>
 
             ))

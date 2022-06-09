@@ -50,7 +50,6 @@ const Home = () => {
             <RedirectLogin loggedIn={loggedIn}/>
             <div className={'text-center mx-auto'} style={{width: '50%'}}>
                 <h1>{houseNo}</h1>
-
                 <Button variant={'light'} onClick={() => setShowMenu(true)}>Menu</Button>
                 <Offcanvas show={showMenu} onHide={() => setShowMenu(false)} style={{backgroundColor: '#161b22'}}>
                     <Offcanvas.Header className={'d-flex justify-content-between'} closeVariant={'white'}>
@@ -58,6 +57,9 @@ const Home = () => {
                         <Button variant={`outline-light ${styles.closeButtonStyle}`} onClick={() => setShowMenu(false)}><AiOutlineClose size={25}/></Button>
                     </Offcanvas.Header>
                     <Offcanvas.Body className={'d-flex flex-column align-content-stretch'}>
+                        <div>
+                            <Link className={`${styles.linkStyle} mt-3 btn btn-light`} to={'/survey'}>Current Survey</Link>
+                        </div>
                         <div>
                             <Link className={`${styles.linkStyle} mt-3 btn btn-light`} to={'/vote'}>Voting</Link>
                         </div>
@@ -70,6 +72,7 @@ const Home = () => {
                         <div>
                             <Link className={`${styles.linkStyle} mt-3 btn btn-light`} to={'/construction'}>Events</Link>
                         </div>
+
                     </Offcanvas.Body>
                 </Offcanvas>
             </div>

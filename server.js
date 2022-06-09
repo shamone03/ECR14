@@ -265,7 +265,6 @@ app.post('/api/survey', verifyToken, checkVerified, async (req, res) => {
             surveyName: 'survey1',
             houseNo: jwt.decode(req.headers['authorization']).houseNo,
             responses: req.body.responses,
-            remarks: req.body.remarks
         })
         await survey.save()
         res.status(200).send({message: 'saved'})

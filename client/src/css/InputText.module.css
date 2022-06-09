@@ -1,0 +1,8 @@
+.inputStyle:focus {
+    border-color: aliceblue !important;
+    box-shadow: 0 0 0 .25rem rgba(240,248,255,.5) !important;
+}
+
+.inputStyle {
+
+}
