@@ -4,6 +4,8 @@
 
 awskey
 app.yaml
+client/build
+client/node_modules
 
 ### Node ###
 # Logs

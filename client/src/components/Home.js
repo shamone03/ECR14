@@ -58,7 +58,7 @@ const Home = () => {
                     </Offcanvas.Header>
                     <Offcanvas.Body className={'d-flex flex-column align-content-stretch'}>
                         <div>
-                            <Link className={`${styles.linkStyle} mt-3 btn btn-light`} to={'/survey'}>Current Survey</Link>
+                            <Link className={`${styles.linkStyle} mt-3 btn btn-light`} to={'/construction'}>Current Survey</Link>
                         </div>
                         <div>
                             <Link className={`${styles.linkStyle} mt-3 btn btn-light`} to={'/vote'}>Voting</Link>
