@@ -92,10 +92,14 @@ const Survey = () => {
             responses.map((i) => (
 
                 <Form.Group key={i.question} style={{width:"80%"}} className={"my-3 mx-auto"}>
-                    <Form.Label>{i.question}</Form.Label>
-                    <Form.Check type={'radio'} label={'Yes'} name={i.question} onClick={() => setAnswer(i.question, 'Yes')}/>
-                    <Form.Check type={'radio'} label={'No'} name={i.question} onClick={() => setAnswer(i.question, 'No')}/>
-                    <Form.Check type={'radio'} label={'Not Sure'} name={i.question} onClick={() => setAnswer(i.question, 'Not Sure')}/>
+                    <div className={'container-fluid'}>
+                        <div className={'row h-auto'}>
+                            <Form.Label className={'col-md-6'} style={{wordWrap: 'break-word'}}>{i.question}</Form.Label>
+                            <Form.Check className={'col-md-2'} type={'radio'} label={'Yes'} name={i.question} onClick={() => setAnswer(i.question, 'Yes')}/>
+                            <Form.Check className={'col-md-2'} type={'radio'} label={'No'} name={i.question} onClick={() => setAnswer(i.question, 'No')}/>
+                            <Form.Check className={'col-md-2'} type={'radio'} label={'Not Sure'} name={i.question} onClick={() => setAnswer(i.question, 'Not Sure')}/>
+                        </div>
+                    </div>
                     <Form.Control type={'text'} className={`${styles.inputStyle}`} placeholder={'Remarks'} onChange={(e) => setRemarks(i.question, e.target.value)}/>
                 </Form.Group>
 
