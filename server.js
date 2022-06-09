@@ -260,32 +260,21 @@ app.get('/api/getVotes', verifyToken, async (req, res) => {
 
 app.post('/api/survey', verifyToken, checkVerified, async (req, res) => {
 
-
     try {
-        const newSurvey = new surveyModel({
-            houseNo: req.body.houseNo,
-            number: req.body.number,
-            email: req.body.email,
-            response: req.body.response
+        const survey = new surveyModel({
+            surveyName: 'survey1',
+            houseNo: jwt.decode(req.headers['authorization']).houseNo,
+            responses: req.body.responses,
+            remarks: req.body.remarks
         })
-        await newSurvey.save()
+        await survey.save()
         res.status(200).send({message: 'saved'})
     } catch (e) {
-        // console.log(e)
+        console.log(e.code + 'not saved')
         if (e.code === 11000) {
-            // try {
-            //     await surveyModel.findOneAndUpdate({email: req.body.email,houseNo: req.body.houseNo}, {
-            //         number: req.body.number,
-            //         response: req.body.response
-            //     })
-            //     res.status(200).send({message: 'updated'})
-            // } catch (e) {
-            //     res.status(500).send({message: 'did not update', e})
-            // }
-            res.status(200).send({message: 'exists'})
-        } else {
-            res.status(500).send({message: 'did not save', e})
+            return res.status(403).send({message: 'already submitted'})
         }
+        res.status(500).send({message: 'not saved'})
 
     }
 
