@@ -2,31 +2,22 @@ import {Button, Card} from "react-bootstrap";
 import image from "../assets/placeholder.png";
 import React, {useState} from "react";
 
-const VotingCard = ({name, _id, votes, sendVote, reps, description}) => {
-
-    const [chosenReps, setChosenReps] = useState([])
-
-    const addRep = (_id) => {
-        if (chosenReps.includes(_id)) {
-
-        }
-    }
-
+const VotingCard = ({addNom, nom}) => {
     const cardStyle = {
-        width: '18rem',
+        width: '',
         color: 'black',
         backgroundColor: 'gray'
     }
 
     return (
-        <Card style={cardStyle} className={'text-center'} key={name}>
-            <Card.Img src={image}/>
+        <Card style={cardStyle} className={'text-center col-md-3 col-6 pt-2'}>
+            <Card.Img src={image} className={''}/>
             <Card.Body>
-                <Card.Title>{name}</Card.Title>
-                <Card.Subtitle>{description}</Card.Subtitle>
+                <Card.Title>{nom.name}</Card.Title>
+                <Card.Subtitle>{nom.description}</Card.Subtitle>
             </Card.Body>
-            <Button className={'mb-3 mx-auto'} style={{width:'80%'}} onClick={() => sendVote(_id)}>Vote</Button>
-            <Card.Footer>{votes}</Card.Footer>
+            <Button className={'mb-3 mx-auto'} style={{width:'80%'}} onClick={() => addNom(nom)}>Add</Button>
+            <Card.Footer>{nom.votes}</Card.Footer>
         </Card>
     )
 }

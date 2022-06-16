@@ -31,7 +31,7 @@ root.render (
             {/*<Route path={'/admin'} element={<Admin/>}/>*/}
             <Route path={'/vote'} element={<VoteMenu/>}/>
             <Route path={'/settings'} element={<Settings/>}/>
-            <Route path={'/vote/vote-now'} element={<Construction/>}/>
+            <Route path={'/vote/vote-now'} element={<Voting/>}/>
             <Route path={'/survey'} element={<Survey/>}/>
             <Route path={'/verify/:id/verify/:token'} element={<VerifyEmailLink/>}/>
             <Route path={'/reset/:id/reset/:token'} element={<ResetPassword/>}/>
