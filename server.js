@@ -17,6 +17,11 @@ const dbConn = require('./server/connection/connection')
 const {nomineeModel, surveyModel, pollModel} = require("./server/model/model");
 const {register, verifyEmail, login, registered, resetPassword, verifyReset} = require("./server/controllers/user");
 
+const path = require("path")
+app.use(express.static(path.join(__dirname, 'client', 'build')))
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+})
 dbConn()
 
 app.listen(process.env.PORT, () => {
