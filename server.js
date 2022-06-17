@@ -47,6 +47,7 @@ const verifyToken = (req, res, next) => {
     } catch (e) {
         console.log('error ' + e)
         return res.status(401).send({message: 'invalid token', e})
+        
     }
     return next()
 }
@@ -163,7 +164,6 @@ app.get('/api/getPolls', verifyToken, async (req, res) => {
 
             return res.status(200).send({polls, userPolls})
         } else {
-            const userPolls = []
             // for (let poll of polls) {
             //     if (poll.forBlock === block) {
             //         userPolls.push(poll)

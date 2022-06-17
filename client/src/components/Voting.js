@@ -4,6 +4,7 @@ import {url} from "../assets/js/url";
 import {Button, Modal, Offcanvas, Spinner} from "react-bootstrap";
 import styles from "../css/Voting.module.css";
 import {AiOutlineClose} from "react-icons/all";
+import LoadingButton from "./LoadingButton";
 
 
 const Voting = () => {
@@ -14,7 +15,6 @@ const Voting = () => {
     const [loading, setLoading] = useState(false)
     const [showModal, setShowModal] = useState(false)
     const [fullScreen, setFullScreen] = useState(true)
-    const [chosenReps, setChosenReps] = useState([])
 
     useEffect(() => {
         const fetchPolls = async () => {
@@ -65,9 +65,21 @@ const Voting = () => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                nomineeIds: chosenNoms
+                nomineeIds: chosenNoms.map(i => ({_id: i._id}))
             })
         })
+        if (res.status === 400) {
+            alert('Server error try again later')
+            console.log('bad request')
+            return
+        }
+        if (res.status === 500) {
+            alert('Server error try again later')
+            return
+        }
+        if (res.status === 200) {
+            alert('Voted Successfully')
+        }
     }
 
 
@@ -77,20 +89,43 @@ const Voting = () => {
         setShowModal(true)
     }
 
-
     const addNom = (i) => {
-        setChosenNoms([...chosenNoms, i._id])
+        setChosenNoms([...chosenNoms, i])
     }
 
     const clearChosenNoms = () => {
         setChosenNoms([])
     }
 
+    const chosenNomsContains = (_id) => {
+        for (let i of chosenNoms) {
+            if (i._id === _id) {
+                console.log('removed')
+                return false
+            }
+        }
+    }
+
     const Nominees = ({chosenPoll}) => {
         let nomineesCopy = nominees
         nomineesCopy = nomineesCopy.filter((i) => i.poll._id === chosenPoll._id)
+        if (chosenNoms.length > 0) {
+            nomineesCopy = nomineesCopy.filter((i) => {
+                return !chosenNoms.find((j => {
+                    return j._id === i._id
+                }))
+            })
+            console.log(nomineesCopy)
+        }
         return (
-            nomineesCopy.map(i => (<li onClick={() => addNom(i)} className={'text-center list-group-item list-group-item-action list-group-item-dark'} key={i._id}>{i.name}</li>))
+            // nomineesCopy.map(i => (<li onClick={() => addNom(i)} className={'text-center list-group-item list-group-item-action list-group-item-dark'} key={i._id}>{i.name}</li>))
+            nomineesCopy.map(i => (<VotingCard addNom={addNom} key={i._id} nom={i}/>))
+        )
+    }
+
+    const ChosenNoms = () => {
+        return (
+            chosenNoms.map(i => (<VotingCard addNom={addNom} key={i._id} nom={i}/>))
         )
     }
 
@@ -109,8 +144,6 @@ const Voting = () => {
                         </ul>
 
                     </div>
-
-                    {/*{nominees.map(i => (<VotingCard key={i._id} name={i.name} _id={i._id} votes={i.votes} description={i.description} reps={i.poll.representatives} sendVote={sendVote}/>))}*/}
                 </div>
             </div>
             <Modal show={showModal} fullscreen={fullScreen} onHide={() => setShowModal(false)} contentClassName={styles.votingModal}>
@@ -119,15 +152,16 @@ const Voting = () => {
                     <Button variant={`outline-light ${styles.closeButtonStyle}`} onClick={() => setShowModal(false)}><AiOutlineClose size={25}/></Button>
                 </Modal.Header>
                 <Modal.Body>
-                    <Button variant={'outline-light'} onClick={sendVote}>Submit vote</Button>
                     <div className={'container'}>
+                        <div className={'row'}>
+                            <ChosenNoms/>
+                        </div>
+                        <LoadingButton loading={loading} onClick={sendVote} text={'Submit Vote'}/>
                         <h1 className={'text-center'}>Nominees</h1>
 
                         <h2 className={'text-center'}>Choose {chosenPoll.representatives} representatives</h2>
-                        <div className={'row align-items-center'}>
-                            <ul className={'list-group mt-2 text-center w-100'}>
-                                <Nominees chosenPoll={chosenPoll}/>
-                            </ul>
+                        <div className={'row'}>
+                            <Nominees chosenPoll={chosenPoll}/>
                         </div>
 
                         {/*{nominees.map(i => (<VotingCard key={i._id} name={i.name} _id={i._id} votes={i.votes} description={i.description} reps={i.poll.representatives} sendVote={sendVote}/>))}*/}
