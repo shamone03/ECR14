@@ -97,7 +97,6 @@ const Settings = () => {
         <>
             <RedirectLogin loggedIn={loggedIn}/>
             <div className={'w-50 mx-auto d-flex align-items-center justify-content-center flex-column'}>
-                <Link to={'/home'} className={'btn btn-outline-light mt-2'}>Home</Link>
                 <Button variant={'dark'} className={'mt-5 mx-auto'} onClick={() => setShowNames(!showNames)}>Show residents</Button>
                 <Names/>
                 <p className={'mt-5'}>

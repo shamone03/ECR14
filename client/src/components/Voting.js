@@ -110,9 +110,13 @@ const Voting = () => {
         let nomineesCopy = nominees
         nomineesCopy = nomineesCopy.filter((i) => i.poll._id === chosenPoll._id)
         if (chosenNoms.length > 0) {
-            nomineesCopy = nomineesCopy.filter((i) => !chosenNomsContains(i._id))
+            nomineesCopy = nomineesCopy.filter((i) => {
+                return !chosenNoms.find((j => {
+                    return j._id === i._id
+                }))
+            })
+            console.log(nomineesCopy)
         }
-        console.log(nomineesCopy)
         return (
             // nomineesCopy.map(i => (<li onClick={() => addNom(i)} className={'text-center list-group-item list-group-item-action list-group-item-dark'} key={i._id}>{i.name}</li>))
             nomineesCopy.map(i => (<VotingCard addNom={addNom} key={i._id} nom={i}/>))
@@ -140,8 +144,6 @@ const Voting = () => {
                         </ul>
 
                     </div>
-
-                    {/*{nominees.map(i => (<VotingCard key={i._id} name={i.name} _id={i._id} votes={i.votes} description={i.description} reps={i.poll.representatives} sendVote={sendVote}/>))}*/}
                 </div>
             </div>
             <Modal show={showModal} fullscreen={fullScreen} onHide={() => setShowModal(false)} contentClassName={styles.votingModal}>
