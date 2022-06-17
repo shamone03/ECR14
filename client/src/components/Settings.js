@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {Button, Spinner} from "react-bootstrap";
 import RedirectLogin from "./RedirectLogin";
 import {url} from "../assets/js/url";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 
 const Settings = () => {
@@ -16,6 +16,7 @@ const Settings = () => {
     const [number, setNumber] = useState('')
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchData = async () => {
@@ -62,6 +63,11 @@ const Settings = () => {
         }
     }
 
+    const logout = () => {
+        localStorage.clear()
+        navigate('/login')
+    }
+
     const Names = () => {
         if (showNames) {
             return (
@@ -97,7 +103,6 @@ const Settings = () => {
         <>
             <RedirectLogin loggedIn={loggedIn}/>
             <div className={'w-50 mx-auto d-flex align-items-center justify-content-center flex-column'}>
-                <Link to={'/home'} className={'btn btn-outline-light mt-2'}>Home</Link>
                 <Button variant={'dark'} className={'mt-5 mx-auto'} onClick={() => setShowNames(!showNames)}>Show residents</Button>
                 <Names/>
                 <p className={'mt-5'}>
@@ -105,6 +110,7 @@ const Settings = () => {
                     <strong>Number: </strong>{number} <br/><br/>
                     <strong>Email: </strong>{email}
                 </p>
+                <Button variant={'outline-danger'} onClick={logout}>Logout</Button>
             </div>
 
             <div className={'mt-3 text-center'}>

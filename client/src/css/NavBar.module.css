@@ -1,0 +1,31 @@
+.linkActive {
+    margin-right: 5px;
+    margin-left: 5px;
+    text-decoration: none;
+    color: gray;
+    transition-timing-function: ease-in-out !important;
+    transition: all !important;
+}
+
+.linkActive:hover {
+    color: gray;
+}
+
+.linkInActive {
+    margin-right: 5px;
+    margin-left: 5px;
+    text-decoration: none;
+    color: aliceblue;
+    transition-timing-function: ease-in-out !important;
+    transition: all !important;
+}
+
+.linkInActive:hover {
+
+    color: gray;
+}
+
+.navBar {
+    background-color: #161b22;
+    border-bottom: 1px gray solid;
+}
