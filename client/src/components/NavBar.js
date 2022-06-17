@@ -38,7 +38,7 @@ const NavBar = () => {
     return (
 
 
-        <nav className={`d-flex flex-row justify-content-between ${styles.navBar} align-items-center`}>
+        <nav className={`d-flex flex-row justify-content-between ${styles1.navBar} align-items-center`}>
             <h2 className={'mx-3 my-3'} style={{color: 'lightblue'}}>ECR14</h2>
             <div className={`d-flex flex-row justify-content-end align-items-center`}>
                 {showMenu ? (<MobileMenu/>) : (<></>)}
