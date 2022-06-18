@@ -1,10 +1,9 @@
 import {useMediaQuery} from "react-responsive";
 import React, {useState} from "react";
-import {Button, Dropdown, Nav, Navbar, Offcanvas} from "react-bootstrap";
-import styles from "../css/App.module.css";
+import {Button, Offcanvas} from "react-bootstrap";
 import styles1 from "../css/NavBar.module.css";
 import {AiOutlineClose, AiOutlineMenu} from "react-icons/all";
-import {Link, NavLink} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 
 const NavBar = () => {
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 600px)' })
@@ -22,7 +21,7 @@ const NavBar = () => {
                     <Offcanvas.Title>
                         Menu
                     </Offcanvas.Title>
-                    <Button variant={`outline-light ${styles.closeButtonStyle}`} onClick={() => setShowMenu(false)}><AiOutlineClose size={25}/></Button>
+                    <Button variant={`outline-light ${styles1.closeButtonStyle}`} onClick={() => setShowMenu(false)}><AiOutlineClose size={25}/></Button>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <div className={'d-flex flex-column h-100 text-center'}>
@@ -43,7 +42,7 @@ const NavBar = () => {
             <div className={`d-flex flex-row justify-content-end align-items-center`}>
                 {showMenu ? (<MobileMenu/>) : (<></>)}
                 {isTabletOrMobile ? (
-                    <Button onClick={() => setShowMenu(true)} className={styles.menuButtonStyle}><AiOutlineMenu size={25}/></Button>
+                    <Button onClick={() => setShowMenu(true)} className={styles1.menuButtonStyle}><AiOutlineMenu size={25}/></Button>
                 ) : (
                     <>
                         <NavLink to={'/home'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Home</NavLink>

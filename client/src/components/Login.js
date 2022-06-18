@@ -81,7 +81,7 @@ const Login = () => {
                                     Loading...
                                 </Button>
                             </>) :
-                        (<Button variant={'outline-light'} className={'mt-5'} onClick={loginUser}>Login</Button>)}
+                        (<Button variant={'outline-light'} className={'mt-5'} onClick={loginUser} type={'submit'}>Login</Button>)}
                 </Form>
             </div>
         </div>

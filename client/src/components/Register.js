@@ -321,7 +321,7 @@ const Register = () => {
                     </div>
                     <div className={'row justify-content-center'}>
                         <div className={'col-6 col-md-4 d-flex justify-content-end'}>
-                            <Button variant={'outline-light'} onClick={setNextPage}>Next<AiOutlineRight/></Button>
+                            <Button variant={'outline-light'} onClick={setNextPage} type={'submit'}>Next<AiOutlineRight/></Button>
                         </div>
                     </div>
                 </Form>
@@ -345,7 +345,7 @@ const Register = () => {
                                             Loading...
                                         </Button>
                                     </>) :
-                                (<Button variant={'outline-light'} className={'mt-5'} onClick={resetPassword}>Set Password</Button>)}
+                                (<Button variant={'outline-light'} className={'mt-5'} onClick={resetPassword} type={'submit'}>Set Password</Button>)}
                         </div>
                     </div>
                 </div>
@@ -406,18 +406,19 @@ const Register = () => {
                                 </Form.Group>
                             </div>
                         </div>
-                    </Form>
-                </div>
-                <div className={'d-flex justify-content-center'}>
-                    {loading ? (
+
+                        {loading ? (
                             <>
                                 <Button variant="outline-light" disabled>
                                     <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true"/>
                                     Loading...
                                 </Button>
-                            </>) :
-                        (<Button variant={'outline-light'} onClick={registerUser}>Register</Button>)}
+                            </>) : (
+                                <Button variant={'outline-light'} onClick={registerUser} type={'submit'}>Register</Button>
+                        )}
+                    </Form>
                 </div>
+
             </>
         )
     }

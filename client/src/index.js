@@ -29,6 +29,8 @@ root.render (
             <Route path={'/'} element={<App/>}/>
             <Route path={'/login'} element={<Login/>}/>
             <Route path={'/register'} element={<Register/>}/>
+            <Route path={'/verify/:id/verify/:token'} element={<VerifyEmailLink/>}/>
+            <Route path={'/reset/:id/reset/:token'} element={<ResetPassword/>}/>
             <Route element={<>
                     <NavBar/>
                     <Outlet/>
@@ -39,8 +41,6 @@ root.render (
                 <Route path={'/settings'} element={<Settings/>}/>
                 <Route path={'/vote/vote-now'} element={<Voting/>}/>
                 <Route path={'/survey'} element={<Survey/>}/>
-                <Route path={'/verify/:id/verify/:token'} element={<VerifyEmailLink/>}/>
-                <Route path={'/reset/:id/reset/:token'} element={<ResetPassword/>}/>
                 <Route path={'/construction'} element={<Construction/>}/>
             </Route>
         </Routes>
