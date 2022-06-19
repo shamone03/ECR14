@@ -1,4 +1,5 @@
 const express = require('express')
+const {format} = require('util')
 const morgan = require('morgan')
 const jwt = require('jsonwebtoken')
 const model = require('./server/model/model')
@@ -11,18 +12,42 @@ require('dotenv').config()
 app.use(cors({origin: '*'}))
 app.use(nocache())
 app.use(morgan('tiny'))
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.use(express.json({limit: '15mb'}))
+app.use(express.urlencoded({extended: true, limit: '15mb'}))
 const dbConn = require('./server/connection/connection')
 const {nomineeModel, surveyModel, pollModel} = require("./server/model/model");
 const {register, verifyEmail, login, registered, resetPassword, verifyReset} = require("./server/controllers/user");
-
+const {Storage} = require('@google-cloud/storage')
+const fs = require("fs");
+const stream = require('stream')
+// const img = require('./server/utils/placeholder.png')
 // const path = require("path")
 // app.use(express.static(path.join(__dirname, 'client', 'build')))
 // app.get('/', (req, res) => {
 //     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
 // })
 dbConn()
+
+const storage = new Storage()
+const bucket = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET);
+
+// app.post('/upload', async (req, res) => {
+//     // converting the b64 to a stream
+//     const bufferStream = new stream.PassThrough()
+//     bufferStream.end(req.body.imgBase64, 'base64')
+//     const cloudFile = bucket.file('pic1.png')
+//     bufferStream.pipe(cloudFile.createWriteStream({
+//         cacheControl: "private, max-age=0, no-transform"
+//     })).on('error', () => {
+//         console.log('error pic uploading')
+//         res.status(500).send()
+//     }).on('finish', () => {
+//         console.log('pic uploaded')
+//         res.status(200).send()
+//     })
+//
+//
+// })
 
 app.listen(process.env.PORT, () => {
     console.log(`server on ${process.env.PORT}`)

@@ -3,6 +3,8 @@ const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
 const {userModel, tokenModel} = require("../model/model");
 const jwt = require("jsonwebtoken");
+const stream = require("stream");
+const {Storage} = require("@google-cloud/storage");
 
 exports.resetPassword = async (req, res) => {
     if (!req.body) {
@@ -59,7 +61,8 @@ exports.register = async (req, res) => {
     if (!req.body) {
         res.status(400).send({message: 'no body'})
     }
-    console.log(req.body)
+    const storage = new Storage()
+    const bucket = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET)
     let newUser = userModel({
         houseNo: req.body.houseNo,
         email: req.body.email,
@@ -71,6 +74,24 @@ exports.register = async (req, res) => {
 
     try {
         newUser = await newUser.save()
+        const bufferStream = new stream.PassThrough()
+        bufferStream.end(req.body.imgBase64, 'base64')
+        const cloudFile = bucket.file(`${newUser._id}.png`)
+        bufferStream.pipe(cloudFile.createWriteStream({
+            cacheControl: "private, max-age=0, no-transform"
+        })).on('error', (e) => {
+            console.log('error pic uploading')
+            res.status(500).send({e})
+        }).on('finish', async () => {
+            console.log('pic uploaded')
+            try {
+                await userModel.findOneAndUpdate({_id: newUser._id}, {imgURL: `https://storage.googleapis.com/${process.env.GCLOUD_STORAGE_BUCKET}/${newUser._id}.png`})
+            } catch (e) {
+                console.log('error updating img url')
+                console.log(e)
+                res.status(500).send({message: 'error updating img url', e})
+            }
+        })
         const token = await new tokenModel({
             userId: newUser._id,
             token: crypto.randomBytes(32).toString("hex")

@@ -3,6 +3,7 @@ import {Button, Spinner} from "react-bootstrap";
 import RedirectLogin from "./RedirectLogin";
 import {url} from "../assets/js/url";
 import {Link, useNavigate} from "react-router-dom";
+import {FiLogOut} from "react-icons/all";
 
 
 const Settings = () => {
@@ -110,7 +111,7 @@ const Settings = () => {
                     <strong>Number: </strong>{number} <br/><br/>
                     <strong>Email: </strong>{email}
                 </p>
-                <Button variant={'outline-danger'} onClick={logout}>Logout</Button>
+                <Button variant={'outline-danger'} onClick={logout}>Logout &nbsp;<FiLogOut size={'25'}/></Button>
             </div>
 
             <div className={'mt-3 text-center'}>
