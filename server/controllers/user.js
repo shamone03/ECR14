@@ -3,6 +3,8 @@ const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
 const {userModel, tokenModel} = require("../model/model");
 const jwt = require("jsonwebtoken");
+const stream = require("stream");
+const {Storage} = require("@google-cloud/storage");
 
 exports.resetPassword = async (req, res) => {
     if (!req.body) {
@@ -15,13 +17,10 @@ exports.resetPassword = async (req, res) => {
             return res.status(404).send({message: 'user not found'})
 
         }
-        // const token = await new tokenModel({
-        //     userId: user._id,
-        //     token: crypto.randomBytes(32).toString("hex")
-        // }).save()
+
         const code = crypto.randomBytes(32).toString("hex")
 
-        const token = await tokenModel.updateOne({userId: user._id}, {token: code}, {upsert: true})
+        await tokenModel.updateOne({userId: user._id}, {token: code}, {upsert: true})
 
         const url = `${process.env.CLIENT_URL}/reset/${user._id}/reset/${code}`
         await sendEmail(user.email, 'reset password', url)
@@ -59,7 +58,8 @@ exports.register = async (req, res) => {
     if (!req.body) {
         res.status(400).send({message: 'no body'})
     }
-    console.log(req.body)
+    const storage = new Storage()
+    const bucket = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET)
     let newUser = userModel({
         houseNo: req.body.houseNo,
         email: req.body.email,
@@ -71,6 +71,28 @@ exports.register = async (req, res) => {
 
     try {
         newUser = await newUser.save()
+        if (req.body.imgBase64.length > 0) {
+            const bufferStream = new stream.PassThrough()
+            bufferStream.end(req.body.imgBase64, 'base64')
+            const cloudFile = bucket.file(`${newUser._id}.png`)
+            bufferStream.pipe(cloudFile.createWriteStream({metadata: {
+                    cacheControl: "no-store"
+                }
+            })).on('error', (e) => {
+                console.log('error pic uploading')
+                return res.status(500).send({e})
+            }).on('finish', async () => {
+                console.log('pic uploaded')
+                try {
+                    await userModel.findOneAndUpdate({_id: newUser._id}, {imgURL: `https://storage.googleapis.com/${process.env.GCLOUD_STORAGE_BUCKET}/${newUser._id}.png`})
+                } catch (e) {
+                    console.log('error updating img url')
+                    console.log(e)
+                    return res.status(500).send({message: 'error updating img url', e})
+                }
+            })
+        }
+
         const token = await new tokenModel({
             userId: newUser._id,
             token: crypto.randomBytes(32).toString("hex")
@@ -79,7 +101,7 @@ exports.register = async (req, res) => {
         const url = `${process.env.CLIENT_URL}/verify/${newUser._id}/verify/${token.token}`
         await sendEmail(newUser.email, 'verify email', url)
 
-        res.status(200).send({message: 'user saved'})
+        return res.status(200).send({message: 'user saved'})
 
     } catch (e) {
         console.log(e)
@@ -121,13 +143,9 @@ exports.login = async (req, res) => {
         res.status(404).send({message: 'invalid details'})
     } else {
         if (await bcrypt.compare(req.body.password, user.password)) {
-            console.log('password correct')
             const token = jwt.sign({houseNo: user.houseNo, _id: user._id, isAdmin: user.isAdmin, verified: user.verified}, process.env.JWT_SECRET, { expiresIn: '86400s'})
-            // console.log(res.header)
-            console.log('token ' + token)
             res.status(200).send({message: 'success', token: token})
         } else {
-            console.log('password incorrect')
             res.status(401).send({message: 'invalid details'})
         }
     }

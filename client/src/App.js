@@ -1,6 +1,6 @@
 import './App.css';
 import React, {useState} from 'react';
-import { Link } from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import styles from './css/App.module.css'
 import {Button, Dropdown, DropdownButton, Offcanvas} from "react-bootstrap";
 import { useMediaQuery } from 'react-responsive'
@@ -10,14 +10,13 @@ import {
     FaVoteYea,
     GoReport,
     IoDocumentsOutline,
-    MdArrowRight,
     RiSurveyLine
 } from "react-icons/all";
-// import FaVoteYea from 'react-icons'
 
 function App() {
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 600px)' })
     const [showMenu, setShowMenu] = useState(false)
+    const navigate = useNavigate()
 
     const MobileMenu = () => {
         console.log('tre')
@@ -95,9 +94,8 @@ function App() {
             </nav>
             <div className={`${styles.backgroundImg} d-flex align-items-center flex-column`}>
                 <div className={`text-center ${styles.title}`}>
-                    <h1 style={{fontSize: '56px', fontWeight: '600', color: 'black'}}>Site is under construction!</h1>
                     <h1 style={{color: 'lightblue'}}>ECR 14</h1>
-                    <Button href={'#about'}>Start your journal</Button>
+                    <Button onClick={() => navigate('/register')}>Start your journal</Button>
                 </div>
                 <div className={`container ${styles.containerStyle}`}>
                     <div className={'row'}>
@@ -143,16 +141,6 @@ function App() {
                     </div>
                     <div className={'container'}>
                         <div className={'row'}>
-                            {/*<div className={'col-lg-6'}>*/}
-                            {/*    <p>*/}
-                            {/*        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.*/}
-                            {/*    </p>*/}
-                            {/*    <ul className={'list-unstyled'}>*/}
-                            {/*        <li><MdArrowRight/> Ullamco laboris nisi ut aliquip ex ea commodo consequat</li>*/}
-                            {/*        <li><MdArrowRight/> Ullamco laboris nisi ut aliquip ex ea commodo consequat</li>*/}
-                            {/*        <li><MdArrowRight/> Ullamco laboris nisi ut aliquip ex ea commodo consequat</li>*/}
-                            {/*    </ul>*/}
-                            {/*</div>*/}
                             <div className={'col-lg-12 pt-4 pt-lg-0'}>
                                 <p>
                                     Ever afters amidst of Beaufort scale of wind, ECR 14 is progressing towards all ever afters. Best of residential amenities, family neighbours and it’s happening place always for 577 families. Younger ones can enrich themselves through play, digital games, gym, swimming, board games, and a library to be part of ‘What a Wonderful world’. The best of the intellectuals from the community guides every way of living through all seasons/celebrations. Wiser ones with age can find exceptional quality of life around them. It is always admirable about the spirit of the community leads a life together. We are happy to welcome you to ECR 14, Start your Journal here!
@@ -190,7 +178,7 @@ function App() {
 
         </div>
 
-    );
+    )
 }
 
 export default App;

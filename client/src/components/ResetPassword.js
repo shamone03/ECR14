@@ -83,18 +83,15 @@ const ResetPassword = () => {
                                 <Form.Label>Confirm Password</Form.Label>
                                 <Form.Control className={styles.inputStyle} style={passwordStyle} type={'password'} onChange={(e) => validatePasswords(password, e.target.value)}/>
                             </Form.Group>
-
+                            {loading ? (
+                                    <>
+                                        <Button variant="outline-light" disabled className={'mx-auto mt-5'}>
+                                            <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true"/>
+                                            Loading...
+                                        </Button>
+                                    </>) :
+                                (<Button variant={'outline-light'} className={'mx-auto mt-5'} onClick={resetPassword} type={'submit'}>Submit</Button>)}
                         </Form>
-                    </div>
-                    <div className={'d-flex justify-content-center'}>
-                        {loading ? (
-                                <>
-                                    <Button variant="outline-light" disabled>
-                                        <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true"/>
-                                        Loading...
-                                    </Button>
-                                </>) :
-                            (<Button variant={'outline-light'} className={'mx-auto mt-5'} onClick={resetPassword}>Submit</Button>)}
                     </div>
                 </>
             ) : (<></>)}

@@ -123,7 +123,7 @@ const Survey = () => {
                 <Form className={"mx-auto d-flex flex-column justify-content-between align-items-center"}>
                     <Questions />
                     {/*<Button variant={"outline-light"} className={'my-5'} onClick={sendSurvey}>Submit</Button>*/}
-                    <LoadingButton onClick={sendSurvey} loading={loading} text={'Submit'}/>
+                    <LoadingButton variant={'outline-light'} className={'my-5'} onClick={sendSurvey} loading={loading} text={'Submit'}/>
                 </Form>
             </div>
         </>

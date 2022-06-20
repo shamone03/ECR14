@@ -4,6 +4,7 @@ import {Button, Form, Spinner} from "react-bootstrap";
 import {Navigate} from "react-router-dom";
 import styles from '../css/Login.module.css'
 import {url} from "../assets/js/url";
+import LoadingButton from "./LoadingButton";
 
 const Login = () => {
     const [houseNo, setHouseNo] = useState('')
@@ -63,7 +64,7 @@ const Login = () => {
     return (
         <div>
             <RedirectHome/>
-            <h1 className={'text-center'}>Login</h1>
+            <h1 className={'text-center mt-3'}>Login</h1>
             <div className={`${styles.formWrapper} mx-auto`}>
                 <Form className={`${styles.formStyle} mx-auto d-flex flex-column justify-content-between align-items-center`}>
                     <Form.Group className={"mb-3 mt-5"}>
@@ -74,14 +75,7 @@ const Login = () => {
                         <Form.Label>Password</Form.Label>
                         <Form.Control className={styles.inputStyle} type="password" placeholder="Password" onChange={e => setPassword(e.target.value)}/>
                     </Form.Group>
-                    {loading ? (
-                            <>
-                                <Button className={'mt-5'} variant="outline-light" disabled>
-                                    <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true"/>
-                                    Loading...
-                                </Button>
-                            </>) :
-                        (<Button variant={'outline-light'} className={'mt-5'} onClick={loginUser}>Login</Button>)}
+                    <LoadingButton variant={'outline-success'} className={'mt-5'} onClick={loginUser} type={'submit'} text={'Login'}/>
                 </Form>
             </div>
         </div>
