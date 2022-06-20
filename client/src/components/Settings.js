@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {Button, Spinner} from "react-bootstrap";
+import {Button, Image, Spinner} from "react-bootstrap";
 import RedirectLogin from "./RedirectLogin";
 import {url} from "../assets/js/url";
 import {Link, useNavigate} from "react-router-dom";
@@ -17,6 +17,8 @@ const Settings = () => {
     const [number, setNumber] = useState('')
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
+    const [img, setImg] = useState('')
+    const [editMode, setEditMode] = useState()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -41,6 +43,10 @@ const Settings = () => {
                 setResidentType(data.residentType)
                 setNumber(data.number)
                 setEmail(data.email)
+                if (data.imgURL) {
+                    setImg(data.imgURL)
+                }
+
             }
         }
         fetchData()
@@ -104,6 +110,7 @@ const Settings = () => {
         <>
             <RedirectLogin loggedIn={loggedIn}/>
             <div className={'w-50 mx-auto d-flex align-items-center justify-content-center flex-column'}>
+                {img !== '' ? <Image roundedCircle width={150} height={150} src={img} className={'my-1'}/> : <></>}
                 <Button variant={'dark'} className={'mt-5 mx-auto'} onClick={() => setShowNames(!showNames)}>Show residents</Button>
                 <Names/>
                 <p className={'mt-5'}>
