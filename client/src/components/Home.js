@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import React from 'react';
 import {Link, Navigate} from "react-router-dom";
-import {Button, Offcanvas} from "react-bootstrap";
+import {Button, Image, Offcanvas} from "react-bootstrap";
 import styles from '../css/Home.module.css'
 import RedirectLogin from "./RedirectLogin";
 import {url} from "../assets/js/url";
@@ -11,7 +11,8 @@ import {AiOutlineClose} from "react-icons/all";
 const Home = () => {
     const [houseNo, setHouseNo] = useState('')
     const [loggedIn, setLoggedIn] = useState(true)
-    const [showMenu, setShowMenu] = useState(false)
+    const [name, setName] = useState([])
+    const [imgAddress, setImgAddress] = useState('')
 
     useEffect(() => {
         const fetchData = async () => {
@@ -29,6 +30,8 @@ const Home = () => {
                 const data = await res.json()
                 setLoggedIn(true)
                 setHouseNo(data.houseNo)
+                setName(data.names[0].name)
+                setImgAddress(data.imgURL)
             }
         }
         fetchData()
@@ -41,8 +44,13 @@ const Home = () => {
     return (
         <>
             <RedirectLogin loggedIn={loggedIn}/>
-            <div className={'text-center mx-auto'} style={{width: '50%'}}>
+
+            <div className={'container text-center'}>
+                <Image src={imgAddress} roundedCircle width={200} height={200} alt={'prof pic'} className={'my-5'}/>
                 <h1>{houseNo}</h1>
+                <h2>Hello, {name}.</h2>
+                <h3>Use the profile tab to edit your details.</h3>
+                <h3>Thank you for signing up!</h3>
             </div>
         </>
 

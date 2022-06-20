@@ -14,7 +14,6 @@ import VerifyEmailLink from "./components/VerifyEmailLink";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import VoteMenu from "./components/VoteMenu";
 import Survey from "./components/Survey";
-import Admin from "./components/Admin";
 import Construction from "./components/Construction";
 import Voting from "./components/Voting";
 import Settings from "./components/Settings";
@@ -39,7 +38,7 @@ root.render (
                 {/*<Route path={'/admin'} element={<Admin/>}/>*/}
                 <Route path={'/vote'} element={<VoteMenu/>}/>
                 <Route path={'/settings'} element={<Settings/>}/>
-                <Route path={'/vote/vote-now'} element={<Voting/>}/>
+                <Route path={'/vote/vote-now'} element={<Construction/>}/>
                 <Route path={'/survey'} element={<Survey/>}/>
                 <Route path={'/construction'} element={<Construction/>}/>
             </Route>

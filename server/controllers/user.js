@@ -80,7 +80,7 @@ exports.register = async (req, res) => {
                 }
             })).on('error', (e) => {
                 console.log('error pic uploading')
-                res.status(500).send({e})
+                return res.status(500).send({e})
             }).on('finish', async () => {
                 console.log('pic uploaded')
                 try {
@@ -88,7 +88,7 @@ exports.register = async (req, res) => {
                 } catch (e) {
                     console.log('error updating img url')
                     console.log(e)
-                    res.status(500).send({message: 'error updating img url', e})
+                    return res.status(500).send({message: 'error updating img url', e})
                 }
             })
         }
@@ -101,7 +101,7 @@ exports.register = async (req, res) => {
         const url = `${process.env.CLIENT_URL}/verify/${newUser._id}/verify/${token.token}`
         await sendEmail(newUser.email, 'verify email', url)
 
-        res.status(200).send({message: 'user saved'})
+        return res.status(200).send({message: 'user saved'})
 
     } catch (e) {
         console.log(e)

@@ -182,18 +182,16 @@ const UpdateUser = ({img, members1, number1, resType}) => {
                     <Image src={URL.createObjectURL(imgFile)} className={'d-none'} ref={imgRef} alt={'prof pic'}/>
                 </> : ''}
             <div className={'d-flex flex-row justify-content-center w-100'}>
-                {imgFile.name ? <Image src={imgB64} width={150} height={150} roundedCircle alt={'prof pic'} className={'mt-3'}/> : <Image src={img} width={150} height={150} roundedCircle alt={'prof pic'} className={'mt-3'}/>}
+                {imgFile.name ? <Image src={imgB64} width={150} height={150} roundedCircle alt={'prof pic'}/> : img ? <Image src={img} width={150} height={150} roundedCircle alt={'prof pic'}/> : ''}
             </div>
-            <Form.Group>
-                <Form.Group controlId="formFile">
-                    <Form.Label>Upload profile picture</Form.Label>
-                    <Form.Control type="file" accept={'image/*'} className={styles.inputStyle} onChange={(e) => {
-                        console.log(e.target.files)
-                        e.target.files.length > 0 ? setImgFile(e.target.files[0]) : setImgFile(file => file)
-                    }}/>
-                </Form.Group>
+            <Form.Group controlId="formFile" className={'mb-3'}>
+                <Form.Label>Upload profile picture</Form.Label>
+                <Form.Control type="file" accept={'image/*'} className={styles.inputStyle} onChange={(e) => {
+                    console.log(e.target.files)
+                    e.target.files.length > 0 ? setImgFile(e.target.files[0]) : setImgFile(file => file)
+                }}/>
             </Form.Group>
-            <Form.Group className={'mt-5 mb-3'} style={memberStyle}>
+            <Form.Group className={'mb-3'} style={memberStyle}>
                 <Form.Label>Add residents in your apartment</Form.Label>
                 <div className={'d-flex flex-column'}>
                     {members.map((m) =>
@@ -220,7 +218,7 @@ const UpdateUser = ({img, members1, number1, resType}) => {
                 <Form.Control style={numberStyle} value={number} className={styles.inputStyle} type={"text"} placeholder={'0123456789'} onChange={e => validateNumber(e.target.value)}/>
             </Form.Group>
             <div className={'text-center'}>
-                <LoadingButton variant={'outline-success'} className={'my-3 mx-auto'} onClick={update} loading={loading} text={'Update'}/>
+                <LoadingButton type={'submit'} variant={'outline-success'} className={'my-3 mx-auto'} onClick={update} loading={loading} text={'Update'}/>
             </div>
         </Form>
     )

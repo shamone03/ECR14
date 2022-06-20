@@ -3,7 +3,7 @@ import {Button, Image} from "react-bootstrap";
 import RedirectLogin from "./RedirectLogin";
 import {url} from "../assets/js/url";
 import {useNavigate} from "react-router-dom";
-import {AiOutlineClose, AiOutlineEdit, FiLogOut} from "react-icons/all";
+import {AiOutlineClose, AiOutlineEdit, FiLogOut, MdVerified} from "react-icons/all";
 import UpdateUser from "./UpdateUser";
 import LoadingButton from "./LoadingButton";
 
@@ -82,9 +82,8 @@ const Settings = () => {
             })
         })
         if (res.status === 200) {
-            alert('Click link sent to your registered email to set password')
             setPasswordLoading(false)
-            navigate('/login')
+            alert('Click link sent to your registered email to set password')
         } else {
             setPasswordLoading(false)
             alert('Server error')
@@ -94,22 +93,32 @@ const Settings = () => {
 
     const logout = () => {
         localStorage.clear()
-        navigate('/login')
+        navigate('/')
     }
 
 
     const Names = () => {
-        if (showMembers) {
+
             return (
-                <ul className={'list-group mx-auto mt-2 text-center w-100'}>
-                    {members.map(i => <li className={'text-center list-group-item list-group-item-action list-group-item-dark'} key={i._id}>{i.name}</li>)}
-                </ul>
+                // <ul className={'list-group mx-auto mt-2 text-center w-100'}>
+                //     {members.map(i => <li className={'text-center list-group-item list-group-item-action list-group-item-dark'} key={i._id}>{i.name}</li>)}
+                // </ul>
+                <div className={'container'}>
+                    <div className={'row justify-content-center'} >
+                        <h6 className={'col-2 text-start p-1'} style={{borderBottom: '1px solid gray', color: 'lightblue'}}>Name</h6>
+                        <h6 className={'col-2 text-end p-1'} style={{borderBottom: '1px solid gray', color: 'lightblue'}}>Age</h6>
+                    </div>
+                    {members.map(i => (
+                        <>
+                            <div className={'row justify-content-center'} style={{wordWrap: 'break-word'}}>
+                                <h6 className={'col-2 text-start'} style={{color: 'lightblue'}}>{i.name}</h6>
+                                <h6 className={'col-2 text-end'}>{i.age}</h6>
+                            </div>
+                        </>
+                    ))}
+                </div>
             )
-        } else {
-            return (
-                <></>
-            )
-        }
+
 
     }
 
@@ -120,28 +129,39 @@ const Settings = () => {
             {editMode ? (
                 <>
                     <div className={'d-flex w-100 justify-content-end'}>
-                        <Button variant={'outline-light'} className={'mt-3'} onClick={() => setEditMode(false)}><AiOutlineClose size={20}/></Button>
+                        <Button variant={'outline-warning'} className={'mt-3'} onClick={() => setEditMode(false)}><AiOutlineClose size={20}/></Button>
                     </div>
                     <UpdateUser img={img} members1={members} number1={number} resType={residentType}/>
                 </>
             ) : (
                 <>
                     <div className={'d-flex w-100 justify-content-end'}>
-                        <Button variant={'outline-light'} className={'mt-3'} onClick={() => setEditMode(true)}><AiOutlineEdit size={20}/></Button>
+                        <Button variant={'outline-warning'} className={'mt-3'} onClick={() => setEditMode(true)}><AiOutlineEdit size={20}/></Button>
                     </div>
-                    {img !== '' ? <Image roundedCircle width={150} height={150} src={img} className={'mt-3'}/> : <></>}
-                    <Button variant={'dark'} className={'mt-5 mx-auto'} onClick={() => setShowMembers(!showMembers)}>Show residents</Button>
+                    {img !== '' ? <Image roundedCircle width={150} height={150} src={img}/> : <></>}
+
+                    <h1 className={'text-center'}>{houseNo}</h1>
+                    <div className={'container my-2'}>
+                        <div className={'row justify-content-center'} style={{wordWrap: 'break-word'}}>
+                            <h5 className={'col-md-3 text-start'} style={{color:'lightblue'}}>Email{verified ? (<span><MdVerified color={'green'} size={20}/></span>) : (<span><MdVerified color={'gray'} size={20}/></span>)}: </h5>
+                            <h5 className={'col-md-3 text-lg-end'}>{email}</h5>
+                        </div>
+                        <div className={'row justify-content-center'} style={{wordWrap: 'break-word'}}>
+                            <h5 className={'col-md-3 text-start'} style={{color:'lightblue'}}>Number: </h5>
+                            <h5 className={'col-md-3 text-lg-end'}>{number}</h5>
+                        </div>
+                        <div className={'row justify-content-center'} style={{wordWrap: 'break-word'}}>
+                            <h5 className={'col-md-3 text-start'} style={{color:'lightblue'}}>Resident Type: </h5>
+                            <h5 className={'col-md-3 text-lg-end'}>{residentType}</h5>
+                        </div>
+                    </div>
+                    {/*<Button variant={'dark'} className={'mt-5 mx-auto'} onClick={() => setShowMembers(!showMembers)}>Show residents</Button>*/}
                     <Names/>
-                    <p className={'mt-5'}>
-                        <strong>Resident Type: </strong>{residentType} <br/><br/>
-                        <strong>Number: </strong>{number} <br/><br/>
-                        <strong>Email: </strong>{email}
-                    </p>
                     <div className={'my-3 text-center'}>
-                        {verified ? (<h3>You are verified</h3>) : (<LoadingButton variant={'outline-light'} onClick={sendEmail} text={'Resend Verification Email'} loading={loading}/> )}
-                        <LoadingButton variant={'outline-light'} className={'my-1'} onClick={resetPassword} text={'Reset Password'} loading={passwordLoading}/>
+                        {verified ? '': (<div><LoadingButton variant={'outline-light'} onClick={sendEmail} text={'Resend Verification Email'} loading={loading}/></div> )}
+                        <LoadingButton variant={'outline-light'} className={'mt-3'} onClick={resetPassword} text={'Reset Password'} loading={passwordLoading}/>
                     </div>
-                    <Button variant={'outline-danger'} onClick={logout}>Logout &nbsp;<FiLogOut size={'25'}/></Button>
+                    <Button className={'my-3'} variant={'outline-danger'} onClick={logout}>Logout &nbsp;<FiLogOut size={'25'}/></Button>
                 </>
             )}
             </div>

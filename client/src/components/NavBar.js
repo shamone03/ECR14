@@ -17,7 +17,7 @@ const NavBar = () => {
 
     const logout = () => {
         localStorage.clear()
-        navigate('/login')
+        navigate('/')
     }
 
     const MobileMenu = () => {
