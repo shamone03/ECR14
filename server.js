@@ -15,11 +15,12 @@ app.use(morgan('tiny'))
 app.use(express.json({limit: '15mb'}))
 app.use(express.urlencoded({extended: true, limit: '15mb'}))
 const dbConn = require('./server/connection/connection')
-const {nomineeModel, surveyModel, pollModel} = require("./server/model/model");
+const {nomineeModel, surveyModel, pollModel, userModel} = require("./server/model/model");
 const {register, verifyEmail, login, registered, resetPassword, verifyReset} = require("./server/controllers/user");
 const {Storage} = require('@google-cloud/storage')
 const fs = require("fs");
 const stream = require('stream')
+const bcrypt = require("bcrypt");
 // const img = require('./server/utils/placeholder.png')
 // const path = require("path")
 // app.use(express.static(path.join(__dirname, 'client', 'build')))
@@ -92,6 +93,45 @@ const checkVerified = (req, res, next) => {
         return res.status(401).send({message: 'not verified'})
     }
 }
+
+app.post('/api/update', verifyToken, async (req, res) => {
+    if (!req.body) {
+        res.status(400).send({message: 'no body'})
+    }
+    const id = jwt.decode(req.headers['authorization'])._id
+    try {
+        const user = await userModel.updateOne({_id: id}, {names: req.body.names, number: req.body.number, residentType: req.body.residentType})
+        if (req.body.imgBase64.length > 0) {
+            const storage = new Storage()
+            const bucket = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET)
+            const bufferStream = new stream.PassThrough()
+            bufferStream.end(req.body.imgBase64, 'base64')
+            const cloudFile = bucket.file(`${id}.png`)
+            bufferStream.pipe(cloudFile.createWriteStream({
+                metadata: {
+                    cacheControl: "no-store"
+                }
+            })).on('error', (e) => {
+                console.log('error pic uploading')
+                return res.status(500).send({e})
+            }).on('finish', async () => {
+                console.log('pic uploaded')
+                try {
+                    await userModel.findOneAndUpdate({_id: id}, {imgURL: `https://storage.googleapis.com/${process.env.GCLOUD_STORAGE_BUCKET}/${id}.png`})
+                } catch (e) {
+                    console.log('error updating img url')
+                    console.log(e)
+                    return res.status(500).send({message: 'error updating img url', e})
+                }
+            })
+        }
+        console.log('doc updated')
+        return res.status(200).send()
+    } catch (e) {
+        console.log(e)
+        res.status(500).send({e})
+    }
+})
 
 app.get('/api/verifyEmail', verifyToken, async (req, res) => {
 

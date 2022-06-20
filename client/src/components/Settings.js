@@ -1,24 +1,31 @@
-import React, {useEffect, useState} from 'react'
-import {Button, Image, Spinner} from "react-bootstrap";
+import React, {useEffect, useState, useRef} from 'react'
+import {Button, Form, Image, Spinner} from "react-bootstrap";
 import RedirectLogin from "./RedirectLogin";
 import {url} from "../assets/js/url";
 import {Link, useNavigate} from "react-router-dom";
-import {FiLogOut} from "react-icons/all";
+import {AiOutlineClose, AiOutlineEdit, FiLogOut} from "react-icons/all";
+import styles from '../css/InputText.module.css'
+import UpdateUser from "./UpdateUser";
+import LoadingButton from "./LoadingButton";
 
 
 const Settings = () => {
+    const canvasRef = useRef(null)
+    const imgRef = useRef(null)
+    const [imgFile, setImgFile] = useState(new File([], "", undefined))
+    const [imgB64, setImgB64] = useState('')
     const [houseNo, setHouseNo] = useState('')
-    const [names, setNames] = useState([])
+    const [members, setMembers] = useState([])
+    const [showMembers, setShowMembers] = useState(false)
     const [verified, setVerified] = useState(false)
-    const [showNames, setShowNames] = useState(false)
     const [loggedIn, setLoggedIn] = useState(true)
-    const [showMenu, setShowMenu] = useState(false)
     const [residentType, setResidentType] = useState('')
     const [number, setNumber] = useState('')
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
+    const [updateLoading, setUpdateLoading] = useState(false)
     const [img, setImg] = useState('')
-    const [editMode, setEditMode] = useState()
+    const [editMode, setEditMode] = useState(false)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -39,7 +46,7 @@ const Settings = () => {
                 setVerified(data.verified)
                 setLoggedIn(true)
                 setHouseNo(data.houseNo)
-                setNames(data.names)
+                setMembers(data.names)
                 setResidentType(data.residentType)
                 setNumber(data.number)
                 setEmail(data.email)
@@ -75,11 +82,12 @@ const Settings = () => {
         navigate('/login')
     }
 
+
     const Names = () => {
-        if (showNames) {
+        if (showMembers) {
             return (
                 <ul className={'list-group mx-auto mt-2 text-center w-100'}>
-                    {names.map(i => <li className={'text-center list-group-item list-group-item-action list-group-item-dark'} key={i._id}>{i.name}</li>)}
+                    {members.map(i => <li className={'text-center list-group-item list-group-item-action list-group-item-dark'} _id={i._id}>{i.name}</li>)}
                 </ul>
             )
         } else {
@@ -90,40 +98,34 @@ const Settings = () => {
 
     }
 
-    const LoadingButton = ({loading, text, onClick}) => {
-        if (loading) {
-            return (
-                <Button className={'mt-5'} variant="outline-light" disabled>
-                    <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true"/>
-                    Loading...
-                </Button>
-            )
-        }
-        if (!loading) {
-            return (
-                <Button onClick={onClick} className={'mt-5'} variant={'outline-light'}>{text}</Button>
-            )
-        }
-    }
-
     return (
         <>
             <RedirectLogin loggedIn={loggedIn}/>
             <div className={'w-50 mx-auto d-flex align-items-center justify-content-center flex-column'}>
-                {img !== '' ? <Image roundedCircle width={150} height={150} src={img} className={'my-1'}/> : <></>}
-                <Button variant={'dark'} className={'mt-5 mx-auto'} onClick={() => setShowNames(!showNames)}>Show residents</Button>
-                <Names/>
-                <p className={'mt-5'}>
-                    <strong>Resident Type: </strong>{residentType} <br/><br/>
-                    <strong>Number: </strong>{number} <br/><br/>
-                    <strong>Email: </strong>{email}
-                </p>
-                <Button variant={'outline-danger'} onClick={logout}>Logout &nbsp;<FiLogOut size={'25'}/></Button>
+            {editMode ? (
+                <>
+                    <UpdateUser img={img} members1={members} number1={number} resType={residentType}/>
+                    <Button variant={'outline-light'} className={'mb-2'} onClick={() => setEditMode(false)}><AiOutlineEdit size={20}/></Button>
+                </>
+            ) : (
+                <>
+                    {img !== '' ? <Image roundedCircle width={150} height={150} src={img} className={'mt-3'}/> : <></>}
+                    <Button variant={'dark'} className={'mt-5 mx-auto'} onClick={() => setShowMembers(!showMembers)}>Show residents</Button>
+                    <Names/>
+                    <p className={'mt-5'}>
+                        <strong>Resident Type: </strong>{residentType} <br/><br/>
+                        <strong>Number: </strong>{number} <br/><br/>
+                        <strong>Email: </strong>{email}
+                    </p>
+                    <div className={'my-3 text-center'}>
+                        {verified ? (<h3>You are verified</h3>) : (<LoadingButton onClick={sendEmail} text={'Resend Verification Email'} loading={loading}/> )}
+                    </div>
+                    <Button variant={'outline-light'} className={'mb-2'} onClick={() => setEditMode(true)}><AiOutlineEdit size={20}/></Button>
+                    <Button variant={'outline-danger'} onClick={logout}>Logout &nbsp;<FiLogOut size={'25'}/></Button>
+                </>
+            )}
             </div>
 
-            <div className={'mt-3 text-center'}>
-                {verified ? (<h3>You are verified</h3>) : (<LoadingButton onClick={sendEmail} text={'Resend Verification Email'} loading={loading}/> )}
-            </div>
         </>
     )
 }

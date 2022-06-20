@@ -74,24 +74,28 @@ exports.register = async (req, res) => {
 
     try {
         newUser = await newUser.save()
-        const bufferStream = new stream.PassThrough()
-        bufferStream.end(req.body.imgBase64, 'base64')
-        const cloudFile = bucket.file(`${newUser._id}.png`)
-        bufferStream.pipe(cloudFile.createWriteStream({
-            cacheControl: "private, max-age=0, no-transform"
-        })).on('error', (e) => {
-            console.log('error pic uploading')
-            res.status(500).send({e})
-        }).on('finish', async () => {
-            console.log('pic uploaded')
-            try {
-                await userModel.findOneAndUpdate({_id: newUser._id}, {imgURL: `https://storage.googleapis.com/${process.env.GCLOUD_STORAGE_BUCKET}/${newUser._id}.png`})
-            } catch (e) {
-                console.log('error updating img url')
-                console.log(e)
-                res.status(500).send({message: 'error updating img url', e})
-            }
-        })
+        if (req.body.imgBase64.length > 0) {
+            const bufferStream = new stream.PassThrough()
+            bufferStream.end(req.body.imgBase64, 'base64')
+            const cloudFile = bucket.file(`${newUser._id}.png`)
+            bufferStream.pipe(cloudFile.createWriteStream({metadata: {
+                    cacheControl: "no-store"
+                }
+            })).on('error', (e) => {
+                console.log('error pic uploading')
+                res.status(500).send({e})
+            }).on('finish', async () => {
+                console.log('pic uploaded')
+                try {
+                    await userModel.findOneAndUpdate({_id: newUser._id}, {imgURL: `https://storage.googleapis.com/${process.env.GCLOUD_STORAGE_BUCKET}/${newUser._id}.png`})
+                } catch (e) {
+                    console.log('error updating img url')
+                    console.log(e)
+                    res.status(500).send({message: 'error updating img url', e})
+                }
+            })
+        }
+
         const token = await new tokenModel({
             userId: newUser._id,
             token: crypto.randomBytes(32).toString("hex")
