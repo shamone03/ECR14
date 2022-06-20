@@ -16,6 +16,18 @@
     margin-top: 10%;
 }
 
+.linkStyle {
+    margin-top: 10px;
+    text-decoration: none;
+    color: aliceblue;
+}
+
+.linkStyle:hover {
+    color: gray;
+    transition: all 0.2s ease-in-out !important;
+    cursor: pointer;
+}
+
 /*@media only screen and (max-width: 600px) {*/
 /*    .formStyle {*/
 /*        width: 80%;*/

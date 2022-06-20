@@ -11,6 +11,7 @@ const Login = () => {
     const [password, setPassword] = useState('')
     const [loggedIn, setLoggedIn] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [passwordLoading, setPasswordLoading] = useState(false)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -53,6 +54,34 @@ const Login = () => {
         }
     }
 
+    const resetPassword = async (e) => {
+        e.preventDefault()
+        if (houseNo === '') {
+            alert('Enter Apartment Number to reset password.')
+            return
+        }
+        setPasswordLoading(true)
+        const res = await fetch(`${url}/api/resetPassword`, {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                houseNo: houseNo.charAt(0).toUpperCase() + houseNo.slice(1)
+            })
+        })
+        if (res.status === 200) {
+            setPasswordLoading(false)
+            alert('Click link sent to your registered email to set password')
+        }
+        if (res.status === 404) {
+            setPasswordLoading(false)
+            alert('Invalid Apartment Number')
+        }
+        if (res.status === 500) {
+            setPasswordLoading(false)
+            alert('Server error try again later')
+        }
+    }
+
     const RedirectHome = () => {
         return (
             <>
@@ -76,6 +105,12 @@ const Login = () => {
                         <Form.Control className={styles.inputStyle} type="password" placeholder="Password" onChange={e => setPassword(e.target.value)}/>
                     </Form.Group>
                     <LoadingButton variant={'outline-success'} className={'mt-5'} onClick={(e) => loginUser(e)} type={'submit'} text={'Login'} loading={loading}/>
+                    {passwordLoading ? (
+                        <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true" style={{marginTop: '10px'}}/>
+                    ) : (
+                        <a onClick={(e) => resetPassword(e)} className={styles.linkStyle}>Forgot password?</a>
+                    )}
+
                 </Form>
             </div>
         </div>
