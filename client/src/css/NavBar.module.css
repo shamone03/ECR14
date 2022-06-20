@@ -21,11 +21,25 @@
 }
 
 .linkInActive:hover {
-
     color: gray;
 }
 
 .navBar {
     background-color: #161b22;
     border-bottom: 1px gray solid;
+}
+
+.closeButtonStyle, .menuButtonStyle {
+    border: none !important;
+    background-color: transparent !important;
+}
+
+.closeButtonStyle:hover, .menuButtonStyle:hover {
+    background-color: transparent !important;
+    border: none !important;
+    color: gray !important;
+}
+
+.closeButtonStyle:focus, .menuButtonStyle:focus {
+    box-shadow: none !important;
 }

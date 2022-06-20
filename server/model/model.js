@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema({
     isAdmin: {type: Boolean, default: false},
     number: {type: String},
     residentType: {type: String},
-    registeredArtificially: {type: Boolean, default: false}
+    registeredArtificially: {type: Boolean, default: false},
+    imgURL: {type: String}
 }, { collection: 'residents'})
 
 const tokenSchema = new mongoose.Schema({

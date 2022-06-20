@@ -156,7 +156,7 @@ const Voting = () => {
                         <div className={'row'}>
                             <ChosenNoms/>
                         </div>
-                        <LoadingButton loading={loading} onClick={sendVote} text={'Submit Vote'}/>
+                        <LoadingButton variant={'outline-light'} className={'my-5'} loading={loading} onClick={sendVote} text={'Submit Vote'}/>
                         <h1 className={'text-center'}>Nominees</h1>
 
                         <h2 className={'text-center'}>Choose {chosenPoll.representatives} representatives</h2>

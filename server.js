@@ -11,11 +11,20 @@ require('dotenv').config()
 app.use(cors({origin: '*'}))
 app.use(nocache())
 app.use(morgan('tiny'))
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.use(express.json({limit: '50mb'}))
+app.use(express.urlencoded({extended: true, limit: '50mb'}))
 const dbConn = require('./server/connection/connection')
-const {nomineeModel, surveyModel, pollModel} = require("./server/model/model");
+const {nomineeModel, surveyModel, pollModel, userModel} = require("./server/model/model");
 const {register, verifyEmail, login, registered, resetPassword, verifyReset} = require("./server/controllers/user");
+const {Storage} = require('@google-cloud/storage')
+const stream = require('stream')
+
+
+// const path = require("path")
+// app.use(express.static(path.join(__dirname, 'client', 'build')))
+// app.get('/', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+// })
 
 dbConn()
 
@@ -62,6 +71,45 @@ const checkVerified = (req, res, next) => {
         return res.status(401).send({message: 'not verified'})
     }
 }
+
+app.post('/api/update', verifyToken, async (req, res) => {
+    if (!req.body) {
+        res.status(400).send({message: 'no body'})
+    }
+    const id = jwt.decode(req.headers['authorization'])._id
+    try {
+        const user = await userModel.updateOne({_id: id}, {names: req.body.names, number: req.body.number, residentType: req.body.residentType})
+        if (req.body.imgBase64.length > 0) {
+            const storage = new Storage()
+            const bucket = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET)
+            const bufferStream = new stream.PassThrough()
+            bufferStream.end(req.body.imgBase64, 'base64')
+            const cloudFile = bucket.file(`${id}.png`)
+            bufferStream.pipe(cloudFile.createWriteStream({
+                metadata: {
+                    cacheControl: "no-store"
+                }
+            })).on('error', (e) => {
+                console.log('error pic uploading')
+                return res.status(500).send({e})
+            }).on('finish', async () => {
+                console.log('pic uploaded')
+                try {
+                    await userModel.findOneAndUpdate({_id: id}, {imgURL: `https://storage.googleapis.com/${process.env.GCLOUD_STORAGE_BUCKET}/${id}.png`})
+                } catch (e) {
+                    console.log('error updating img url')
+                    console.log(e)
+                    return res.status(500).send({message: 'error updating img url', e})
+                }
+            })
+        }
+        console.log('doc updated')
+        return res.status(200).send()
+    } catch (e) {
+        console.log(e)
+        res.status(500).send({e})
+    }
+})
 
 app.get('/api/verifyEmail', verifyToken, async (req, res) => {
 

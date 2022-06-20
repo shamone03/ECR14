@@ -17,7 +17,6 @@ module.exports = async (email, subject, text) => {
 
 
     const accessToken = await oAuth2Client.getAccessToken()
-    console.log(accessToken)
     try {
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',

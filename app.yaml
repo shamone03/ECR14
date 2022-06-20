@@ -1,0 +1,47 @@
+runtime: nodejs16
+
+handlers:
+  - url: /home
+    secure: always
+    static_files: client/build/index.html
+    upload: client/build/index.html
+  - url: /login
+    secure: always
+    static_files: client/build/index.html
+    upload: client/build/index.html
+  - url: /register
+    secure: always
+    static_files: client/build/index.html
+    upload: client/build/index.html
+  - url: /survey
+    secure: always
+    static_files: client/build/index.html
+    upload: client/build/index.html
+  - url: /vote
+    secure: always
+    static_files: client/build/index.html
+    upload: client/build/index.html
+  - url: /vote/vote-now
+    secure: always
+    static_files: client/build/index.html
+    upload: client/build/index.html
+  - url: /construction
+    secure: always
+    static_files: client/build/index.html
+    upload: client/build/index.html
+  - url: /settings
+    secure: always
+    static_files: client/build/index.html
+    upload: client/build/index.html
+  - url: /verify/(.*)/verify/(.*)
+    static_files: client/build/index.html
+    upload: client/build/index.html
+  - url: /reset/(.*)/reset/(.*)
+    static_files: client/build/index.html
+    upload: client/build/index.html
+  - url: /static
+    static_dir: client/build/static
+  - url: /(.*)
+    secure: always
+    redirect_http_response_code: 301
+    script: auto
