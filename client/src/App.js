@@ -36,10 +36,10 @@ function App() {
                                     Tools
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu variant={'dark'}>
-                                    <Dropdown.Item href="/login">Voting</Dropdown.Item>
-                                    <Dropdown.Item href="/login">Events</Dropdown.Item>
-                                    <Dropdown.Item href="/login">Documents</Dropdown.Item>
-                                    <Dropdown.Item href="/login">Amenities</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => navigate('/login')}>Voting</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => navigate('/login')}>Events</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => navigate('/login')}>Documents</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => navigate('/login')}>Amenities</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                             <a className={`${styles.linkStyle} my-3 btn ${styles.buttonStyle}`} href={'mailto:ecr14.ecr14@gmail.com'}>Contact</a>
@@ -74,10 +74,10 @@ function App() {
                                     Tools
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu variant={'dark'}>
-                                    <Dropdown.Item href="/login">Voting</Dropdown.Item>
-                                    <Dropdown.Item href="/login">Events</Dropdown.Item>
-                                    <Dropdown.Item href="/login">Documents</Dropdown.Item>
-                                    <Dropdown.Item href="/login">Amenities</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => navigate('/login')}>Voting</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => navigate('/login')}>Events</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => navigate('/login')}>Documents</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => navigate('/login')}>Amenities</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                             <a className={`${styles.linkStyle} my-3 mx-1 btn ${styles.buttonStyle}`} href={'mailto:ecr14.ecr14@gmail.com'}>Contact</a>

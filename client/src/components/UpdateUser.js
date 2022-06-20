@@ -94,6 +94,10 @@ const UpdateUser = ({img, members1, number1, resType}) => {
                 alert('Names have to be longer that 3 characters')
                 return false
             }
+            if (i.age < 0 || i.age > 100) {
+                alert('Enter age between 0 and 100')
+                return false
+            }
         }
         return true
     }
@@ -144,7 +148,8 @@ const UpdateUser = ({img, members1, number1, resType}) => {
         return true
     }
 
-    const update = async () => {
+    const update = async (e) => {
+        e.preventDefault()
         if (!validate()) {
             return
         }
@@ -218,7 +223,7 @@ const UpdateUser = ({img, members1, number1, resType}) => {
                 <Form.Control style={numberStyle} value={number} className={styles.inputStyle} type={"text"} placeholder={'0123456789'} onChange={e => validateNumber(e.target.value)}/>
             </Form.Group>
             <div className={'text-center'}>
-                <LoadingButton type={'submit'} variant={'outline-success'} className={'my-3 mx-auto'} onClick={update} loading={loading} text={'Update'}/>
+                <LoadingButton type={'submit'} variant={'outline-success'} className={'my-3 mx-auto'} onClick={(e) => update(e)} loading={loading} text={'Update'}/>
             </div>
         </Form>
     )

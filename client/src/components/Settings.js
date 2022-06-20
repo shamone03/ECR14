@@ -105,16 +105,14 @@ const Settings = () => {
                 // </ul>
                 <div className={'container'}>
                     <div className={'row justify-content-center'} >
-                        <h6 className={'col-2 text-start p-1'} style={{borderBottom: '1px solid gray', color: 'lightblue'}}>Name</h6>
-                        <h6 className={'col-2 text-end p-1'} style={{borderBottom: '1px solid gray', color: 'lightblue'}}>Age</h6>
+                        <h6 className={'col-lg-2 col-5 text-start p-1'} style={{borderBottom: '1px solid gray', color: 'lightblue'}}>Name</h6>
+                        <h6 className={'col-lg-2 col-5 text-end p-1'} style={{borderBottom: '1px solid gray', color: 'lightblue'}}>Age</h6>
                     </div>
                     {members.map(i => (
-                        <>
-                            <div className={'row justify-content-center'} style={{wordWrap: 'break-word'}}>
-                                <h6 className={'col-2 text-start'} style={{color: 'lightblue'}}>{i.name}</h6>
-                                <h6 className={'col-2 text-end'}>{i.age}</h6>
-                            </div>
-                        </>
+                        <div className={'row justify-content-center'} style={{wordWrap: 'break-word'}} key={i._id}>
+                            <h6 className={'col-lg-2 col-5 text-start'} style={{color: 'lightblue'}}>{i.name}</h6>
+                            <h6 className={'col-lg-2 col-5 text-end'}>{i.age}</h6>
+                        </div>
                     ))}
                 </div>
             )

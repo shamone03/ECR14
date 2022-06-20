@@ -3,12 +3,11 @@
     margin-left: 5px;
     text-decoration: none;
     color: gray;
-    transition-timing-function: ease-in-out !important;
-    transition: all !important;
 }
 
 .linkActive:hover {
     color: gray;
+    transition: all 0.2s ease-in-out !important;
 }
 
 .linkInActive {
@@ -16,12 +15,11 @@
     margin-left: 5px;
     text-decoration: none;
     color: aliceblue;
-    transition-timing-function: ease-in-out !important;
-    transition: all !important;
 }
 
 .linkInActive:hover {
     color: gray;
+    transition: all 0.2s ease-in-out !important;
 }
 
 .navBar {
@@ -42,4 +40,24 @@
 
 .closeButtonStyle:focus, .menuButtonStyle:focus {
     box-shadow: none !important;
+}
+
+.buttonStyle {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: aliceblue !important;
+}
+
+.buttonStyle:hover {
+    color: gray !important;
+    transition: all !important;
+    transition-timing-function: ease-in-out !important;
+}
+
+.buttonStyle:focus {
+    box-shadow: none !important;
+}
+
+.dropDownItemStyle:active {
+    background-color: #161b22 !important;
 }

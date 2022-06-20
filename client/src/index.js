@@ -35,7 +35,6 @@ root.render (
                     <Outlet/>
                 </>}>
                 <Route path={'/home'} element={<Home/>}/>
-                {/*<Route path={'/admin'} element={<Admin/>}/>*/}
                 <Route path={'/vote'} element={<VoteMenu/>}/>
                 <Route path={'/settings'} element={<Settings/>}/>
                 <Route path={'/vote/vote-now'} element={<Construction/>}/>
