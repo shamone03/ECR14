@@ -119,6 +119,9 @@
 body {
     background-color: #181a1b !important;
     color: aliceblue !important;
+    background-size: 800px 800px;
+    background-image: url("../assets/—Pngtree—simple black dotted diagonal grid_5466852.png");
+    background-repeat: repeat;
 }
 
 

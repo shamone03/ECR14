@@ -90,7 +90,7 @@ const UpdateUser = ({img, members1, number1, resType}) => {
             return false
         }
         for (let i of members) {
-            if (i.name.length > 3) {
+            if (i.name.length < 3) {
                 alert('Names have to be longer that 3 characters')
                 return false
             }
@@ -137,12 +137,18 @@ const UpdateUser = ({img, members1, number1, resType}) => {
         }
         if (!validateMembers(members)) {
             setMemberStyle({border: 'solid 3px red'})
+            return false
         } else {
             setMemberStyle({border: '3px transparent'})
         }
+        return true
     }
 
     const update = async () => {
+        if (!validate()) {
+            return
+        }
+        setLoading(true)
         const res = await fetch(`${url}/api/update`, {
             method: 'POST',
             headers: {
@@ -158,10 +164,14 @@ const UpdateUser = ({img, members1, number1, resType}) => {
         })
         if (res.status === 200) {
             alert('Updated')
+            setLoading(false)
+            window.location.reload()
         }
         if (res.status === 500) {
+            setLoading(false)
             alert('Server error try again later')
         }
+        setLoading(false)
     }
 
     return (
@@ -198,7 +208,7 @@ const UpdateUser = ({img, members1, number1, resType}) => {
             </Form.Group>
             <Form.Group className={'mb-3'} style={resTypeStyle}>
                 <Form.Label>Choose Resident Type</Form.Label>
-                <Form.Select className={`${styles.inputStyle}`} onChange={(e) => validateResidentType(e.target.value)}>
+                <Form.Select className={`${styles.inputStyle}`} value={residentType} onChange={(e) => validateResidentType(e.target.value)}>
                     <option value={'Resident Type'}>Resident Type</option>
                     <option value={'Owner'}>Owner</option>
                     <option value={'Co-Owner'}>Co-Owner</option>
@@ -207,9 +217,11 @@ const UpdateUser = ({img, members1, number1, resType}) => {
             </Form.Group>
             <Form.Group className={'mb-3'}>
                 <Form.Label>Enter Phone Number</Form.Label>
-                <Form.Control style={numberStyle} className={styles.inputStyle} type={"text"} placeholder={'0123456789'} onChange={e => validateNumber(e.target.value)}/>
+                <Form.Control style={numberStyle} value={number} className={styles.inputStyle} type={"text"} placeholder={'0123456789'} onChange={e => validateNumber(e.target.value)}/>
             </Form.Group>
-            <LoadingButton onClick={update} loading={loading} text={'Update'}/>
+            <div className={'text-center'}>
+                <LoadingButton variant={'outline-success'} className={'my-3 mx-auto'} onClick={update} loading={loading} text={'Update'}/>
+            </div>
         </Form>
     )
 }

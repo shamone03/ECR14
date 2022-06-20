@@ -1,19 +1,14 @@
-import React, {useEffect, useState, useRef} from 'react'
-import {Button, Form, Image, Spinner} from "react-bootstrap";
+import React, {useEffect, useState} from 'react'
+import {Button, Image} from "react-bootstrap";
 import RedirectLogin from "./RedirectLogin";
 import {url} from "../assets/js/url";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {AiOutlineClose, AiOutlineEdit, FiLogOut} from "react-icons/all";
-import styles from '../css/InputText.module.css'
 import UpdateUser from "./UpdateUser";
 import LoadingButton from "./LoadingButton";
 
 
 const Settings = () => {
-    const canvasRef = useRef(null)
-    const imgRef = useRef(null)
-    const [imgFile, setImgFile] = useState(new File([], "", undefined))
-    const [imgB64, setImgB64] = useState('')
     const [houseNo, setHouseNo] = useState('')
     const [members, setMembers] = useState([])
     const [showMembers, setShowMembers] = useState(false)
@@ -23,7 +18,7 @@ const Settings = () => {
     const [number, setNumber] = useState('')
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
-    const [updateLoading, setUpdateLoading] = useState(false)
+    const [passwordLoading, setPasswordLoading] = useState(false)
     const [img, setImg] = useState('')
     const [editMode, setEditMode] = useState(false)
     const navigate = useNavigate()
@@ -77,6 +72,26 @@ const Settings = () => {
         }
     }
 
+    const resetPassword = async () => {
+        setPasswordLoading(true)
+        const res = await fetch(`${url}/api/resetPassword`, {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                houseNo: houseNo
+            })
+        })
+        if (res.status === 200) {
+            alert('Click link sent to your registered email to set password')
+            setPasswordLoading(false)
+            navigate('/login')
+        } else {
+            setPasswordLoading(false)
+            alert('Server error')
+        }
+
+    }
+
     const logout = () => {
         localStorage.clear()
         navigate('/login')
@@ -87,7 +102,7 @@ const Settings = () => {
         if (showMembers) {
             return (
                 <ul className={'list-group mx-auto mt-2 text-center w-100'}>
-                    {members.map(i => <li className={'text-center list-group-item list-group-item-action list-group-item-dark'} _id={i._id}>{i.name}</li>)}
+                    {members.map(i => <li className={'text-center list-group-item list-group-item-action list-group-item-dark'} key={i._id}>{i.name}</li>)}
                 </ul>
             )
         } else {
@@ -101,14 +116,19 @@ const Settings = () => {
     return (
         <>
             <RedirectLogin loggedIn={loggedIn}/>
-            <div className={'w-50 mx-auto d-flex align-items-center justify-content-center flex-column'}>
+            <div className={'mx-auto d-flex align-items-center justify-content-center flex-column'} style={{width: '75%'}}>
             {editMode ? (
                 <>
+                    <div className={'d-flex w-100 justify-content-end'}>
+                        <Button variant={'outline-light'} className={'mt-3'} onClick={() => setEditMode(false)}><AiOutlineClose size={20}/></Button>
+                    </div>
                     <UpdateUser img={img} members1={members} number1={number} resType={residentType}/>
-                    <Button variant={'outline-light'} className={'mb-2'} onClick={() => setEditMode(false)}><AiOutlineEdit size={20}/></Button>
                 </>
             ) : (
                 <>
+                    <div className={'d-flex w-100 justify-content-end'}>
+                        <Button variant={'outline-light'} className={'mt-3'} onClick={() => setEditMode(true)}><AiOutlineEdit size={20}/></Button>
+                    </div>
                     {img !== '' ? <Image roundedCircle width={150} height={150} src={img} className={'mt-3'}/> : <></>}
                     <Button variant={'dark'} className={'mt-5 mx-auto'} onClick={() => setShowMembers(!showMembers)}>Show residents</Button>
                     <Names/>
@@ -118,9 +138,9 @@ const Settings = () => {
                         <strong>Email: </strong>{email}
                     </p>
                     <div className={'my-3 text-center'}>
-                        {verified ? (<h3>You are verified</h3>) : (<LoadingButton onClick={sendEmail} text={'Resend Verification Email'} loading={loading}/> )}
+                        {verified ? (<h3>You are verified</h3>) : (<LoadingButton variant={'outline-light'} onClick={sendEmail} text={'Resend Verification Email'} loading={loading}/> )}
+                        <LoadingButton variant={'outline-light'} className={'my-1'} onClick={resetPassword} text={'Reset Password'} loading={passwordLoading}/>
                     </div>
-                    <Button variant={'outline-light'} className={'mb-2'} onClick={() => setEditMode(true)}><AiOutlineEdit size={20}/></Button>
                     <Button variant={'outline-danger'} onClick={logout}>Logout &nbsp;<FiLogOut size={'25'}/></Button>
                 </>
             )}

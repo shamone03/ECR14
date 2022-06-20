@@ -17,13 +17,10 @@ exports.resetPassword = async (req, res) => {
             return res.status(404).send({message: 'user not found'})
 
         }
-        // const token = await new tokenModel({
-        //     userId: user._id,
-        //     token: crypto.randomBytes(32).toString("hex")
-        // }).save()
+
         const code = crypto.randomBytes(32).toString("hex")
 
-        const token = await tokenModel.updateOne({userId: user._id}, {token: code}, {upsert: true})
+        await tokenModel.updateOne({userId: user._id}, {token: code}, {upsert: true})
 
         const url = `${process.env.CLIENT_URL}/reset/${user._id}/reset/${code}`
         await sendEmail(user.email, 'reset password', url)
@@ -146,13 +143,9 @@ exports.login = async (req, res) => {
         res.status(404).send({message: 'invalid details'})
     } else {
         if (await bcrypt.compare(req.body.password, user.password)) {
-            console.log('password correct')
             const token = jwt.sign({houseNo: user.houseNo, _id: user._id, isAdmin: user.isAdmin, verified: user.verified}, process.env.JWT_SECRET, { expiresIn: '86400s'})
-            // console.log(res.header)
-            console.log('token ' + token)
             res.status(200).send({message: 'success', token: token})
         } else {
-            console.log('password incorrect')
             res.status(401).send({message: 'invalid details'})
         }
     }
