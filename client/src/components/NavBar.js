@@ -1,6 +1,6 @@
 import {useMediaQuery} from "react-responsive";
 import React, {useState} from "react";
-import {Button, Offcanvas} from "react-bootstrap";
+import {Button, Dropdown, Offcanvas} from "react-bootstrap";
 import styles1 from "../css/NavBar.module.css";
 import {AiOutlineClose, AiOutlineMenu, FiLogOut} from "react-icons/all";
 import {NavLink, useNavigate} from "react-router-dom";
@@ -35,6 +35,29 @@ const NavBar = () => {
                             <NavLink style={linkStyle} onClick={() => setShowMenu(false)} to={'/home'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Home</NavLink>
                             <NavLink style={linkStyle} onClick={() => setShowMenu(false)} to={'/vote'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Vote</NavLink>
                             <NavLink style={linkStyle} onClick={() => setShowMenu(false)} to={'/settings'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Profile</NavLink>
+                            <Dropdown>
+                                <Dropdown.Toggle className={`btn ${styles1.buttonStyle}`} style={linkStyle}>
+                                    Tools
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu variant={'dark'}>
+                                    <Dropdown.Item className={styles1.dropDownItemStyle} style={linkStyle} onClick={() => {
+                                        setShowMenu(false)
+                                        navigate('/vote')
+                                    }}>Voting</Dropdown.Item>
+                                    <Dropdown.Item className={styles1.dropDownItemStyle} style={linkStyle} onClick={() => {
+                                        setShowMenu(false)
+                                        navigate('/construction')
+                                    }}>Events</Dropdown.Item>
+                                    <Dropdown.Item className={styles1.dropDownItemStyle} style={linkStyle} onClick={() => {
+                                        setShowMenu(false)
+                                        navigate('/construction')
+                                    }}>Documents</Dropdown.Item>
+                                    <Dropdown.Item className={styles1.dropDownItemStyle} style={linkStyle} onClick={() => {
+                                        setShowMenu(false)
+                                        navigate('/construction')
+                                    }}>Amenities</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
                         </div>
                         <Button variant={'outline-danger'} className={'mx-2'} onClick={logout}>Logout &nbsp;<FiLogOut size={'25'}/></Button>
                     </div>
@@ -56,6 +79,17 @@ const NavBar = () => {
                     </>
                 ) : (
                     <>
+                        <Dropdown>
+                            <Dropdown.Toggle className={`btn my-3 ${styles1.buttonStyle}`}>
+                                Tools
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu variant={'dark'}>
+                                <Dropdown.Item className={styles1.dropDownItemStyle} onClick={() => navigate('/vote')}>Voting</Dropdown.Item>
+                                <Dropdown.Item className={styles1.dropDownItemStyle} onClick={() => navigate('/construction')}>Events</Dropdown.Item>
+                                <Dropdown.Item className={styles1.dropDownItemStyle} onClick={() => navigate('/construction')}>Documents</Dropdown.Item>
+                                <Dropdown.Item className={styles1.dropDownItemStyle} onClick={() => navigate('/construction')}>Amenities</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
                         <NavLink to={'/home'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Home</NavLink>
                         <NavLink to={'/vote'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Vote</NavLink>
                         <NavLink to={'/settings'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Profile</NavLink>

@@ -75,7 +75,7 @@ const Login = () => {
                         <Form.Label>Password</Form.Label>
                         <Form.Control className={styles.inputStyle} type="password" placeholder="Password" onChange={e => setPassword(e.target.value)}/>
                     </Form.Group>
-                    <LoadingButton variant={'outline-success'} className={'mt-5'} onClick={loginUser} type={'submit'} text={'Login'}/>
+                    <LoadingButton variant={'outline-success'} className={'mt-5'} onClick={(e) => loginUser(e)} type={'submit'} text={'Login'} loading={loading}/>
                 </Form>
             </div>
         </div>
