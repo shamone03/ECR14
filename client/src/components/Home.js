@@ -5,8 +5,7 @@ import {Button, Image, Offcanvas} from "react-bootstrap";
 import styles from '../css/Home.module.css'
 import RedirectLogin from "./RedirectLogin";
 import {url} from "../assets/js/url";
-import {AiOutlineClose} from "react-icons/all";
-import placeholder from "../assets/placeholder.png";
+import placeholder from "../assets/images/placeholder.webp";
 
 const Home = () => {
     const [houseNo, setHouseNo] = useState('')

@@ -5,7 +5,7 @@ import {AiOutlineClose} from "react-icons/all";
 import validator from "validator/es";
 import {url} from "../assets/js/url";
 import LoadingButton from "./LoadingButton";
-import placeholder from "../assets/placeholder.png";
+import placeholder from "../assets/images/placeholder.webp";
 
 const UpdateUser = ({img, members1, number1, resType, parkings}) => {
     const canvasRef = useRef(null)
