@@ -7,7 +7,7 @@ import {url} from "../assets/js/url";
 import LoadingButton from "./LoadingButton";
 import placeholder from "../assets/placeholder.png";
 
-const UpdateUser = ({img, members1, number1, resType}) => {
+const UpdateUser = ({img, members1, number1, resType, parkings}) => {
     const canvasRef = useRef(null)
     const imgRef = useRef(null)
     const [imgFile, setImgFile] = useState(new File([], "", undefined))
@@ -17,14 +17,16 @@ const UpdateUser = ({img, members1, number1, resType}) => {
     const [loading, setLoading] = useState(false)
 
     const [imgB64, setImgB64] = useState('')
-    const [members, setMembers] = useState([])
     const [residentType, setResidentType] = useState('')
     const [number, setNumber] = useState('')
+    const [members, setMembers] = useState([])
+    const [parkingNos, setParkingNos] = useState([])
 
     useEffect(() => {
         setMembers(members1)
         setResidentType(resType)
         setNumber(number1)
+        setParkingNos(parkings)
     }, [])
 
     useEffect(() => {
@@ -85,6 +87,43 @@ const UpdateUser = ({img, members1, number1, resType}) => {
         console.log(members)
     }
 
+    const editParkingSpot = (p, i) => {
+        const copy = parkingNos
+        copy[i] = parseInt(p)
+        setParkingNos([...copy])
+    }
+
+    const addParking = () => {
+        const copy = parkingNos
+        copy.push(0)
+        setParkingNos([...copy])
+    }
+
+    const removeParkingNo = (i) => {
+        console.log(i)
+        const copy = parkingNos
+        copy.splice(i, 1)
+
+        setParkingNos([...copy])
+        console.log(parkingNos)
+    }
+
+    const validateParking = () => {
+        if ((new Set(parkingNos)).size === parkingNos.length) {
+            setParkingNos((p) => [...p.map(i => parseInt(i))])
+            for (let i of parkingNos) {
+                if (i < 0 || i > 999) {
+                    alert('Parking Number has to be between 0 and 999')
+                    return false
+                }
+            }
+            return true
+        } else {
+            alert('Parking Numbers have to be unique')
+            return false
+        }
+    }
+
     const validateMembers = (members) => {
         if (members.length === 0) {
             alert('Add at least one resident')
@@ -126,6 +165,9 @@ const UpdateUser = ({img, members1, number1, resType}) => {
     }
 
     const validate = () => {
+        if (!validateParking()) {
+            return false
+        }
         if (!validateNumber(number)) {
             setNumberStyle({border: 'solid 3px red'})
             alert('Invalid Number')
@@ -165,7 +207,8 @@ const UpdateUser = ({img, members1, number1, resType}) => {
                 names: members.map(i => ({name: i.name, age: parseInt(i.age)})),
                 number: number,
                 residentType: residentType,
-                imgBase64: imgB64 ? imgB64.split(',')[1] : ''
+                imgBase64: imgB64 ? imgB64.split(',')[1] : '',
+                parkingNos: parkingNos
             })
         })
         if (res.status === 200) {
@@ -209,6 +252,18 @@ const UpdateUser = ({img, members1, number1, resType}) => {
                     )}
                 </div>
                 <Button variant={'outline-light'} onClick={addMember}>Add</Button>
+            </Form.Group>
+            <Form.Group className={'mb-3'}>
+                <Form.Label>Add owned parking spots</Form.Label>
+                <div className={'d-flex flex-column'}>
+                    {parkingNos.map((p, index) =>
+                        <div className={'d-flex flex-row'} key={index}>
+                            <Form.Control className={`${styles.inputStyle} mb-1 mx-1`} type={'number'} value={p} onChange={(e) => editParkingSpot(e.target.value, index)}/>
+                            <Button className={'mb-1'} variant={'outline-light'} onClick={() => removeParkingNo(index)}><AiOutlineClose size={20}/></Button>
+                        </div>
+                    )}
+                </div>
+                <Button variant={'outline-light'} onClick={addParking}>Add</Button>
             </Form.Group>
             <Form.Group className={'mb-3'} style={resTypeStyle}>
                 <Form.Label>Choose Resident Type</Form.Label>

@@ -78,7 +78,7 @@ app.post('/api/update', verifyToken, async (req, res) => {
     }
     const id = jwt.decode(req.headers['authorization'])._id
     try {
-        const user = await userModel.updateOne({_id: id}, {names: req.body.names, number: req.body.number, residentType: req.body.residentType})
+        const user = await userModel.updateOne({_id: id}, {names: req.body.names, number: req.body.number, residentType: req.body.residentType, parkingNos: req.body.parkingNos})
         if (req.body.imgBase64.length > 0) {
             const storage = new Storage()
             const bucket = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET)
