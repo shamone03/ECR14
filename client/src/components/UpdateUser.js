@@ -5,6 +5,7 @@ import {AiOutlineClose} from "react-icons/all";
 import validator from "validator/es";
 import {url} from "../assets/js/url";
 import LoadingButton from "./LoadingButton";
+import placeholder from "../assets/placeholder.png";
 
 const UpdateUser = ({img, members1, number1, resType}) => {
     const canvasRef = useRef(null)
@@ -187,7 +188,7 @@ const UpdateUser = ({img, members1, number1, resType}) => {
                     <Image src={URL.createObjectURL(imgFile)} className={'d-none'} ref={imgRef} alt={'prof pic'}/>
                 </> : ''}
             <div className={'d-flex flex-row justify-content-center w-100'}>
-                {imgFile.name ? <Image src={imgB64} width={150} height={150} roundedCircle alt={'prof pic'}/> : img ? <Image src={img} width={150} height={150} roundedCircle alt={'prof pic'}/> : ''}
+                {imgFile.name ? <Image src={imgB64} width={150} height={150} roundedCircle alt={'prof pic'}/> : img ? <Image src={img} width={150} height={150} roundedCircle alt={'prof pic'}/> : <Image src={placeholder} roundedCircle width={150} height={150} alt={'prof pic'}/>}
             </div>
             <Form.Group controlId="formFile" className={'mb-3'}>
                 <Form.Label>Upload profile picture</Form.Label>

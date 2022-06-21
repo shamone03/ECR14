@@ -6,7 +6,7 @@ import styles from '../css/Home.module.css'
 import RedirectLogin from "./RedirectLogin";
 import {url} from "../assets/js/url";
 import {AiOutlineClose} from "react-icons/all";
-
+import placeholder from "../assets/placeholder.png";
 
 const Home = () => {
     const [houseNo, setHouseNo] = useState('')
@@ -46,7 +46,11 @@ const Home = () => {
             <RedirectLogin loggedIn={loggedIn}/>
 
             <div className={'container text-center'}>
-                <Image src={imgAddress} roundedCircle width={200} height={200} alt={'prof pic'} className={'my-5'}/>
+                {imgAddress ? (
+                    <Image src={imgAddress} roundedCircle width={200} height={200} alt={'prof pic'} className={'my-5'}/>
+                ) : (
+                    <Image src={placeholder} roundedCircle width={200} height={200} alt={'prof pic'} className={'my-5'}/>
+                )}
                 <h1>{houseNo}</h1>
                 <h2>Hello, {name}.</h2>
                 <h3>Use the profile tab to edit your details.</h3>

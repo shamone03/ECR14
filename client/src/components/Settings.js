@@ -6,6 +6,7 @@ import {useNavigate} from "react-router-dom";
 import {AiOutlineClose, AiOutlineEdit, FiLogOut, MdVerified} from "react-icons/all";
 import UpdateUser from "./UpdateUser";
 import LoadingButton from "./LoadingButton";
+import placeholder from "../assets/placeholder.png";
 
 
 const Settings = () => {
@@ -136,7 +137,7 @@ const Settings = () => {
                     <div className={'d-flex w-100 justify-content-end'}>
                         <Button variant={'outline-warning'} className={'mt-3'} onClick={() => setEditMode(true)}><AiOutlineEdit size={20}/></Button>
                     </div>
-                    {img !== '' ? <Image roundedCircle width={150} height={150} src={img}/> : <></>}
+                    {img !== '' ? <Image roundedCircle width={150} height={150} src={img}/> : <Image src={placeholder} roundedCircle width={150} height={150} alt={'prof pic'}/>}
 
                     <h1 className={'text-center'}>{houseNo}</h1>
                     <div className={'container my-2'}>
