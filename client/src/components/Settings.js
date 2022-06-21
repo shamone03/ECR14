@@ -12,6 +12,7 @@ import placeholder from "../assets/placeholder.png";
 const Settings = () => {
     const [houseNo, setHouseNo] = useState('')
     const [members, setMembers] = useState([])
+    const [parkings, setParkings] = useState([])
     const [showMembers, setShowMembers] = useState(false)
     const [verified, setVerified] = useState(false)
     const [loggedIn, setLoggedIn] = useState(true)
@@ -46,6 +47,8 @@ const Settings = () => {
                 setResidentType(data.residentType)
                 setNumber(data.number)
                 setEmail(data.email)
+                setParkings(data.parkingNos)
+                console.log(data.parkingNos)
                 if (data.imgURL) {
                     setImg(data.imgURL)
                 }
@@ -99,11 +102,7 @@ const Settings = () => {
 
 
     const Names = () => {
-
             return (
-                // <ul className={'list-group mx-auto mt-2 text-center w-100'}>
-                //     {members.map(i => <li className={'text-center list-group-item list-group-item-action list-group-item-dark'} key={i._id}>{i.name}</li>)}
-                // </ul>
                 <div className={'container'}>
                     <div className={'row justify-content-center'} >
                         <h6 className={'col-lg-2 col-5 text-start p-1'} style={{borderBottom: '1px solid gray', color: 'lightblue'}}>Name</h6>
@@ -117,8 +116,35 @@ const Settings = () => {
                     ))}
                 </div>
             )
+    }
 
-
+    const Parking = () => {
+        if (parkings.length === 0) {
+            return (
+                <>
+                </>
+            )
+        }
+        if (parkings.length === 1) {
+            return (
+                <div className={'container mt-2'}>
+                    <div className={'row justify-content-center'} >
+                        <h4 className={'col-lg-3 col-5 text-start'}>Parking Spot: </h4>
+                        <h4 className={'col-lg-3 col-5 text-end'}>{parkings[0]}</h4>
+                    </div>
+                </div>
+            )
+        }
+        return (
+            <div className={'container mt-2'}>
+                <h3 className={'text-center'}>Parking Spots</h3>
+                {parkings.map(i => (
+                    <div key={i} className={'row justify-content-center'}>
+                        <h6 className={'col-3 text-center'}>{i}</h6>
+                    </div>
+                ))}
+            </div>
+        )
     }
 
     return (
@@ -130,7 +156,7 @@ const Settings = () => {
                     <div className={'d-flex w-100 justify-content-end'}>
                         <Button variant={'outline-warning'} className={'mt-3'} onClick={() => setEditMode(false)}><AiOutlineClose size={20}/></Button>
                     </div>
-                    <UpdateUser img={img} members1={members} number1={number} resType={residentType}/>
+                    <UpdateUser img={img} members1={members} number1={number} resType={residentType} parkings={parkings}/>
                 </>
             ) : (
                 <>
@@ -156,6 +182,7 @@ const Settings = () => {
                     </div>
                     {/*<Button variant={'dark'} className={'mt-5 mx-auto'} onClick={() => setShowMembers(!showMembers)}>Show residents</Button>*/}
                     <Names/>
+                    <Parking/>
                     <div className={'my-3 text-center'}>
                         {verified ? '': (<div><LoadingButton variant={'outline-light'} onClick={sendEmail} text={'Resend Verification Email'} loading={loading}/></div> )}
                         <LoadingButton variant={'outline-light'} className={'mt-3'} onClick={resetPassword} text={'Reset Password'} loading={passwordLoading}/>
