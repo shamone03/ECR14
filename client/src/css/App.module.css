@@ -92,7 +92,7 @@
 
 .backgroundImg {
 
-    background-image: url("../assets/homebackground.jpeg");
+    background-image: url("../assets/images/homebackground.webp");
     /*background-position: center;*/
     background-size: cover;
     background-repeat: no-repeat;
@@ -120,7 +120,7 @@ body {
     background-color: #181a1b !important;
     color: aliceblue !important;
     background-size: 800px 800px;
-    background-image: url("../assets/background.png");
+    background-image: url("../assets/images/background.webp");
     background-repeat: repeat;
 }
 

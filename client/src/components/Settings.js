@@ -6,7 +6,7 @@ import {useNavigate} from "react-router-dom";
 import {AiOutlineClose, AiOutlineEdit, FiLogOut, MdVerified} from "react-icons/all";
 import UpdateUser from "./UpdateUser";
 import LoadingButton from "./LoadingButton";
-import placeholder from "../assets/placeholder.png";
+import placeholder from "../assets/images/placeholder.webp";
 
 
 const Settings = () => {

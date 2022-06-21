@@ -1,5 +1,5 @@
 import {Button, Card} from "react-bootstrap";
-import image from "../assets/placeholder.png";
+import image from "../assets/images/placeholder.webp";
 import React, {useState} from "react";
 
 const VotingCard = ({addNom, nom}) => {
