@@ -41,6 +41,11 @@ const ResetPassword = () => {
                 setLoading(false)
                 navigate('/login')
             }
+            if (res.status === 400) {
+                console.log('invalid link')
+                setValidURL(false)
+                setLoading(false)
+            }
         } catch (e) {
             console.log(e)
             setValidURL(false)
@@ -94,7 +99,11 @@ const ResetPassword = () => {
                         </Form>
                     </div>
                 </>
-            ) : (<></>)}
+            ) : (
+                <div className={'vh-100 w-100 d-flex align-items-center justify-content-center'}>
+                    <h1>Expired Link</h1>
+                </div>
+            )}
 
         </>
 

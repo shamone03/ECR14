@@ -28,6 +28,9 @@ const VerifyEmailLink = () => {
                     console.log(data)
                     setValidURL(true)
                 }
+                if (res.status === 400) {
+                    setValidURL(false)
+                }
             } catch (e) {
                 console.log('invalid link')
                 setValidURL(false)
@@ -52,7 +55,7 @@ const VerifyEmailLink = () => {
                 {loading ? (
                     <Spinner as="span" animation="grow" role="status"/>
                 ) : (
-                    showMsg ? (<h1>Invalid Link</h1>) : (<></>)
+                    showMsg ? (<h1>Expired Link</h1>) : (<></>)
                 )}
             </div>
         </>
