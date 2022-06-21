@@ -15,19 +15,19 @@ exports.resetPassword = async (req, res) => {
         if (!user) {
             console.log('user not found')
             return res.status(404).send({message: 'user not found'})
-
         }
 
         const code = crypto.randomBytes(32).toString("hex")
 
         await tokenModel.updateOne({userId: user._id}, {token: code}, {upsert: true})
+        console.log('token uploaded')
 
         const url = `${process.env.CLIENT_URL}/reset/${user._id}/reset/${code}`
-        await sendEmail(user.email, 'reset password', url)
-        res.status(200).send()
+        await sendEmail(user.email, `Reset Password for ${req.body.houseNo}`, `Click this link to reset your password(expires in 5 minutes): ${url}`)
+        return res.status(200).send()
     } catch (e) {
         console.log(e)
-        res.status(500).send(e)
+        return res.status(500).send(e)
     }
 }
 
@@ -45,7 +45,9 @@ exports.verifyReset = async (req, res) => {
         }
 
         await userModel.updateOne({_id: user._id}, {verified: true, password: await bcrypt.hash(req.body.password, 10), registeredArtificially: false})
+        console.log('email verified password reset')
         await token.remove()
+        console.log('token removed')
         res.status(200).send({message: 'email verified password reset'})
     } catch (e) {
         console.log(e)
@@ -71,6 +73,7 @@ exports.register = async (req, res) => {
 
     try {
         newUser = await newUser.save()
+        console.log('user saved')
         if (req.body.imgBase64.length > 0) {
             const bufferStream = new stream.PassThrough()
             bufferStream.end(req.body.imgBase64, 'base64')
@@ -85,6 +88,7 @@ exports.register = async (req, res) => {
                 console.log('pic uploaded')
                 try {
                     await userModel.findOneAndUpdate({_id: newUser._id}, {imgURL: `https://storage.googleapis.com/${process.env.GCLOUD_STORAGE_BUCKET}/${newUser._id}.png`})
+                    console.log('imgURL updated')
                 } catch (e) {
                     console.log('error updating img url')
                     console.log(e)
@@ -99,7 +103,7 @@ exports.register = async (req, res) => {
         }).save()
 
         const url = `${process.env.CLIENT_URL}/verify/${newUser._id}/verify/${token.token}`
-        await sendEmail(newUser.email, 'verify email', url)
+        await sendEmail(newUser.email, `Verification Email for ${req.body.houseNo}`, `Click this link to verify your email(expires in 5 minutes):${url}`)
 
         return res.status(200).send({message: 'user saved'})
 
@@ -113,19 +117,24 @@ exports.verifyEmail = async (req, res) => {
     try {
         const user = await userModel.findOne({_id: req.params.id})
         if (!user) {
+            console.log('no user found')
             res.status(400).send({message: 'no user found'})
             return
         }
         const token = await tokenModel.findOne({userId: user._id, token: req.params.token})
         if (!token) {
+            console.log('no token found')
             res.status(400).send({message: 'verification failed'})
             return
         }
 
         await userModel.updateOne({_id: user._id}, {verified: true})
+        console.log('email verified')
         await token.remove()
+        console.log('token removed')
         res.status(200).send({message: 'email verified'})
     } catch (e) {
+        console.log(e)
         res.status(500).send({message: 'verification failed'})
     }
 }
@@ -137,7 +146,6 @@ exports.login = async (req, res) => {
     }
 
     const user = await userModel.findOne({houseNo: req.body.houseNo})
-    console.log(user)
     if (!user) {
         console.log('no user')
         res.status(404).send({message: 'invalid details'})

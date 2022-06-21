@@ -20,11 +20,11 @@ const {Storage} = require('@google-cloud/storage')
 const stream = require('stream')
 
 
-// const path = require("path")
-// app.use(express.static(path.join(__dirname, 'client', 'build')))
-// app.get('/', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
-// })
+const path = require("path")
+app.use(express.static(path.join(__dirname, 'client', 'build')))
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+})
 
 dbConn()
 
@@ -51,23 +51,22 @@ const verifyToken = (req, res, next) => {
         return res.status(401).send({message: 'no token found'})
     }
     try {
-        // console.log(token)
         jwt.verify(token, process.env.JWT_SECRET)
     } catch (e) {
         console.log('error ' + e)
         return res.status(401).send({message: 'invalid token', e})
-        
     }
+    console.log('jwt verified')
     return next()
 }
 
 const checkVerified = (req, res, next) => {
     const verified = jwt.decode(req.headers['authorization']).verified
     if (verified) {
-        console.log('verified')
+        console.log('email verified user')
         return next()
     } else {
-        console.log('not verified')
+        console.log('email not verified user')
         return res.status(401).send({message: 'not verified'})
     }
 }
@@ -79,6 +78,7 @@ app.post('/api/update', verifyToken, async (req, res) => {
     const id = jwt.decode(req.headers['authorization'])._id
     try {
         const user = await userModel.updateOne({_id: id}, {names: req.body.names, number: req.body.number, residentType: req.body.residentType, parkingNos: req.body.parkingNos})
+        console.log('user document updated')
         if (req.body.imgBase64.length > 0) {
             const storage = new Storage()
             const bucket = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET)
@@ -96,6 +96,7 @@ app.post('/api/update', verifyToken, async (req, res) => {
                 console.log('pic uploaded')
                 try {
                     await userModel.findOneAndUpdate({_id: id}, {imgURL: `https://storage.googleapis.com/${process.env.GCLOUD_STORAGE_BUCKET}/${id}.png`})
+                    console.log('imgURL updated')
                 } catch (e) {
                     console.log('error updating img url')
                     console.log(e)
@@ -103,7 +104,7 @@ app.post('/api/update', verifyToken, async (req, res) => {
                 }
             })
         }
-        console.log('doc updated')
+
         return res.status(200).send()
     } catch (e) {
         console.log(e)
@@ -113,39 +114,32 @@ app.post('/api/update', verifyToken, async (req, res) => {
 
 app.get('/api/verifyEmail', verifyToken, async (req, res) => {
 
-    const jwtToken = req.headers['authorization']
+    const houseNo = jwt.decode(req.headers['authorization']).houseNo
 
     try {
-        const houseNo = jwt.verify(jwtToken, process.env.JWT_SECRET).houseNo
-        try {
-            const user = await model.userModel.findOne({houseNo: houseNo}, {password: 0})
-            console.log(user)
-            console.log(user.verified)
-            if (!user.verified) {
-                let token = await model.tokenModel.findOne({userId: user._id})
-                if (token) {
-                    await token.remove()
-                }
-
-                token = await new model.tokenModel({
-                    userId: user._id,
-                    token: crypto.randomBytes(32).toString("hex")
-                }).save()
-                const url = `${process.env.CLIENT_URL}/verify/${user._id}/verify/${token.token}`
-                await sendEmail(user.email, 'verify email', url)
-                res.status(200).send({message: 'email sent'})
-
-            } else {
-                return res.status(400).send({message: 'already verified'})
+        const user = await model.userModel.findOne({houseNo: houseNo}, {password: 0, verified: 1, email: 1, _id: 1})
+        if (!user.verified) {
+            let token = await model.tokenModel.findOne({userId: user._id})
+            if (token) {
+                await token.remove()
+                console.log('existing token removed')
             }
-
-        } catch (e) {
-            console.log(e)
-            res.status(500).send({error: e})
+            token = await new model.tokenModel({
+                userId: user._id,
+                token: crypto.randomBytes(32).toString("hex")
+            }).save()
+            const url = `${process.env.CLIENT_URL}/verify/${user._id}/verify/${token.token}`
+            await sendEmail(user.email, `Verification Email for ${houseNo}`, `Click this link to verify your email(expires in 5 minutes):${url}`)
+            res.status(200).send({message: 'email sent'})
+        } else {
+            console.log('already verified')
+            return res.status(400).send({message: 'already verified'})
         }
     } catch (e) {
-        res.status(401).send({message: 'jwt token invalid'})
+        console.log(e)
+        res.status(500).send({error: e})
     }
+
 
 })
 
@@ -158,8 +152,10 @@ app.get('/api/getUser', verifyToken, async (req, res) => {
         try {
             const user = await model.userModel.findOne({houseNo: houseNo}, {password: 0})
             if (user) {
+                console.log('user found')
                 res.status(200).send(user)
             } else {
+                console.log('user not found')
                 res.status(401).send({message: 'empty user'})
             }
         } catch (e) {
@@ -167,16 +163,18 @@ app.get('/api/getUser', verifyToken, async (req, res) => {
             res.status(401).send({e})
         }
     } catch (e) {
-        res.status(401).send(e)
+        console.log(e)
+        res.status(401).send({e})
     }
 
 
 })
 
-app.post('/api/addPoll', verifyToken, async (req, res) => {
+app.post('/api/addPoll', verifyToken, checkVerified, async (req, res) => {
     const _id = jwt.decode(req.headers['authorization'])._id
     const isAdmin = jwt.decode(req.headers['authorization']).isAdmin
     if (!isAdmin) {
+        console.log('not admin')
         res.status(401).send({message: 'not admin'})
         return
     }
@@ -189,44 +187,43 @@ app.post('/api/addPoll', verifyToken, async (req, res) => {
 
     try {
         const savedPoll = await poll.save()
+        console.log('poll saved')
         res.status(200).send(savedPoll)
     } catch (e) {
+        console.log('poll not saved')
         console.log(e)
         res.status(500).send(e)
     }
 })
 
 app.get('/api/getPolls', verifyToken, async (req, res) => {
-    const _id = jwt.decode(req.headers['authorization'])._id
     const isAdmin = jwt.decode(req.headers['authorization']).isAdmin
     const block = jwt.decode(req.headers['authorization']).houseNo.charAt(0).toUpperCase()
-    const polls = await pollModel.find()
-    const userPolls = []
-    for (let poll of polls) {
-        if (poll.forBlock === block) {
-            userPolls.push(poll)
-        }
-    }
     try {
+        const polls = await pollModel.find()
+        console.log('polls found')
+        const userPolls = []
+        for (let poll of polls) {
+            if (poll.forBlock === block) {
+                userPolls.push(poll)
+            }
+        }
         if (isAdmin) {
-
+            console.log('isAdmin polls and userPolls sent')
             return res.status(200).send({polls, userPolls})
         } else {
-            // for (let poll of polls) {
-            //     if (poll.forBlock === block) {
-            //         userPolls.push(poll)
-            //     }
-            // }
+            console.log('userPolls sent')
             return res.status(200).send({userPolls})
         }
     } catch (e) {
-        // console.log(e)
-        res.status(500).send({e})
+        console.log('polls not found')
+        console.log(e)
+        return res.status(404).send({e})
     }
 
 })
 
-app.post('/api/addNominee', verifyToken, async (req, res) => {
+app.post('/api/addNominee', verifyToken, checkVerified, async (req, res) => {
     const nominee = new model.nomineeModel({
         name: req.body.name,
         houseNo: req.body.houseNo,
@@ -236,8 +233,11 @@ app.post('/api/addNominee', verifyToken, async (req, res) => {
 
     try {
         await nominee.save()
+        console.log('nominee saved')
         res.status(200).send({message: 'nominee saved'})
     } catch (e) {
+        console.log('nominee not saved')
+        console.log(e)
         res.status(500).send({message: 'nominee not saved', e})
     }
 })
@@ -249,41 +249,42 @@ app.get('/api/getNominees', verifyToken, async (req, res) => {
         const nominees = await model.nomineeModel.find().populate('poll')
         const userNominees = nominees.filter((n) => n.poll.forBlock === block)
         if (isAdmin) {
-            // console.log(nominees)
+            console.log('isAdmin userNominees nominees sent')
             res.status(200).send({userNominees, nominees})
         } else {
-            // console.log(userNominees)
+            console.log('userNominees sent')
             res.status(200).send({userNominees})
         }
     } catch (e) {
+        console.log(e)
         res.status(500).send({e})
     }
 })
 
-app.post('/api/vote', verifyToken, async (req, res) => {
+app.post('/api/vote', verifyToken, checkVerified, async (req, res) => {
     const houseNo = jwt.decode(req.headers['authorization']).houseNo
     const nomineeIds = req.body.nomineeIds
-    console.log(req.body)
+
     try {
 
         const nominee = await nomineeModel.findOne({_id: nomineeIds[0]}).populate('poll').exec()
 
-        // console.log(nomineeIds)
-
         if (nomineeIds.length !== nominee.poll.representatives) {
+            console.log(`sent reps ${nomineeIds.length} and required reps ${nominee.poll.representatives} do not match`)
             res.status(400).send({message: `sent reps ${nomineeIds.length} and required reps ${nominee.poll.representatives} do not match`})
             return
         }
 
         for (let nominee of nomineeIds) {
             await nomineeModel.updateOne({_id: nominee},{ $addToSet: {voters: houseNo}})
-            console.log(await nomineeModel.findOne({_id: nominee}).populate('poll').exec())
+            console.log(`${nominee.name} updated`)
         }
 
         await model.nomineeModel.aggregate([
             { $addFields: {votes: {$size: "$voters"}}},
             { $out: "nominees"}
         ])
+        console.log('votes count updated')
         res.status(200).send({message: 'vote increased'})
     } catch (e) {
         console.log(e)
@@ -291,9 +292,9 @@ app.post('/api/vote', verifyToken, async (req, res) => {
     }
 })
 
-app.get('/api/getVotes', verifyToken, async (req, res) => {
+app.get('/api/getVotes', verifyToken, checkVerified, async (req, res) => {
     try {
-        const result = await nomineeModel.find({$project: { voters: 1, votes: 1 }})
+        const result = await nomineeModel.find({}, {name: 1, voters: 1, votes: 1})
         res.status(200).send(result)
     } catch (e) {
         console.log(e)
