@@ -146,6 +146,7 @@ const UpdateUser = ({img, members1, number1, resType, parkings}) => {
         const types = ['Owner', 'Co-Owner', 'Tenant']
         if (!types.includes(residentType)) {
             setResTypeStyle({border: 'solid 3px red'})
+            setResidentType(residentType)
             return false
         } else {
             setResTypeStyle({border: '3px transparent'})
@@ -157,6 +158,7 @@ const UpdateUser = ({img, members1, number1, resType, parkings}) => {
     const validateNumber = (number) => {
         if (!validator.isMobilePhone(number)) {
             setNumberStyle({border: 'solid 3px red'})
+            setNumber(number)
         } else {
             setNumberStyle({border: '3px transparent'})
             setNumber(number)
