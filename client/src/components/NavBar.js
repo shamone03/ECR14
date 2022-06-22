@@ -1,6 +1,6 @@
 import {useMediaQuery} from "react-responsive";
 import React, {useState} from "react";
-import {Button, Dropdown, Offcanvas} from "react-bootstrap";
+import {Badge, Button, Dropdown, Offcanvas} from "react-bootstrap";
 import styles1 from "../css/NavBar.module.css";
 import {AiOutlineClose, AiOutlineMenu, FiLogOut} from "react-icons/all";
 import {NavLink, useNavigate} from "react-router-dom";
@@ -33,7 +33,7 @@ const NavBar = () => {
                     <div className={'d-flex flex-column h-100 justify-content-between'}>
                         <div className={'d-flex flex-column h-100 text-center'}>
                             <NavLink style={linkStyle} onClick={() => setShowMenu(false)} to={'/home'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Home</NavLink>
-                            <NavLink style={linkStyle} onClick={() => setShowMenu(false)} to={'/vote'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Vote</NavLink>
+                            <NavLink style={linkStyle} onClick={() => setShowMenu(false)} to={'/vote'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Vote<Badge bg={'warning'} pill>WIP</Badge></NavLink>
                             <NavLink style={linkStyle} onClick={() => setShowMenu(false)} to={'/settings'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Profile</NavLink>
                             <Dropdown>
                                 <Dropdown.Toggle className={`btn ${styles1.buttonStyle}`} style={linkStyle}>
@@ -70,7 +70,10 @@ const NavBar = () => {
 
 
         <nav className={`d-flex flex-row justify-content-between ${styles1.navBar} align-items-center`}>
-            <h2 className={'mx-3 my-3'} style={{color: 'lightblue'}}>ECR14</h2>
+            <div className={'d-flex flex-row justify-content-between align-items-center'}>
+                <h2 className={'ms-3 my-3 d-inline'} style={{color: 'lightblue'}}>ECR14</h2>
+                <p className={'d-inline my-3'} style={{fontSize: '15px'}}><Badge bg={'info'} pill>Beta</Badge></p>
+            </div>
             <div className={`d-flex flex-row justify-content-end align-items-center`}>
                 {showMenu ? (<MobileMenu/>) : (<></>)}
                 {isTabletOrMobile ? (
@@ -91,7 +94,7 @@ const NavBar = () => {
                             </Dropdown.Menu>
                         </Dropdown>
                         <NavLink to={'/home'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Home</NavLink>
-                        <NavLink to={'/vote'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Vote</NavLink>
+                        <NavLink to={'/vote'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Vote<Badge bg={'warning'} pill>WIP</Badge></NavLink>
                         <NavLink to={'/settings'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Profile</NavLink>
                         <Button variant={'outline-danger'} className={'mx-2'} onClick={logout}><FiLogOut size={'25'}/></Button>
                     </>
