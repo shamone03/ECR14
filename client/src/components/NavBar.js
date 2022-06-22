@@ -43,19 +43,19 @@ const NavBar = () => {
                                     <Dropdown.Item className={styles1.dropDownItemStyle} style={linkStyle} onClick={() => {
                                         setShowMenu(false)
                                         navigate('/vote')
-                                    }}>Voting</Dropdown.Item>
+                                    }}>Voting(WIP)</Dropdown.Item>
                                     <Dropdown.Item className={styles1.dropDownItemStyle} style={linkStyle} onClick={() => {
                                         setShowMenu(false)
                                         navigate('/construction')
-                                    }}>Events</Dropdown.Item>
+                                    }}>Events(WIP)</Dropdown.Item>
                                     <Dropdown.Item className={styles1.dropDownItemStyle} style={linkStyle} onClick={() => {
                                         setShowMenu(false)
                                         navigate('/construction')
-                                    }}>Documents</Dropdown.Item>
+                                    }}>Documents(WIP)</Dropdown.Item>
                                     <Dropdown.Item className={styles1.dropDownItemStyle} style={linkStyle} onClick={() => {
                                         setShowMenu(false)
                                         navigate('/construction')
-                                    }}>Amenities</Dropdown.Item>
+                                    }}>Amenities(WIP)</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                         </div>
@@ -87,10 +87,10 @@ const NavBar = () => {
                                 Tools
                             </Dropdown.Toggle>
                             <Dropdown.Menu variant={'dark'}>
-                                <Dropdown.Item className={styles1.dropDownItemStyle} onClick={() => navigate('/vote')}>Voting</Dropdown.Item>
-                                <Dropdown.Item className={styles1.dropDownItemStyle} onClick={() => navigate('/construction')}>Events</Dropdown.Item>
-                                <Dropdown.Item className={styles1.dropDownItemStyle} onClick={() => navigate('/construction')}>Documents</Dropdown.Item>
-                                <Dropdown.Item className={styles1.dropDownItemStyle} onClick={() => navigate('/construction')}>Amenities</Dropdown.Item>
+                                <Dropdown.Item className={styles1.dropDownItemStyle} onClick={() => navigate('/vote')}>Voting(WIP)</Dropdown.Item>
+                                <Dropdown.Item className={styles1.dropDownItemStyle} onClick={() => navigate('/construction')}>Events(WIP)</Dropdown.Item>
+                                <Dropdown.Item className={styles1.dropDownItemStyle} onClick={() => navigate('/construction')}>Documents(WIP)</Dropdown.Item>
+                                <Dropdown.Item className={styles1.dropDownItemStyle} onClick={() => navigate('/construction')}>Amenities(WIP)</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
                         <NavLink to={'/home'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Home</NavLink>
