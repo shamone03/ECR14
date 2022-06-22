@@ -117,7 +117,7 @@ app.get('/api/verifyEmail', verifyToken, async (req, res) => {
     const houseNo = jwt.decode(req.headers['authorization']).houseNo
 
     try {
-        const user = await model.userModel.findOne({houseNo: houseNo}, {password: 0, verified: 1, email: 1, _id: 1})
+        const user = await model.userModel.findOne({houseNo: houseNo}, {verified: 1, email: 1, _id: 1})
         if (!user.verified) {
             let token = await model.tokenModel.findOne({userId: user._id})
             if (token) {
