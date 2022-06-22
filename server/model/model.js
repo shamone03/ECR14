@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
     registeredArtificially: {type: Boolean, default: false},
     imgURL: {type: String},
     parkingNos: [{type: Number, unique: true}]
-}, { collection: 'residents'})
+}, { collection: 'residents', timestamps: true })
 
 const tokenSchema = new mongoose.Schema({
     userId: {
