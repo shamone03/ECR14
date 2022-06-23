@@ -13,18 +13,15 @@ const UpdateUser = ({img, members1, number1, resType, parkings}) => {
     const [imgFile, setImgFile] = useState(new File([], "", undefined))
     const [memberStyle, setMemberStyle] = useState({})
     const [numberStyle, setNumberStyle] = useState({})
-    const [resTypeStyle, setResTypeStyle] = useState({})
     const [loading, setLoading] = useState(false)
 
     const [imgB64, setImgB64] = useState('')
-    const [residentType, setResidentType] = useState('')
     const [number, setNumber] = useState('')
     const [members, setMembers] = useState([])
     const [parkingNos, setParkingNos] = useState([])
 
     useEffect(() => {
         setMembers(members1)
-        setResidentType(resType)
         setNumber(number1)
         setParkingNos(parkings)
     }, [])
@@ -59,12 +56,13 @@ const UpdateUser = ({img, members1, number1, resType, parkings}) => {
         }
     }, [imgFile])
 
-    const setNameAge = (_id, name, age) => {
+    const setNameAgeRes = (_id, name, age, res) => {
         let membersCopy = members
         for (let i of membersCopy) {
             if (i._id === _id) {
                 i.name = name
                 i.age = age
+                i.residentType = res
             }
         }
         setMembers([...membersCopy])
@@ -78,11 +76,11 @@ const UpdateUser = ({img, members1, number1, resType, parkings}) => {
     const addMember = () => {
         const membersCopy = members
         if (membersCopy.length === 0) {
-            membersCopy.push({name: '', age: 0, _id: 1})
+            membersCopy.push({name: '', age: 0, _id: 1, residentType: 'Resident Type'})
             setMembers([...membersCopy])
             return
         }
-        membersCopy.push({name: '', age: 0, _id: members[members.length - 1]._id + 1})
+        membersCopy.push({name: '', age: 0, residentType: 'Resident Type', _id: members[members.length - 1]._id + 1})
         setMembers([...membersCopy])
         console.log(members)
     }
@@ -125,6 +123,7 @@ const UpdateUser = ({img, members1, number1, resType, parkings}) => {
     }
 
     const validateMembers = (members) => {
+        const types = ['Owner', 'Tenant', 'Co-Owner', 'Family']
         if (members.length === 0) {
             alert('Add at least one resident')
             return false
@@ -138,21 +137,12 @@ const UpdateUser = ({img, members1, number1, resType, parkings}) => {
                 alert('Enter age between 0 and 100')
                 return false
             }
+            if (!types.includes) {
+                alert('Choose Resident Type')
+                return false
+            }
         }
         return true
-    }
-
-    const validateResidentType = (residentType) => {
-        const types = ['Owner', 'Co-Owner', 'Tenant']
-        if (!types.includes(residentType)) {
-            setResTypeStyle({border: 'solid 3px red'})
-            setResidentType(residentType)
-            return false
-        } else {
-            setResTypeStyle({border: '3px transparent'})
-            setResidentType(residentType)
-            return true
-        }
     }
 
     const validateNumber = (number) => {
@@ -177,13 +167,6 @@ const UpdateUser = ({img, members1, number1, resType, parkings}) => {
         } else {
             setNumberStyle({border: '3px transparent'})
         }
-        if (!validateResidentType(residentType)) {
-            setResTypeStyle({border: 'solid 3px red'})
-            alert('Choose Resident Type')
-            return false
-        } else {
-            setResTypeStyle({border: '3px transparent'})
-        }
         if (!validateMembers(members)) {
             setMemberStyle({border: 'solid 3px red'})
             return false
@@ -206,9 +189,8 @@ const UpdateUser = ({img, members1, number1, resType, parkings}) => {
                 "Authorization": localStorage.getItem('token')
             },
             body: JSON.stringify({
-                names: members.map(i => ({name: i.name, age: parseInt(i.age)})),
+                names: members.map(i => ({name: i.name, age: parseInt(i.age), residentType: i.residentType})),
                 number: number,
-                residentType: residentType,
                 imgBase64: imgB64 ? imgB64.split(',')[1] : '',
                 parkingNos: parkingNos
             })
@@ -246,9 +228,16 @@ const UpdateUser = ({img, members1, number1, resType, parkings}) => {
                 <Form.Label>Add residents in your apartment</Form.Label>
                 <div className={'d-flex flex-column'}>
                     {members.map((m) =>
-                        <div className={'d-flex flex-row'} key={m._id}>
-                            <Form.Control className={`${styles.inputStyle} mb-1 mx-1`} type={'text'} placeholder={'Name'} value={m.name} onChange={e => setNameAge(m._id, e.target.value, m.age)}/>
-                            <Form.Control className={`${styles.inputStyle} mb-1 mx-1`} type={'number'} placeholder={'Age'} value={m.age} onChange={e => setNameAge(m._id, m.name, e.target.value)}/>
+                        <div className={'d-flex flex-row mb-2'} key={m._id}>
+                            <Form.Control style={{width: '35%'}} className={`${styles.inputStyle} mb-1 mx-1`} type={'text'} placeholder={'Name'} value={m.name} onChange={e => setNameAgeRes(m._id, e.target.value, m.age, m.residentType)}/>
+                            <Form.Select style={{width: '35%'}} className={`${styles.inputStyle} ${styles.inputStyleSelect}`} value={m.residentType} onChange={(e) => setNameAgeRes(m._id, m.name, m.age, e.target.value)}>
+                                <option value={'Resident Type'}>Resident Type</option>
+                                <option value={'Owner'}>Owner</option>
+                                <option value={'Co-Owner'}>Co-Owner</option>
+                                <option value={'Tenant'}>Tenant</option>
+                                <option value={'Family'}>Family</option>
+                            </Form.Select>
+                            <Form.Control style={{width: '30'}} className={`${styles.inputStyle} mb-1 mx-1 w-25`} type={'number'} placeholder={'Age'} value={m.age} onChange={e => setNameAgeRes(m._id, m.name, e.target.value, m.residentType)}/>
                             <Button className={'mb-1'} variant={'outline-light'} onClick={() => removeName(m._id)}><AiOutlineClose size={20}/></Button>
                         </div>
                     )}
@@ -266,15 +255,6 @@ const UpdateUser = ({img, members1, number1, resType, parkings}) => {
                     )}
                 </div>
                 <Button variant={'outline-light'} onClick={addParking}>Add</Button>
-            </Form.Group>
-            <Form.Group className={'mb-3'} style={resTypeStyle}>
-                <Form.Label>Choose Resident Type</Form.Label>
-                <Form.Select className={`${styles.inputStyle}`} value={residentType} onChange={(e) => validateResidentType(e.target.value)}>
-                    <option value={'Resident Type'}>Resident Type</option>
-                    <option value={'Owner'}>Owner</option>
-                    <option value={'Co-Owner'}>Co-Owner</option>
-                    <option value={'Tenant'}>Tenant</option>
-                </Form.Select>
             </Form.Group>
             <Form.Group className={'mb-3'}>
                 <Form.Label>Enter Phone Number</Form.Label>

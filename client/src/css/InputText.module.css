@@ -3,6 +3,10 @@
     box-shadow: 0 0 0 .25rem rgba(240,248,255,.5) !important;
 }
 
+.inputStyleSelect {
+    margin: 0px 4px 4px;
+}
+
 .inputStyle {
 
 }
