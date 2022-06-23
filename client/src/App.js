@@ -94,8 +94,24 @@ function App() {
             </nav>
             <div className={`${styles.backgroundImg} d-flex align-items-center flex-column`}>
                 <div className={`text-center ${styles.title}`}>
-                    <h1 style={{color: 'lightblue'}}>ECR 14</h1>
-                    <Button onClick={() => navigate('/register')}>Start your journal</Button>
+                    {/*<h1 style={{color: 'lightblue'}}>ECR 14</h1>*/}
+                    <Button onClick={() => navigate('/register')} className={'mt-5'}>Start your journal</Button>
+                </div>
+                <div className={`${styles.about}`} id={'about'}>
+                    <div className={`container`}>
+                        {/*<div className={`${styles.aboutTitle}`}>*/}
+                        {/*    <h3><span style={{color: 'lightblue'}}>ECR14</span> Community</h3>*/}
+                        {/*</div>*/}
+                        <div className={'container'}>
+                            <div className={'row'}>
+                                <div className={'col-lg-12 pt-lg-0'} style={{backgroundColor: 'rgb(22, 27, 34, 0.5)', borderRadius: '15px'}}>
+                                    <p style={{color: 'lightblue', fontWeight: 'bold', fontSize: '15px', padding: '15px', paddingBottom: '7px'}}>
+                                        Ever afters amidst of Beaufort scale of wind, ECR 14 is progressing towards all ever afters. Best of residential amenities, family neighbours and it’s happening place always for 577 families. Younger ones can enrich themselves through play, digital games, gym, swimming, board games, and a library to be part of ‘What a Wonderful world’. The best of the intellectuals from the community guides every way of living through all seasons/celebrations. Wiser ones with age can find exceptional quality of life around them. It is always admirable about the spirit of the community leads a life together. We are happy to welcome you to ECR 14, Start your Journal here!
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div className={`container ${styles.containerStyle}`}>
                     <div className={'row'}>
@@ -133,23 +149,7 @@ function App() {
                     </div>
                 </div>
             </div>
-            <div className={`${styles.about}`} id={'about'}>
-                <div className={`container`}>
-                    <div className={`${styles.aboutTitle}`}>
-                        <h1 style={{color: 'lightblue'}}>ECR14</h1>
-                        <h3><span style={{color: 'lightblue'}}>ECR14</span> Community</h3>
-                    </div>
-                    <div className={'container'}>
-                        <div className={'row'}>
-                            <div className={'col-lg-12 pt-4 pt-lg-0'}>
-                                <p>
-                                    Ever afters amidst of Beaufort scale of wind, ECR 14 is progressing towards all ever afters. Best of residential amenities, family neighbours and it’s happening place always for 577 families. Younger ones can enrich themselves through play, digital games, gym, swimming, board games, and a library to be part of ‘What a Wonderful world’. The best of the intellectuals from the community guides every way of living through all seasons/celebrations. Wiser ones with age can find exceptional quality of life around them. It is always admirable about the spirit of the community leads a life together. We are happy to welcome you to ECR 14, Start your Journal here!
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
             <footer className={`${styles.footer}`}>
                 <div>
                     <div className={'container'}>

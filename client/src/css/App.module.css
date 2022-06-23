@@ -16,7 +16,7 @@
 }
 
 .aboutTitle {
-    padding-bottom: 30px;
+    /*padding-bottom: 30px;*/
     text-align: center;
 }
 
@@ -26,11 +26,11 @@
 }
 
 .title {
-    margin-top: 100px;
+    /*margin-top: 100px;*/
 }
 
 .containerStyle {
-    margin-top: 200px;
+    margin-top: 50px;
 }
 
 .cardStyle {
