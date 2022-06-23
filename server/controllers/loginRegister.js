@@ -112,7 +112,7 @@ exports.register = async (req, res) => {
     }
 }
 
-exports.verifyEmail = async (req, res) => {
+exports.verifyEmailLink = async (req, res) => {
     try {
         const user = await userModel.findOne({_id: req.params.id})
         if (!user) {
