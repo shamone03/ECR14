@@ -2,7 +2,7 @@ import './App.css';
 import React, {useState} from 'react';
 import {Link, useNavigate} from "react-router-dom"
 import styles from './css/App.module.css'
-import {Button, Dropdown, DropdownButton, Offcanvas} from "react-bootstrap";
+import {Badge, Button, Dropdown, DropdownButton, Offcanvas} from "react-bootstrap";
 import { useMediaQuery } from 'react-responsive'
 import {
     AiOutlineClose,
@@ -36,10 +36,10 @@ function App() {
                                     Tools
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu variant={'dark'}>
-                                    <Dropdown.Item onClick={() => navigate('/login')}>Voting</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => navigate('/login')}>Events</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => navigate('/login')}>Documents</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => navigate('/login')}>Amenities</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => navigate('/login')}>Voting(WIP)</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => navigate('/login')}>Events(WIP)</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => navigate('/login')}>Documents(WIP)</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => navigate('/login')}>Amenities(WIP)</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                             <a className={`${styles.linkStyle} my-3 btn ${styles.buttonStyle}`} href={'mailto:ecr14.ecr14@gmail.com'}>Contact</a>
@@ -53,7 +53,10 @@ function App() {
     return (
         <div className={`App`}>
             <nav className={`d-flex flex-row justify-content-between ${styles.navBar} align-items-center`}>
-                <h2 className={'mx-3 my-3'} style={{color: 'lightblue'}}>ECR14</h2>
+                <div className={'d-flex flex-row justify-content-between align-items-center'}>
+                    <h2 className={'ms-3 my-3 d-inline'} style={{color: 'lightblue'}}>ECR14</h2>
+                    <p className={'d-inline my-3'} style={{fontSize: '15px'}}><Badge bg={'info'} pill>Beta</Badge></p>
+                </div>
                 <div className={`d-flex flex-row justify-content-end align-items-center`}>
                     {showMenu ? (<MobileMenu/>) : (<></>)}
                     {isTabletOrMobile ? (
@@ -74,10 +77,10 @@ function App() {
                                     Tools
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu variant={'dark'}>
-                                    <Dropdown.Item onClick={() => navigate('/login')}>Voting</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => navigate('/login')}>Events</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => navigate('/login')}>Documents</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => navigate('/login')}>Amenities</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => navigate('/login')}>Voting(WIP)</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => navigate('/login')}>Events(WIP)</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => navigate('/login')}>Documents(WIP)</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => navigate('/login')}>Amenities(WIP)</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                             <a className={`${styles.linkStyle} my-3 mx-1 btn ${styles.buttonStyle}`} href={'mailto:ecr14.ecr14@gmail.com'}>Contact</a>
