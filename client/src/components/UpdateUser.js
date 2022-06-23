@@ -7,7 +7,7 @@ import {url} from "../assets/js/url";
 import LoadingButton from "./LoadingButton";
 import placeholder from "../assets/images/placeholder.webp";
 
-const UpdateUser = ({img, members1, number1, resType, parkings}) => {
+const UpdateUser = ({img, members1, number1, parkings}) => {
     const canvasRef = useRef(null)
     const imgRef = useRef(null)
     const [imgFile, setImgFile] = useState(new File([], "", undefined))
