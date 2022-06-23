@@ -13,7 +13,6 @@ const Settings = () => {
     const [houseNo, setHouseNo] = useState('')
     const [members, setMembers] = useState([])
     const [parkings, setParkings] = useState([])
-    const [showMembers, setShowMembers] = useState(false)
     const [verified, setVerified] = useState(false)
     const [loggedIn, setLoggedIn] = useState(true)
     const [residentType, setResidentType] = useState('')
@@ -44,7 +43,6 @@ const Settings = () => {
                 setLoggedIn(true)
                 setHouseNo(data.houseNo)
                 setMembers(data.names)
-                setResidentType(data.residentType)
                 setNumber(data.number)
                 setEmail(data.email)
                 setParkings(data.parkingNos)
@@ -110,7 +108,7 @@ const Settings = () => {
                     </div>
                     {members.map(i => (
                         <div className={'row justify-content-center'} style={{wordWrap: 'break-word'}} key={i._id}>
-                            <h6 className={'col-lg-2 col-5 text-start'} style={{color: 'lightblue'}}>{i.name}</h6>
+                            <h6 className={'col-lg-2 col-5 text-start'} style={{color: 'lightblue'}}>{i.name} ({i.residentType})</h6>
                             <h6 className={'col-lg-2 col-5 text-end'}>{i.age}</h6>
                         </div>
                     ))}
@@ -156,7 +154,7 @@ const Settings = () => {
                     <div className={'d-flex w-100 justify-content-end'}>
                         <Button variant={'outline-warning'} className={'mt-3'} onClick={() => setEditMode(false)}><AiOutlineClose size={20}/></Button>
                     </div>
-                    <UpdateUser img={img} members1={members} number1={number} resType={residentType} parkings={parkings}/>
+                    <UpdateUser img={img} members1={members} number1={number} parkings={parkings}/>
                 </>
             ) : (
                 <>
@@ -174,10 +172,6 @@ const Settings = () => {
                         <div className={'row justify-content-center'} style={{wordWrap: 'break-word'}}>
                             <h5 className={'col-md-3 text-start'} style={{color:'lightblue'}}>Number: </h5>
                             <h5 className={'col-md-3 text-lg-end'}>{number}</h5>
-                        </div>
-                        <div className={'row justify-content-center'} style={{wordWrap: 'break-word'}}>
-                            <h5 className={'col-md-3 text-start'} style={{color:'lightblue'}}>Resident Type: </h5>
-                            <h5 className={'col-md-3 text-lg-end'}>{residentType}</h5>
                         </div>
                     </div>
                     {/*<Button variant={'dark'} className={'mt-5 mx-auto'} onClick={() => setShowMembers(!showMembers)}>Show residents</Button>*/}
