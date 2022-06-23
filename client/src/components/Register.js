@@ -159,9 +159,10 @@ const Register = () => {
     }
 
     const validateResidentType = (residentType) => {
-        const types = ['Owner', 'Co-Owner', 'Tenant']
+        const types = ['Owner', 'Co-Owner', 'Tenant', 'Family']
         if (!types.includes(residentType)) {
             setResidentTypeStyle(invalidStyle)
+            setResidentType(residentType)
             return false
         } else {
             setResidentTypeStyle(validStyle)
@@ -315,8 +316,7 @@ const Register = () => {
                 email: email,
                 password: password,
                 number: number,
-                residentType: residentType,
-                names: Array.of({name, age}),
+                names: Array.of({name, age, residentType}),
                 imgBase64: imgB64 ? imgB64.split(',')[1] : ''
             })
         })
@@ -454,6 +454,7 @@ const Register = () => {
                                         <option value={'Owner'}>Owner</option>
                                         <option value={'Co-Owner'}>Co-Owner</option>
                                         <option value={'Tenant'}>Tenant</option>
+                                        <option value={'Family'}>Family</option>
                                     </Form.Select>
                                 </Form.Group>
 

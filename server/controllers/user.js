@@ -68,7 +68,6 @@ exports.register = async (req, res) => {
         password: await bcrypt.hash(req.body.password, 10),
         names: req.body.names,
         number: req.body.number,
-        residentType: req.body.residentType
     })
 
     try {
