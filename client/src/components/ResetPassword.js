@@ -27,6 +27,7 @@ const ResetPassword = () => {
             setLoading(true)
             const res = await fetch(`${url}/api/${params.id}/reset/${params.token}`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     "Content-Type": "application/json",
                 },

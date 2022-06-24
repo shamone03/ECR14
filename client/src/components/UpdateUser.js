@@ -183,9 +183,9 @@ const UpdateUser = ({img, members1, number1, parkings}) => {
         setLoading(true)
         const res = await fetch(`${url}/api/update`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": localStorage.getItem('token')
             },
             body: JSON.stringify({
                 names: members.map(i => ({name: i.name, age: parseInt(i.age), residentType: i.residentType})),

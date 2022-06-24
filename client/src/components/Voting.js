@@ -20,8 +20,8 @@ const Voting = () => {
         const fetchPolls = async () => {
             const res = await fetch(`${url}/api/getPolls`, {
                 method: 'GET',
+                credentials: 'include',
                 headers: {
-                    "Authorization": localStorage.getItem('token'),
                     "Content-Type": "application/json"
                 }
             })
@@ -33,8 +33,8 @@ const Voting = () => {
         const fetchNominees = async () => {
             const res = await fetch(`${url}/api/getNominees`, {
                 method: 'GET',
+                credentials: 'include',
                 headers: {
-                    "Authorization": localStorage.getItem('token'),
                     "Content-Type": "application/json"
                 }
             })
@@ -54,8 +54,8 @@ const Voting = () => {
     const sendVote = async () => {
         const res = await fetch(`${url}/api/vote`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
-                "Authorization": localStorage.getItem('token'),
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({

@@ -151,10 +151,23 @@ exports.login = async (req, res) => {
     } else {
         if (await bcrypt.compare(req.body.password, user.password)) {
             const token = jwt.sign({houseNo: user.houseNo, _id: user._id, isAdmin: user.isAdmin, verified: user.verified}, process.env.JWT_SECRET, { expiresIn: '86400s'})
-            res.status(200).send({message: 'success', token: token})
+            res.cookie('jwtToken', token, {httpOnly: true, secure: true, sameSite: 'strict'})
+            res.status(200).send({message: 'success'})
         } else {
             res.status(401).send({message: 'invalid details'})
         }
+    }
+}
+
+exports.logout = (req, res) => {
+    try {
+        res.cookie('jwtToken', '', {httpOnly: true, secure: true, sameSite: 'strict'})
+        console.log('logged out')
+        res.status(200).send({message: 'logged out'})
+    } catch (e) {
+        console.log('unable to logout')
+        console.log(e)
+        res.status(500).send({message: 'unable to logout'})
     }
 }
 

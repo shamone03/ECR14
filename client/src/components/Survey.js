@@ -56,9 +56,9 @@ const Survey = () => {
         setLoading(true)
         const res = await fetch(`${url}/api/survey`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": localStorage.getItem('token')
             },
             body: JSON.stringify({
                 responses: responses

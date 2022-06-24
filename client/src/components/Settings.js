@@ -28,6 +28,7 @@ const Settings = () => {
         const fetchData = async () => {
             const res = await fetch(`${url}/api/getUser`, {
                 method: 'GET',
+                credentials: 'include',
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": localStorage.getItem('token')
@@ -58,6 +59,7 @@ const Settings = () => {
         setLoading(true)
         const res = await fetch(`${url}/api/verifyEmail`, {
             method: 'GET',
+            credentials: 'include',
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": localStorage.getItem('token')
@@ -76,6 +78,7 @@ const Settings = () => {
         setPasswordLoading(true)
         const res = await fetch(`${url}/api/resetPassword`, {
             method: 'POST',
+            credentials: 'include',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
                 houseNo: houseNo
