@@ -36,18 +36,15 @@ const ResetPassword = () => {
             })
             if (res.status === 200) {
                 const data = await res.json()
-                console.log(data)
                 setValidURL(true)
                 setLoading(false)
                 navigate('/login')
             }
             if (res.status === 400) {
-                console.log('invalid link')
                 setValidURL(false)
                 setLoading(false)
             }
         } catch (e) {
-            console.log(e)
             setValidURL(false)
             setLoading(false)
             alert('Server error try again later')
@@ -57,7 +54,6 @@ const ResetPassword = () => {
     const validatePasswords = (password, passwordConfirm) => {
         setPassword(password)
         setPasswordConfirm(passwordConfirm)
-        console.log(password)
         if (password.length < 8) {
             setPasswordStyle({border: 'solid 3px red'})
             // alert('Password is too short')

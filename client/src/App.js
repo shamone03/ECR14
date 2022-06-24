@@ -19,7 +19,6 @@ function App() {
     const navigate = useNavigate()
 
     const MobileMenu = () => {
-        console.log('tre')
         return (
             <Offcanvas onHide={() => setShowMenu(false)} show={showMenu} style={{backgroundColor: '#161b22'}}>
                 <Offcanvas.Header>

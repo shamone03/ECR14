@@ -38,7 +38,6 @@ const Settings = () => {
             }
             if (res.status === 200) {
                 const data = await res.json()
-                console.log(data)
                 setVerified(data.verified)
                 setLoggedIn(true)
                 setHouseNo(data.houseNo)
@@ -46,7 +45,6 @@ const Settings = () => {
                 setNumber(data.number)
                 setEmail(data.email)
                 setParkings(data.parkingNos)
-                console.log(data.parkingNos)
                 if (data.imgURL) {
                     setImg(data.imgURL)
                 }

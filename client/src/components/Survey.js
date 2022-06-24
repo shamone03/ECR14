@@ -23,7 +23,6 @@ const Survey = () => {
             if (responsesCopy[i].question === q) {
                 responsesCopy[i].answer = a
                 setResponses(responsesCopy)
-                console.log(responses)
                 return
             }
         }
@@ -35,7 +34,6 @@ const Survey = () => {
             if (responsesCopy[i].question === q) {
                 responsesCopy[i].remarks = r
                 setResponses(responsesCopy)
-                console.log(responses)
                 return
             }
         }
