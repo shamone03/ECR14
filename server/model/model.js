@@ -23,7 +23,7 @@ const tokenSchema = new mongoose.Schema({
         unique: true
     },
     token: {type: String, required: true},
-    createdAt: {type: Date, default: Date.now(), expires: 300} //1hour
+    createdAt: {type: Date, default: Date.now(), expires: 300} //5mins
 }, {collection: 'tokens'})
 
 const nomineeSchema = new mongoose.Schema({
