@@ -2,8 +2,6 @@ const nodemailer = require('nodemailer')
 const { google } = require("googleapis")
 const OAuth2 = google.auth.OAuth2
 
-
-
 module.exports = async (email, subject, text) => {
     const oAuth2Client = new OAuth2(
         process.env.CLIENT_ID,
@@ -14,7 +12,6 @@ module.exports = async (email, subject, text) => {
     oAuth2Client.setCredentials({
         refresh_token: process.env.REFRESH_TOKEN
     })
-
 
     const accessToken = await oAuth2Client.getAccessToken()
     try {

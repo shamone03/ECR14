@@ -95,7 +95,24 @@ const Settings = () => {
     }
 
     const logout = () => {
-        localStorage.clear()
+        try {
+            const res = fetch(`${url}/api/logout`, {
+                method: 'GET',
+                headers: {"Content-Type": "application/json"},
+                credentials: 'include'
+            })
+            if (res.status === 200) {
+
+            }
+            if (res.status === 500) {
+                alert('Error logging out')
+                return
+            }
+        } catch (e) {
+            alert('Error logging out')
+            console.log(e)
+            return
+        }
         navigate('/')
     }
 

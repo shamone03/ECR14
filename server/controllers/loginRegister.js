@@ -76,7 +76,7 @@ exports.register = async (req, res) => {
         if (req.body.imgBase64.length > 0) {
             const bufferStream = new stream.PassThrough()
             bufferStream.end(req.body.imgBase64, 'base64')
-            const cloudFile = bucket.file(`${newUser._id}.webp`)
+            const cloudFile = bucket.file(`profilepics/${newUser._id}.webp`)
             bufferStream.pipe(cloudFile.createWriteStream({metadata: {
                     cacheControl: "no-store"
                 }
@@ -86,7 +86,7 @@ exports.register = async (req, res) => {
             }).on('finish', async () => {
                 console.log('pic uploaded')
                 try {
-                    await userModel.findOneAndUpdate({_id: newUser._id}, {imgURL: `https://storage.googleapis.com/${process.env.GCLOUD_STORAGE_BUCKET}/${newUser._id}.webp`})
+                    await userModel.findOneAndUpdate({_id: newUser._id}, {imgURL: `https://storage.googleapis.com/${process.env.GCLOUD_STORAGE_BUCKET}/profilepics/${newUser._id}.webp`})
                     console.log('imgURL updated')
                 } catch (e) {
                     console.log('error updating img url')
