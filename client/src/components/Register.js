@@ -83,6 +83,7 @@ const Register = () => {
         const fetchData = async () => {
             const res = await fetch(`${url}/api/registered`, {
                 method: 'GET',
+                credentials: 'include',
                 headers: {"Content-Type": "application/json"},
             })
             if (res.status === 200) {
@@ -303,6 +304,7 @@ const Register = () => {
         setLoading(true)
         const res = await fetch(`${url}/api/register`, {
             method: 'POST',
+            credentials: 'include',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
                 houseNo: houseNo,
@@ -334,6 +336,7 @@ const Register = () => {
         setPage2Loading(true)
         const res = await fetch(`${url}/api/resetPassword`, {
             method: 'POST',
+            credentials: 'include',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
                 houseNo: houseNo

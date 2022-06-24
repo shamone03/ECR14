@@ -18,6 +18,7 @@ const VerifyEmailLink = () => {
             try {
                 const res = await fetch(`${url}/api/${params.id}/verify/${params.token}`, {
                     method: 'GET',
+                    credentials: 'include',
                     headers: {
                         "Content-Type": "application/json",
                     }

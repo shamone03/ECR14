@@ -10,7 +10,7 @@ exports.updateUser = async (req, res) => {
     if (!req.body) {
         res.status(400).send({message: 'no body'})
     }
-    const id = jwt.decode(req.headers['authorization'])._id
+    const id = jwt.decode(req.cookies['jwtToken'])._id
     try {
         const user = await userModel.updateOne({_id: id}, {names: req.body.names, number: req.body.number, parkingNos: req.body.parkingNos})
         console.log('user document updated')
@@ -49,7 +49,7 @@ exports.updateUser = async (req, res) => {
 
 exports.sendVerificationEmail = async (req, res) => {
 
-    const houseNo = jwt.decode(req.headers['authorization']).houseNo
+    const houseNo = jwt.decode(req.cookies['jwtToken']).houseNo
 
     try {
         const user = await model.userModel.findOne({houseNo: houseNo}, {verified: 1, email: 1, _id: 1})
@@ -79,11 +79,11 @@ exports.sendVerificationEmail = async (req, res) => {
 }
 
 exports.getUser = async (req, res) => {
-
-    const token = req.headers['authorization']
+    // console.log(req)
+    // console.log(req.cookies.cookieName)
+    // console.log(req.headers)
+    const houseNo = jwt.decode(req.cookies['jwtToken']).houseNo
     try {
-
-        const houseNo = jwt.verify(token, process.env.JWT_SECRET).houseNo
         try {
             const user = await model.userModel.findOne({houseNo: houseNo}, {password: 0})
             if (user) {

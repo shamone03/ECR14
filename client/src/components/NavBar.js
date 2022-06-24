@@ -4,6 +4,7 @@ import {Badge, Button, Dropdown, Offcanvas} from "react-bootstrap";
 import styles1 from "../css/NavBar.module.css";
 import {AiOutlineClose, AiOutlineMenu, FiLogOut} from "react-icons/all";
 import {NavLink, useNavigate} from "react-router-dom";
+import {url} from "../assets/js/url";
 
 const NavBar = () => {
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 600px)' })
@@ -16,7 +17,24 @@ const NavBar = () => {
     }
 
     const logout = () => {
-        localStorage.clear()
+        try {
+            const res = fetch(`${url}/api/logout`, {
+                method: 'GET',
+                headers: {"Content-Type": "application/json"},
+                credentials: 'include'
+            })
+            if (res.status === 200) {
+
+            }
+            if (res.status === 500) {
+                alert('Error logging out')
+                return
+            }
+        } catch (e) {
+            alert('Error logging out')
+            console.log(e)
+            return
+        }
         navigate('/')
     }
 

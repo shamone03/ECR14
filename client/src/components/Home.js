@@ -17,9 +17,9 @@ const Home = () => {
         const fetchData = async () => {
             const res = await fetch(`${url}/api/getUser`, {
                 method: 'GET',
+                credentials: 'include',
                 headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": localStorage.getItem('token')
+                    "Content-Type": "application/json"
                 }
             })
             if (res.status === 401) {

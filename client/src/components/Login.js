@@ -17,9 +17,9 @@ const Login = () => {
         const fetchData = async () => {
             const res = await fetch(`${url}/api/getUser`, {
                 method: 'GET',
+                credentials: 'include',
                 headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": localStorage.getItem('token')
+                    "Content-Type": "application/json"
                 }
             })
             if (res.status === 401) {
@@ -38,6 +38,7 @@ const Login = () => {
         const res = await fetch(`${url}/api/login`, {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
+            credentials: 'include',
             body: JSON.stringify({
                 "houseNo": houseNo.charAt(0).toUpperCase() + houseNo.slice(1),
                 "password": password
@@ -45,7 +46,6 @@ const Login = () => {
         })
         if (res.status === 200) {
             const data = await res.json()
-            localStorage.setItem('token', data.token)
             setLoading(false)
             setLoggedIn(true)
         } else {
@@ -64,6 +64,7 @@ const Login = () => {
         const res = await fetch(`${url}/api/resetPassword`, {
             method: 'POST',
             headers: {"Content-Type": "application/json"},
+            credentials: 'include',
             body: JSON.stringify({
                 houseNo: houseNo.charAt(0).toUpperCase() + houseNo.slice(1)
             })

@@ -6,7 +6,7 @@ exports.postSurvey = async (req, res) => {
     try {
         const survey = new surveyModel({
             surveyName: 'survey1',
-            houseNo: jwt.decode(req.headers['authorization']).houseNo,
+            houseNo: jwt.decode(req.cookies['jwtToken']).houseNo,
             responses: req.body.responses,
         })
         await survey.save()

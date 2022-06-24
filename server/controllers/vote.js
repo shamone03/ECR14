@@ -3,8 +3,8 @@ const model = require("../model/model");
 const {pollModel, nomineeModel} = require("../model/model");
 
 exports.addPoll = async (req, res) => {
-    const _id = jwt.decode(req.headers['authorization'])._id
-    const isAdmin = jwt.decode(req.headers['authorization']).isAdmin
+    const _id = jwt.decode(req.cookies['jwtToken'])._id
+    const isAdmin = jwt.decode(req.cookies['jwtToken']).isAdmin
     if (!isAdmin) {
         console.log('not admin')
         res.status(401).send({message: 'not admin'})
@@ -29,8 +29,8 @@ exports.addPoll = async (req, res) => {
 }
 
 exports.getPolls = async (req, res) => {
-    const isAdmin = jwt.decode(req.headers['authorization']).isAdmin
-    const block = jwt.decode(req.headers['authorization']).houseNo.charAt(0).toUpperCase()
+    const isAdmin = jwt.decode(req.cookies['jwtToken']).isAdmin
+    const block = jwt.decode(req.cookies['jwtToken']).houseNo.charAt(0).toUpperCase()
     try {
         const polls = await pollModel.find()
         console.log('polls found')
@@ -75,8 +75,8 @@ exports.addNominee = async (req, res) => {
 }
 
 exports.getNominees = async (req, res) => {
-    const block = jwt.decode(req.headers['authorization']).houseNo.charAt(0)
-    const isAdmin = jwt.decode(req.headers['authorization']).isAdmin
+    const block = jwt.decode(req.cookies['jwtToken']).houseNo.charAt(0)
+    const isAdmin = jwt.decode(req.cookies['jwtToken']).isAdmin
     try {
         const nominees = await model.nomineeModel.find().populate('poll')
         const userNominees = nominees.filter((n) => n.poll.forBlock === block)
@@ -94,7 +94,7 @@ exports.getNominees = async (req, res) => {
 }
 
 exports.voteNominee = async (req, res) => {
-    const houseNo = jwt.decode(req.headers['authorization']).houseNo
+    const houseNo = jwt.decode(req.cookies['jwtToken']).houseNo
     const nomineeIds = req.body.nomineeIds
 
     try {

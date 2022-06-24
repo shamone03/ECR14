@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const checkEmailVerified = (req, res, next) => {
-    const verified = jwt.decode(req.headers['authorization']).verified
+    const verified = jwt.decode(req.cookies['jwtToken']).verified
     if (verified) {
         console.log('email verified user')
         return next()

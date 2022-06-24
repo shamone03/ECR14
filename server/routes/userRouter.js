@@ -1,5 +1,5 @@
 const express = require('express')
-const {register, verifyEmailLink, resetPassword, verifyReset, registered, login} = require("../controllers/loginRegister");
+const {register, verifyEmailLink, resetPassword, verifyReset, registered, login, logout} = require("../controllers/loginRegister");
 
 const userRouter = express.Router()
 
@@ -14,5 +14,7 @@ userRouter.post('/api/:id/reset/:token', verifyReset)
 userRouter.get('/api/registered', registered)
 
 userRouter.post('/api/login', login)
+
+userRouter.get('/api/logout', logout)
 
 module.exports = userRouter
