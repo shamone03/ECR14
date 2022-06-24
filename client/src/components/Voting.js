@@ -47,15 +47,9 @@ const Voting = () => {
         fetchPolls()
         fetchNominees()
         setLoading(false)
-        // console.log(polls)
-        // console.log(nominees)
+
     }, [])
 
-    useEffect(() => {
-        // console.log(chosenPoll)
-        // console.log(polls)
-        // console.log(nominees)
-    }, [chosenPoll, polls, nominees])
 
     const sendVote = async () => {
         const res = await fetch(`${url}/api/vote`, {
@@ -70,7 +64,6 @@ const Voting = () => {
         })
         if (res.status === 400) {
             alert('Server error try again later')
-            console.log('bad request')
             return
         }
         if (res.status === 500) {
@@ -100,7 +93,7 @@ const Voting = () => {
     const chosenNomsContains = (_id) => {
         for (let i of chosenNoms) {
             if (i._id === _id) {
-                console.log('removed')
+
                 return false
             }
         }
@@ -115,7 +108,7 @@ const Voting = () => {
                     return j._id === i._id
                 }))
             })
-            console.log(nomineesCopy)
+
         }
         return (
             // nomineesCopy.map(i => (<li onClick={() => addNom(i)} className={'text-center list-group-item list-group-item-action list-group-item-dark'} key={i._id}>{i.name}</li>))

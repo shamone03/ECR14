@@ -25,14 +25,14 @@ const VerifyEmailLink = () => {
 
                 if (res.status === 200) {
                     const data = await res.json()
-                    console.log(data)
+
                     setValidURL(true)
                 }
                 if (res.status === 400) {
                     setValidURL(false)
                 }
             } catch (e) {
-                console.log('invalid link')
+
                 setValidURL(false)
             }
             setLoading(false)

@@ -82,7 +82,6 @@ const UpdateUser = ({img, members1, number1, parkings}) => {
         }
         membersCopy.push({name: '', age: 0, residentType: 'Resident Type', _id: members[members.length - 1]._id + 1})
         setMembers([...membersCopy])
-        console.log(members)
     }
 
     const editParkingSpot = (p, i) => {
@@ -98,12 +97,12 @@ const UpdateUser = ({img, members1, number1, parkings}) => {
     }
 
     const removeParkingNo = (i) => {
-        console.log(i)
+
         const copy = parkingNos
         copy.splice(i, 1)
 
         setParkingNos([...copy])
-        console.log(parkingNos)
+
     }
 
     const validateParking = () => {
@@ -220,7 +219,7 @@ const UpdateUser = ({img, members1, number1, parkings}) => {
             <Form.Group controlId="formFile" className={'mb-3'}>
                 <Form.Label>Upload profile picture</Form.Label>
                 <Form.Control type="file" accept={'image/*'} className={styles.inputStyle} onChange={(e) => {
-                    console.log(e.target.files)
+
                     e.target.files.length > 0 ? setImgFile(e.target.files[0]) : setImgFile(file => file)
                 }}/>
             </Form.Group>

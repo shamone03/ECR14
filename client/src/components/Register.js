@@ -95,11 +95,7 @@ const Register = () => {
 
     }, [])
 
-    useEffect(() => {
-        console.log({
-            houseNo, residentType, number, password, passwordConfirm, email, age, registered, imgB64, imgFile
-        })
-    }, [houseNo, residentType, number, password, passwordConfirm, email, age, registered, imgFile, imgB64])
+
 
     const validateHouseNo = (houseNo) => {
         const normHouseNo = houseNo.charAt(0).toUpperCase() + houseNo.slice(1)
@@ -127,7 +123,6 @@ const Register = () => {
             alert('Invalid Apartment Number')
 
         } else {
-            console.log(registered)
             if (contains(registered, houseNo)) {
                 for (let i of registered) {
                     if (i.houseNo === houseNo) {
@@ -213,7 +208,6 @@ const Register = () => {
     const validatePasswords = (password, passwordConfirm) => {
         setPassword(password)
         setPasswordConfirm(passwordConfirm)
-        console.log(password)
         if (password.length < 8) {
             setPasswordStyle(invalidStyle)
             // alert('Password is too short')
@@ -306,7 +300,6 @@ const Register = () => {
 
     const registerUser = async (e) => {
         e.preventDefault()
-        console.log({houseNo, email, password, passwordConfirm, name, age, residentType, number})
         setLoading(true)
         const res = await fetch(`${url}/api/register`, {
             method: 'POST',
@@ -419,7 +412,6 @@ const Register = () => {
                                     <Form.Group controlId="formFile" className="mb-3">
                                         <Form.Label>Upload profile picture</Form.Label>
                                         <Form.Control type="file" accept={'image/*'} className={styles.inputStyle} onChange={(e) => {
-                                            console.log(e.target.files)
                                             e.target.files.length > 0 ? setImgFile(e.target.files[0]) : setImgFile(file => file)
                                         }}/>
                                     </Form.Group>
