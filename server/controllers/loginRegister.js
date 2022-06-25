@@ -1,10 +1,9 @@
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
+const uploadPicture = require("../utils/uploadPicture")
 const {userModel, tokenModel} = require("../model/model");
 const jwt = require("jsonwebtoken");
-const stream = require("stream");
-const {Storage} = require("@google-cloud/storage");
 
 exports.resetPassword = async (req, res) => {
     if (!req.body) {
@@ -60,8 +59,6 @@ exports.register = async (req, res) => {
     if (!req.body) {
         res.status(400).send({message: 'no body'})
     }
-    const storage = new Storage()
-    const bucket = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET)
     let newUser = userModel({
         houseNo: req.body.houseNo,
         email: req.body.email,
@@ -74,26 +71,11 @@ exports.register = async (req, res) => {
         newUser = await newUser.save()
         console.log('user saved')
         if (req.body.imgBase64.length > 0) {
-            const bufferStream = new stream.PassThrough()
-            bufferStream.end(req.body.imgBase64, 'base64')
-            const cloudFile = bucket.file(`profilepics/${newUser._id}.webp`)
-            bufferStream.pipe(cloudFile.createWriteStream({metadata: {
-                    cacheControl: "no-store"
-                }
-            })).on('error', (e) => {
-                console.log('error pic uploading')
-                return res.status(500).send({e})
-            }).on('finish', async () => {
-                console.log('pic uploaded')
-                try {
-                    await userModel.findOneAndUpdate({_id: newUser._id}, {imgURL: `https://storage.googleapis.com/${process.env.GCLOUD_STORAGE_BUCKET}/profilepics/${newUser._id}.webp`})
-                    console.log('imgURL updated')
-                } catch (e) {
-                    console.log('error updating img url')
-                    console.log(e)
-                    return res.status(500).send({message: 'error updating img url', e})
-                }
-            })
+            if (uploadPicture(req.body.imgBase64, 'profilepics', newUser._id)) {
+                return res.status(200).send()
+            } else {
+                return res.status(500).send({message: 'error uploading profile pic'})
+            }
         }
 
         const token = await new tokenModel({

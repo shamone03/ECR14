@@ -1,10 +1,9 @@
 const jwt = require("jsonwebtoken");
 const {userModel} = require("../model/model");
-const {Storage} = require("@google-cloud/storage");
-const stream = require("stream");
 const model = require("../model/model");
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
+const uploadPicture = require("../utils/uploadPicture");
 
 exports.updateUser = async (req, res) => {
     if (!req.body) {
@@ -15,29 +14,12 @@ exports.updateUser = async (req, res) => {
         const user = await userModel.updateOne({_id: id}, {names: req.body.names, number: req.body.number, parkingNos: req.body.parkingNos})
         console.log('user document updated')
         if (req.body.imgBase64.length > 0) {
-            const storage = new Storage()
-            const bucket = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET)
-            const bufferStream = new stream.PassThrough()
-            bufferStream.end(req.body.imgBase64, 'base64')
-            const cloudFile = bucket.file(`profilepics/${id}.webp`)
-            bufferStream.pipe(cloudFile.createWriteStream({
-                metadata: {
-                    cacheControl: "no-store"
-                }
-            })).on('error', (e) => {
-                console.log('error pic uploading')
-                return res.status(500).send({e})
-            }).on('finish', async () => {
-                console.log('pic uploaded')
-                try {
-                    await userModel.findOneAndUpdate({_id: id}, {imgURL: `https://storage.googleapis.com/${process.env.GCLOUD_STORAGE_BUCKET}/profilepics/${id}.webp`})
-                    console.log('imgURL updated')
-                } catch (e) {
-                    console.log('error updating img url')
-                    console.log(e)
-                    return res.status(500).send({message: 'error updating img url', e})
-                }
-            })
+            if (uploadPicture(req.body.imgBase64, 'profilepics', id)) {
+                return res.status(200).send()
+            } else {
+                return res.status(500).send({message: 'error updating profile pic'})
+            }
+
         }
 
         return res.status(200).send()
