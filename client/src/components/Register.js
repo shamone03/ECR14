@@ -102,6 +102,7 @@ const Register = () => {
         const normHouseNo = houseNo.charAt(0).toUpperCase() + houseNo.slice(1)
         if (!blocks.includes(normHouseNo)) {
             setAptNoStyle(invalidStyle)
+            setHouseNo(normHouseNo)
         } else {
             setAptNoStyle(validStyle)
             setHouseNo(normHouseNo)
@@ -145,11 +146,12 @@ const Register = () => {
     }
 
     const validateNumber = (number) => {
+        number = number.replace(/\s+/g, '')
+        setNumber(number)
         if (!validator.isMobilePhone(number)) {
             setNumberStyle(invalidStyle)
         } else {
             setNumberStyle(validStyle)
-            setNumber(number)
         }
         return validator.isMobilePhone(number)
     }
@@ -198,6 +200,7 @@ const Register = () => {
 
     const validateEmail = (email) => {
         if (!validator.isEmail(email)) {
+            setEmail(email)
             setEmailStyle(invalidStyle)
         } else {
             setEmailStyle(validStyle)
