@@ -1,6 +1,6 @@
 const {Storage} = require("@google-cloud/storage");
 const stream = require("stream");
-const {userModel} = require("../model/model");
+const {userModel, nomineeModel} = require("../model/model");
 
 module.exports = (imgBase64, toFolder, id) => {
     try {
@@ -20,8 +20,14 @@ module.exports = (imgBase64, toFolder, id) => {
         }).on('finish', async () => {
             console.log('pic uploaded')
             try {
-                await userModel.findOneAndUpdate({_id: id}, {imgURL: `https://storage.googleapis.com/${process.env.GCLOUD_STORAGE_BUCKET}/${toFolder}/${id}.webp`})
-                console.log('imgURL updated')
+                if (toFolder === 'profilepics') {
+                    await userModel.findOneAndUpdate({_id: id}, {imgURL: `https://storage.googleapis.com/${process.env.GCLOUD_STORAGE_BUCKET}/${toFolder}/${id}.webp`})
+                    console.log('user imgURL updated')
+                }
+                if (toFolder === 'nomineepics') {
+                    await nomineeModel.findOneAndUpdate({_id: id}, {imgURL: `https://storage.googleapis.com/${process.env.GCLOUD_STORAGE_BUCKET}/${toFolder}/${id}.webp`})
+                    console.log('nominee imgURL updated')
+                }
                 return true
             } catch (e) {
                 console.log('error updating img url')
