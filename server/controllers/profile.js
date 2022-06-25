@@ -1,9 +1,9 @@
-const jwt = require("jsonwebtoken");
-const {userModel} = require("../model/model");
-const model = require("../model/model");
-const crypto = require("crypto");
-const sendEmail = require("../utils/sendEmail");
-const uploadPicture = require("../utils/uploadPicture");
+const jwt = require("jsonwebtoken")
+const {userModel} = require("../model/model")
+const model = require("../model/model")
+const crypto = require("crypto")
+const sendEmail = require("../utils/sendEmail")
+const uploadPicture = require("../utils/uploadPicture")
 
 exports.updateUser = async (req, res) => {
     if (!req.body) {
