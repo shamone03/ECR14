@@ -71,11 +71,7 @@ exports.register = async (req, res) => {
         newUser = await newUser.save()
         console.log('user saved')
         if (req.body.imgBase64.length > 0) {
-            if (uploadPicture(req.body.imgBase64, 'profilepics', newUser._id)) {
-                return res.status(200).send()
-            } else {
-                return res.status(500).send({message: 'error uploading profile pic'})
-            }
+            uploadPicture(req.body.imgBase64, 'profilepics', newUser._id)
         }
 
         const token = await new tokenModel({
