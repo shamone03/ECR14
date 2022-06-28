@@ -30,8 +30,7 @@ const Settings = () => {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": localStorage.getItem('token')
+                    "Content-Type": "application/json"
                 }
             })
             if (res.status === 401) {
@@ -61,8 +60,7 @@ const Settings = () => {
             method: 'GET',
             credentials: 'include',
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": localStorage.getItem('token')
+                "Content-Type": "application/json"
             }
         })
         if (res.status === 200) {

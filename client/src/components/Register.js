@@ -333,6 +333,9 @@ const Register = () => {
                 alert('Server error try again later')
             }
         }
+        if (res.status === 400) {
+            alert('Bad request')
+        }
     }
 
     const resetPassword = async () => {

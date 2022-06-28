@@ -5,11 +5,10 @@ const userSchema = new mongoose.Schema({
     houseNo: {type: String, required: true, unique: true},
     email: { type: String, required: true, unique: true},
     password: {type: String, required: true},
-    names: [{name:{type: String}, age:{type:Number}, residentType:{type: String}}],
+    names: [{name:{type: String}, age:{type:Number}, residentType:{type: String, enum: ['Owner', 'Family', 'Co-Owner', 'Tenant']}}],
     verified: {type: Boolean, default: false},
     isAdmin: {type: Boolean, default: false},
     number: {type: String},
-    residentType: {type: String},
     registeredArtificially: {type: Boolean, default: false},
     imgURL: {type: String},
     parkingNos: [{type: Number}]
@@ -28,12 +27,15 @@ const tokenSchema = new mongoose.Schema({
 
 const nomineeSchema = new mongoose.Schema({
     name: {type: String, required: true},
-    houseNo: {type: String, required: true, unique: true},
+    houseNo: {type: String, required: true},
     votes: {type: Number, required: true, default: 0},
     voters: [{type: String}],
     description: {type: String},
-    poll: {type: mongoose.Types.ObjectId, ref: "poll"}
-}, {collection: 'nominees'})
+    poll: {type: mongoose.Types.ObjectId, ref: "poll"},
+    imgURL: {type: String}
+}, {collection: 'nominees', timestamps: true})
+
+nomineeSchema.index({houseNo: 1, poll: 1}, {unique: true})
 
 const surveySchema = new mongoose.Schema({
     surveyName: {type: String, required: true},
@@ -46,8 +48,11 @@ const pollSchema = new mongoose.Schema({
     position: {type: String, required: true},
     forBlock: {type: String, required: true},
     representatives: {type: Number, default: 1},
-    nominees: [{type: Schema.Types.ObjectId, ref: "nominee"}]
-}, {collection: 'polls'})
+    nominees: [{type: Schema.Types.ObjectId, ref: "nominee"}],
+    description: {type: String}
+}, {collection: 'polls', timestamps: true})
+
+pollSchema.index({forBlock: 1, position: 1}, {unique: true})
 
 exports.pollModel = new mongoose.model('poll', pollSchema)
 exports.surveyModel = mongoose.model('survey', surveySchema)
