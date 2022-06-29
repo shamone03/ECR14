@@ -15,7 +15,6 @@ const Settings = () => {
     const [parkings, setParkings] = useState([])
     const [verified, setVerified] = useState(false)
     const [loggedIn, setLoggedIn] = useState(true)
-    const [residentType, setResidentType] = useState('')
     const [number, setNumber] = useState('')
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)

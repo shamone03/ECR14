@@ -2,7 +2,7 @@ import './App.css';
 import React, {useState} from 'react';
 import {Link, useNavigate} from "react-router-dom"
 import styles from './css/App.module.css'
-import {Badge, Button, Dropdown, DropdownButton, Offcanvas} from "react-bootstrap";
+import {Badge, Button, Dropdown, Offcanvas} from "react-bootstrap";
 import { useMediaQuery } from 'react-responsive'
 import {
     AiOutlineClose,

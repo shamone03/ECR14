@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import VotingCard from "./VotingCard";
 import {url} from "../assets/js/url";
-import {Button, Modal, Offcanvas, Spinner} from "react-bootstrap";
+import {Button, Modal} from "react-bootstrap";
 import styles from "../css/Voting.module.css";
 import {AiOutlineClose} from "react-icons/all";
 import LoadingButton from "./LoadingButton";

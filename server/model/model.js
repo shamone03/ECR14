@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     registeredArtificially: {type: Boolean, default: false},
     imgURL: {type: String},
     parkingNos: [{type: Number}]
-}, { collection: 'residents', timestamps: true })
+}, { collection: 'residentsDEV', timestamps: true })
 
 const tokenSchema = new mongoose.Schema({
     userId: {
@@ -22,7 +22,7 @@ const tokenSchema = new mongoose.Schema({
         unique: true
     },
     token: {type: String, required: true},
-    createdAt: {type: Date, default: Date.now(), expires: 300} //5mins
+    createdAt: {type: Date, default: Date.now(), expires: 300} // 5 mins
 }, {collection: 'tokens'})
 
 const nomineeSchema = new mongoose.Schema({

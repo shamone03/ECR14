@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Link, Navigate, useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {url} from "../assets/js/url";
 import {Spinner} from "react-bootstrap";
 
@@ -25,8 +25,6 @@ const VerifyEmailLink = () => {
                 })
 
                 if (res.status === 200) {
-                    const data = await res.json()
-
                     setValidURL(true)
                 }
                 if (res.status === 400) {

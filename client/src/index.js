@@ -15,10 +15,10 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import VoteMenu from "./components/VoteMenu";
 import Survey from "./components/Survey";
 import Construction from "./components/Construction";
-import Voting from "./components/Voting";
 import Settings from "./components/Settings";
 import ResetPassword from "./components/ResetPassword";
 import NavBar from "./components/NavBar";
+import Nominate from "./components/Nominate";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -38,6 +38,7 @@ root.render (
                 <Route path={'/vote'} element={<VoteMenu/>}/>
                 <Route path={'/settings'} element={<Settings/>}/>
                 <Route path={'/vote/vote-now'} element={<Construction/>}/>
+                <Route path={'/vote/nominate'} element={<Nominate/>}/>
                 <Route path={'/survey'} element={<Survey/>}/>
                 <Route path={'/construction'} element={<Construction/>}/>
             </Route>

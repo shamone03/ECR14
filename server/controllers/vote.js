@@ -63,9 +63,9 @@ exports.addNominee = async (req, res) => {
         // if (forBlock.forBlock !== jwt.decode(req.cookies['jwtToken']).houseNo.charAt(0).toUpperCase()) {
         if (forBlock.forBlock !== 'all') {
             // houseNo.chatAt(0).toUpperCase to be replaced with req.ecr14user.houseBlock
-            if (forBlock.forBlock !== req.body.houseNo.charAt(0).toUpperCase()) {
+            if (forBlock.forBlock !== req.ecr14user.houseBlock.toUpperCase()) {
                 // houseNo.chatAt(0).toUpperCase to be replaced with req.ecr14user.houseBlock
-                return res.status(400).send({message: `poll signup (${forBlock.forBlock}) not available for sent block ${req.body.houseNo}`})
+                return res.status(400).send({message: `poll signup (${req.ecr14user.houseBlock}) not available for sent block ${req.ecr14user.houseNo}`})
             }
         }
     } catch (e) {
@@ -78,7 +78,7 @@ exports.addNominee = async (req, res) => {
         // saving user to nominees collection, which will also check if they have already nominated for this poll using compound index houseNo and poll
         const nominee = new model.nomineeModel({
             name: req.body.name,
-            houseNo: req.body.houseNo,
+            houseNo: req.ecr14user.houseNo,
             description: req.body.description,
             poll: req.body.pollId
         })
@@ -102,7 +102,7 @@ exports.addNominee = async (req, res) => {
     } catch (e) {
         console.log(e)
         if (e.code === 11000) {
-            console.log(`${req.body.houseNo} already signed up for poll ${req.body.pollId}`)
+            console.log(`${req.ecr14user.houseNo} already signed up for poll ${req.body.pollId}`)
             return res.status(400).send(`${req.body.houseNo} already signed up for poll ${req.body.pollId}`)
         }
         return res.status(500).send({e})

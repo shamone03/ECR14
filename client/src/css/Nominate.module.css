@@ -1,0 +1,30 @@
+.pollStyle {
+    border-radius: 15px;
+}
+
+.pollStyle:hover {
+    background-color: #dc3545;
+    transition: all;
+    transition-timing-function: ease-out;
+    transition-duration: 0.2s;
+    cursor: pointer;
+}
+
+.closeButtonStyle {
+    border: none !important;
+    background-color: transparent !important;
+}
+
+.closeButtonStyle:hover {
+    background-color: transparent !important;
+    border: none !important;
+    color: gray !important;
+}
+
+.closeButtonStyle:focus {
+    box-shadow: none !important;
+}
+
+.nominateModal {
+    background-color: #161b22;
+}

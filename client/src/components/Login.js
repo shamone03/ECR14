@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import React from 'react';
-import {Button, Form, Spinner} from "react-bootstrap";
+import {Form, Spinner} from "react-bootstrap";
 import {Navigate} from "react-router-dom";
 import styles from '../css/Login.module.css'
 import {url} from "../assets/js/url";
@@ -45,7 +45,6 @@ const Login = () => {
             })
         })
         if (res.status === 200) {
-            const data = await res.json()
             setLoading(false)
             setLoggedIn(true)
         } else {
@@ -109,7 +108,7 @@ const Login = () => {
                     {passwordLoading ? (
                         <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true" style={{marginTop: '10px'}}/>
                     ) : (
-                        <a onClick={(e) => resetPassword(e)} className={styles.linkStyle}>Forgot password?</a>
+                        <p onClick={(e) => resetPassword(e)} className={styles.linkStyle}>Forgot password?</p>
                     )}
 
                 </Form>
