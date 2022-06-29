@@ -15,6 +15,7 @@ exports.addPoll = async (req, res) => {
             position: req.body.position,
             forBlock: req.body.forBlock,
             representatives: req.body.representatives,
+            description: req.body.description
         })
         const savedPoll = await poll.save()
         console.log('poll saved')
@@ -65,7 +66,7 @@ exports.addNominee = async (req, res) => {
             // houseNo.chatAt(0).toUpperCase to be replaced with req.ecr14user.houseBlock
             if (forBlock.forBlock !== req.ecr14user.houseBlock.toUpperCase()) {
                 // houseNo.chatAt(0).toUpperCase to be replaced with req.ecr14user.houseBlock
-                return res.status(400).send({message: `poll signup (${req.ecr14user.houseBlock}) not available for sent block ${req.ecr14user.houseNo}`})
+                return res.status(400).send({message: `${forBlock.forBlock} block poll signup not available for sent block ${req.ecr14user.houseBlock}`})
             }
         }
     } catch (e) {
@@ -86,7 +87,9 @@ exports.addNominee = async (req, res) => {
         console.log('nominee doc saved')
         if (req.body.hasOwnProperty('imgBase64')) {
             if (req.body.imgBase64.length > 0) {
-                uploadPicture(req.body.imgBase64, 'nomineepics', newNom._id)
+                if (!uploadPicture(req.body.imgBase64, 'nomineepics', newNom._id)) {
+                    return res.status(500).send({message: 'error uploading pic'})
+                }
             }
         }
 

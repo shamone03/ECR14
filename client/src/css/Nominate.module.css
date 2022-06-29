@@ -1,5 +1,7 @@
 .pollStyle {
     border-radius: 15px;
+    background-color: lightblue;
+    color: #161b22;
 }
 
 .pollStyle:hover {
@@ -8,6 +10,15 @@
     transition-timing-function: ease-out;
     transition-duration: 0.2s;
     cursor: pointer;
+    transform: scale(1.05);
+}
+
+.allPollsWrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 33.3333%);
+    grid-auto-rows: 1fr;
+    gap: 10px 10px;
+    justify-content: center;
 }
 
 .closeButtonStyle {
@@ -25,6 +36,18 @@
     box-shadow: none !important;
 }
 
-.nominateModal {
+.modal {
     background-color: #161b22;
+}
+
+@media only screen and (max-width: 1000px) {
+    .allPollsWrapper {
+        grid-template-columns: repeat(2, 50%);
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .allPollsWrapper {
+        grid-template-columns: repeat(1, 100%);
+    }
 }

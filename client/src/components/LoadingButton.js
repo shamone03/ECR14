@@ -12,7 +12,7 @@ const LoadingButton = ({loading, text, onClick, className, variant, type}) => {
     }
     if (!loading) {
         return (
-            <Button onClick={onClick} className={`${className}`} type={type} variant={variant}>{text}</Button>
+            <Button onClick={onClick} className={className} type={type} variant={variant}>{text}</Button>
         )
     }
 }
