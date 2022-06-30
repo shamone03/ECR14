@@ -176,9 +176,9 @@ const UpdateUser = ({img, members1, number1, parkings}) => {
     }
 
     return (
-        <Form>
+        <Form onSubmit={e => e.preventDefault()}>
             <CropPicture imgFile={imgFile} imgB64={imgB64} setImgB64={setImgB64} defaultImg={img}/>
-            <Form.Group controlId="formFile" className={'mb-3'}>
+            <Form.Group className={'mb-3'}>
                 <Form.Label>Upload profile picture</Form.Label>
                 <Form.Control type="file" accept={'image/*'} className={styles.inputStyle} onChange={(e) => {
 

@@ -300,7 +300,7 @@ const Register = () => {
             <>
                 <RedirectLogin loggedIn={!loggedIn}/>
                 <h1 className={'text-center'}>Register</h1>
-                <Form className={'container-lg'}>
+                <Form className={'container-lg'} onSubmit={e => e.preventDefault()}>
                     <div className={'row justify-content-center'}>
                         <div className={'col-6 col-md-4'}>
                             <Form.Group className={"mb-3 mt-5"}>
@@ -326,7 +326,7 @@ const Register = () => {
                 <RedirectLogin loggedIn={!loggedIn}/>
                 <h1 className={'text-center mt-3'}>Register</h1>
                 <div className={`d-flex justify-content-center align-items-center ${styles.formWrapper} mx-auto`}>
-                    <Form className={`container`}>
+                    <Form className={`container`} onSubmit={e => e.preventDefault()}>
                         <div className={'row'}>
                             <div className={'col-12'}>
                                 <CropPicture imgFile={imgFile} imgB64={imgB64} setImgB64={setImgB64} defaultImg={''}/>

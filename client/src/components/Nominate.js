@@ -8,8 +8,10 @@ import CropPicture from "./CropPicture";
 import LoadingButton from "./LoadingButton";
 
 const Nominate = () => {
-    const [allPolls, setAllPolls] = useState([])
+    const validStyle = {border: '3px #161b22 solid'}
+    const invalidStyle = {border: '3px red solid'}
 
+    const [allPolls, setAllPolls] = useState([])
     const [chosenPoll, setChosenPoll] = useState({})
     const [showModal, setShowModal] = useState(false)
     const [name, setName] = useState('')
@@ -17,6 +19,79 @@ const Nominate = () => {
     const [imgB64, setImgB64] = useState('')
     const [imgFile, setImgFile] = useState(new File([], "", undefined))
     const [loading, setLoading] = useState(false)
+    const [picStyle, setPicStyle] = useState(validStyle)
+    const [nameStyle, setNameStyle] = useState(validStyle)
+    const [descStyle, setDescStyle] = useState(validStyle)
+
+    const validatePic = (imgB64) => {
+        if (imgB64 !== '') {
+            setPicStyle(validStyle)
+            return true
+        } else {
+            setPicStyle(invalidStyle)
+            return false
+        }
+    }
+
+    const validateName = (name) => {
+        setName(name)
+        if (name.length < 3) {
+            setNameStyle(invalidStyle)
+            return false
+        }
+        setNameStyle(validStyle)
+        return true
+    }
+
+    const validateDesc = (desc) => {
+        setDesc(desc)
+        // check word count
+        // split on one or more spaces
+        if (desc.split(/\s+/).length < 50) {
+            setDescStyle(invalidStyle)
+            return false
+        }
+        setDescStyle(validStyle)
+        return true
+    }
+
+    useEffect(() => {
+        setPicStyle(validStyle)
+    }, [imgFile])
+
+    const validate = () => {
+        if (!validatePic(imgB64)) {
+            setPicStyle(invalidStyle)
+            alert('Upload a picture of yourself to continue')
+            return false
+        } else {
+            setPicStyle(validStyle)
+        }
+        if (!validateName(name)) {
+            setNameStyle(invalidStyle)
+            alert('Name has to be 3 characters long')
+            return false
+        } else {
+            setNameStyle(validStyle)
+        }
+        if (!validateDesc(desc)) {
+            setDescStyle(invalidStyle)
+            alert('Description has to be at least 50 words')
+            return false
+        } else {
+            setDescStyle(validStyle)
+        }
+        return true
+    }
+
+    const handleHide = () => {
+        setName('')
+        setDesc('')
+        setChosenPoll('')
+        setImgFile(new File([], "", undefined))
+        setImgB64('')
+        setShowModal(false)
+    }
 
     useEffect(() => {
         const getPolls = async () => {
@@ -35,7 +110,9 @@ const Nominate = () => {
     }, [])
 
     const addNominee = async () => {
-
+        if (!validate()) {
+            return
+        }
         setLoading(true)
         const res = await fetch(`${url}/api/addNominee`, {
             method: 'POST',
@@ -60,7 +137,6 @@ const Nominate = () => {
         setLoading(false)
 
     }
-
 
     const AllPolls = () => {
         return (
@@ -87,31 +163,29 @@ const Nominate = () => {
                     <AllPolls/>
                 </div>
             </div>
-            <Modal show={showModal} fullscreen onHide={() => setShowModal(false)} contentClassName={styles.modal}>
+            <Modal show={showModal} fullscreen onHide={handleHide} contentClassName={styles.modal}>
                 <Modal.Header className={'d-flex justify-content-between'}>
                     <Modal.Title>Enter Your details</Modal.Title>
-                    <Button variant={`outline-light ${styles.closeButtonStyle}`} onClick={() => setShowModal(false)}><AiOutlineClose size={25}/></Button>
+                    <Button variant={`outline-light ${styles.closeButtonStyle}`} onClick={handleHide}><AiOutlineClose size={25}/></Button>
                 </Modal.Header>
                 <Modal.Body>
 
                     <h1 className={'text-center'}>Nominating for {chosenPoll.position}</h1>
                     <p className={'text-center'} style={{wordWrap: 'break-word'}}>{chosenPoll.description}</p>
-                    <Form className={'container mx-auto'}>
+                    <Form className={'container mx-auto'} onSubmit={e => e.preventDefault()}>
 
                         <CropPicture defaultImg={''} setImgB64={setImgB64} imgB64={imgB64} imgFile={imgFile}/>
-                        <Form.Group controlId="formFile" className={'mb-3 row justify-content-center'}>
+                        <Form.Group className={'mb-3 row justify-content-center'}>
                             <Form.Label>Upload display picture</Form.Label>
-                            <Form.Control type="file" accept={'image/*'} className={inputStyle.inputStyle} onChange={(e) => {
-                                e.target.files.length > 0 ? setImgFile(e.target.files[0]) : setImgFile(file => file)
-                            }}/>
+                            <Form.Control type="file" accept={'image/*'} style={picStyle} className={inputStyle.inputStyle} onChange={e => e.target.files.length > 0 ? setImgFile(e.target.files[0]) : setImgFile(file => file)}/>
                         </Form.Group>
                         <Form.Group className={'mb-3 row justify-content-center'}>
                             <Form.Label>Name</Form.Label>
-                            <Form.Control onChange={(e) => setName(e.target.value)} className={`${inputStyle.inputStyle}`} type={'text'} placeholder={'Enter your name'}/>
+                            <Form.Control style={nameStyle} onChange={(e) => validateName(e.target.value)} className={`${inputStyle.inputStyle}`} type={'text'} placeholder={'Enter your name'}/>
                         </Form.Group>
                         <Form.Group className={'mb-3 row justify-content-center'}>
                             <Form.Label>Description</Form.Label>
-                            <Form.Control onChange={(e) => setDesc(e.target.value)} className={`${inputStyle.inputStyle}`} type={'text'} as={'textarea'} placeholder={'Why do you want to run for this position?'}/>
+                            <Form.Control style={descStyle} onChange={(e) => validateDesc(e.target.value)} className={`${inputStyle.inputStyle}`} type={'text'} as={'textarea'} placeholder={'Why do you want to run for this position?'}/>
                         </Form.Group>
                         <Form.Group className={'mb-3 row justify-content-center'}>
                             <LoadingButton className={'mb-5 text-center col-lg-3'} type={'submit'} onClick={addNominee} loading={loading} variant={'outline-success'} text={`Run for position`}/>
