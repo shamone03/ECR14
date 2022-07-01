@@ -24,7 +24,7 @@
 
 .navBar {
     background-color: #161b22;
-    border-bottom: 1px gray solid;
+    border-bottom: 1px black groove;
 }
 
 .closeButtonStyle, .menuButtonStyle {

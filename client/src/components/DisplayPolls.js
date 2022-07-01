@@ -3,7 +3,7 @@ import React from "react";
 
 const DisplayPolls = ({polls, whenPollClicked}) => {
     return (
-        <div className={styles.allPollsWrapper}>
+        <div className={`mb-5 ${styles.allPollsWrapper}`}>
             {polls.map((p) => (
                 <div onClick={() => whenPollClicked(p)} className={`px-3 py-3 ${styles.pollStyle}`} key={p._id}>
                     <div>

@@ -180,13 +180,13 @@ const Nominate = () => {
         <>
             <h1 className={'text-center my-5'}>Nominate Yourself</h1>
             <div className={'container'}>
-                <h1 className={'text-center'}>Choose position to run for</h1>
+                <h1 className={'text-center mb-3'}>Choose position to run for</h1>
                 <div className={`${styles.allPollsWrapper} mb-5`}>
                     <AllPolls/>
                 </div>
             </div>
             <Modal show={showModal} fullscreen onHide={handleHide} contentClassName={styles.modal}>
-                <Modal.Header className={'d-flex justify-content-between'}>
+                <Modal.Header className={`d-flex justify-content-between ${styles.modalHeader}`}>
                     <Modal.Title>Enter Your details</Modal.Title>
                     <Button variant={`outline-light ${styles.closeButtonStyle}`} onClick={handleHide}><AiOutlineClose size={25}/></Button>
                 </Modal.Header>
@@ -198,23 +198,34 @@ const Nominate = () => {
 
                         <CropPicture defaultImg={''} setImgB64={setImgB64} imgB64={imgB64} imgFile={imgFile}/>
                         <Form.Group className={'mb-3 row justify-content-center'}>
-                            <Form.Label>Upload display picture</Form.Label>
-                            <Form.Control type="file" accept={'image/*'} style={picStyle} className={inputStyle.inputStyle} onChange={e => e.target.files.length > 0 ? setImgFile(e.target.files[0]) : setImgFile(file => file)}/>
+                            <div className={'col-md-6'}>
+                                <Form.Label>Upload display picture</Form.Label>
+                                <Form.Control type="file" accept={'image/*'} style={picStyle} className={inputStyle.inputStyle} onChange={e => e.target.files.length > 0 ? setImgFile(e.target.files[0]) : setImgFile(file => file)}/>
+                            </div>
+
                         </Form.Group>
                         <Form.Group className={'mb-3 row justify-content-center'}>
-                            <Form.Label>Name</Form.Label>
-                            <Form.Control style={nameStyle} onChange={(e) => validateName(e.target.value)} className={`${inputStyle.inputStyle}`} type={'text'} placeholder={'Enter your name'}/>
+                            <div className={'col-md-6'}>
+                                <Form.Label>Name</Form.Label>
+                                <Form.Control style={nameStyle} onChange={(e) => validateName(e.target.value)} className={`${inputStyle.inputStyle}`} type={'text'} placeholder={'Enter your name'}/>
+                            </div>
                         </Form.Group>
                         <Form.Group className={'mb-3 row justify-content-center'}>
-                            <Form.Label>Biography</Form.Label>
-                            <Form.Control style={bioStyle} onChange={(e) => validateBio(e.target.value)} className={`${inputStyle.inputStyle}`} type={'text'} as={'textarea'} placeholder={'Who are you?'}/>
+                            <div className={'col-md-6'}>
+                                <Form.Label>Biography</Form.Label>
+                                <Form.Control style={bioStyle} onChange={(e) => validateBio(e.target.value)} className={`${inputStyle.inputStyle}`} type={'text'} as={'textarea'} placeholder={'Who are you?'}/>
+                            </div>
+
                         </Form.Group>
                         <Form.Group className={'mb-3 row justify-content-center'}>
-                            <Form.Label>Description</Form.Label>
-                            <Form.Control style={{...descStyle, height: '100px'}} onChange={(e) => validateDesc(e.target.value)} className={`${inputStyle.inputStyle}`} type={'text'} as={'textarea'} placeholder={'Why do you want to run for this position? \nWhy are you the best for this position? \nWhat do you promise to do in this position?'}/>
+                            <div className={'col-md-6'}>
+                                <Form.Label>Description</Form.Label>
+                                <Form.Control style={{...descStyle, height: '120px'}} onChange={(e) => validateDesc(e.target.value)} className={`${inputStyle.inputStyle}`} type={'text'} as={'textarea'} placeholder={'Why do you want to run for this position? \nWhy are you the best for this position? \nWhat do you promise to do in this position?'}/>
+                            </div>
+
                         </Form.Group>
                         <Form.Group className={'mb-3 row justify-content-center'}>
-                            <LoadingButton className={'mb-5 text-center col-lg-3'} type={'submit'} onClick={addNominee} loading={loading} variant={'outline-success'} text={`Run for position`}/>
+                            <LoadingButton className={'mb-5 text-center col-md-3'} type={'submit'} onClick={addNominee} loading={loading} variant={'outline-success'} text={`Run for position`}/>
                         </Form.Group>
 
                     </Form>

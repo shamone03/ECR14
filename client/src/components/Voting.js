@@ -52,6 +52,7 @@ const Voting = () => {
 
 
     const sendVote = async () => {
+        setLoading(true)
         const res = await fetch(`${url}/api/vote`, {
             method: 'POST',
             credentials: 'include',
@@ -62,6 +63,11 @@ const Voting = () => {
                 nomineeIds: chosenNoms.map(i => ({_id: i._id}))
             })
         })
+        setLoading(false)
+        if (res.status === 401) {
+            alert('Verify your email from the profile page to vote')
+            return
+        }
         if (res.status === 400) {
             alert('You have already voted for this poll')
             return
@@ -75,8 +81,8 @@ const Voting = () => {
         }
     }
 
-    const addNom = (i) => {
-        setChosenNoms([...chosenNoms, i])
+    const addNom = (nom) => {
+        setChosenNoms([...chosenNoms, nom])
     }
 
     const Nominees = ({chosenPoll}) => {
@@ -88,16 +94,15 @@ const Voting = () => {
                     return j._id === i._id
                 }))
             })
-
         }
         return (
-            nomsForPoll.map(i => (<VotingCard addNom={addNom} key={i._id} nom={i}/>))
+            nomsForPoll.map(i => (<VotingCard addNom={addNom} key={i._id} nom={i} disabled={false}/>))
         )
     }
 
     const ChosenNoms = () => {
         return (
-            chosenNoms.map(i => (<VotingCard addNom={addNom} key={i._id} nom={i}/>))
+            chosenNoms.map(i => (<VotingCard addNom={addNom} key={i._id} nom={i} disabled={true}/>))
         )
     }
 
@@ -114,15 +119,13 @@ const Voting = () => {
 
     return (
         <>
-
-
             <h1 className={'text-center my-5'}>Vote</h1>
             <div className={'container'}>
-                <h1 className={'text-center'}>Choose position to vote for</h1>
+                <h1 className={'text-center mb-3'}>Choose position to vote for</h1>
                 <DisplayPolls polls={polls} whenPollClicked={pollClicked}/>
             </div>
             <Modal show={showModal} fullscreen onHide={handleHide} contentClassName={styles.modal}>
-                <Modal.Header className={'d-flex justify-content-between'} closeVariant={'white'} style={{border: 'none'}}>
+                <Modal.Header className={`d-flex justify-content-between ${styles.modalHeader}`} closeVariant={'white'}>
                     <Modal.Title>Voting for {chosenPoll.position}</Modal.Title>
                     <Button variant={`outline-light ${styles.closeButtonStyle}`} onClick={handleHide}><AiOutlineClose size={25}/></Button>
                 </Modal.Header>
