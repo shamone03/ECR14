@@ -2,9 +2,10 @@ import React, {useEffect, useState} from 'react'
 import VotingCard from "./VotingCard";
 import {url} from "../assets/js/url";
 import {Button, Modal} from "react-bootstrap";
-import styles from "../css/Voting.module.css";
+import styles from "../css/PollStyles.module.css";
 import {AiOutlineClose} from "react-icons/all";
 import LoadingButton from "./LoadingButton";
+import DisplayPolls from "./DisplayPolls";
 
 
 const Voting = () => {
@@ -14,7 +15,6 @@ const Voting = () => {
     const [chosenNoms, setChosenNoms] = useState([])
     const [loading, setLoading] = useState(false)
     const [showModal, setShowModal] = useState(false)
-    const [fullScreen, setFullScreen] = useState(true)
 
     useEffect(() => {
         const fetchPolls = async () => {
@@ -27,7 +27,7 @@ const Voting = () => {
             })
             if (res.status === 200) {
                 const data = await res.json()
-                setPolls([...data.userPolls])
+                setPolls([...data.userPolls.filter(p => p.forBlock === 'all')])
             }
         }
         const fetchNominees = async () => {
@@ -44,8 +44,8 @@ const Voting = () => {
             }
         }
         setLoading(true)
-        fetchPolls()
-        fetchNominees()
+        fetchPolls().then()
+        fetchNominees().then()
         setLoading(false)
 
     }, [])
@@ -63,7 +63,7 @@ const Voting = () => {
             })
         })
         if (res.status === 400) {
-            alert('Server error try again later')
+            alert('You have already voted for this poll')
             return
         }
         if (res.status === 500) {
@@ -75,35 +75,15 @@ const Voting = () => {
         }
     }
 
-
-    const handleShow = (poll) => {
-        setChosenPoll(poll)
-        clearChosenNoms()
-        setShowModal(true)
-    }
-
     const addNom = (i) => {
         setChosenNoms([...chosenNoms, i])
     }
 
-    const clearChosenNoms = () => {
-        setChosenNoms([])
-    }
-
-    const chosenNomsContains = (_id) => {
-        for (let i of chosenNoms) {
-            if (i._id === _id) {
-
-                return false
-            }
-        }
-    }
-
     const Nominees = ({chosenPoll}) => {
-        let nomineesCopy = nominees
-        nomineesCopy = nomineesCopy.filter((i) => i.poll._id === chosenPoll._id)
+        let nomsForPoll = nominees.filter((i) => i.poll._id === chosenPoll._id)
+        // if user has chosen a nom remove it from nomsForPoll
         if (chosenNoms.length > 0) {
-            nomineesCopy = nomineesCopy.filter((i) => {
+            nomsForPoll = nomsForPoll.filter((i) => {
                 return !chosenNoms.find((j => {
                     return j._id === i._id
                 }))
@@ -111,8 +91,7 @@ const Voting = () => {
 
         }
         return (
-            // nomineesCopy.map(i => (<li onClick={() => addNom(i)} className={'text-center list-group-item list-group-item-action list-group-item-dark'} key={i._id}>{i.name}</li>))
-            nomineesCopy.map(i => (<VotingCard addNom={addNom} key={i._id} nom={i}/>))
+            nomsForPoll.map(i => (<VotingCard addNom={addNom} key={i._id} nom={i}/>))
         )
     }
 
@@ -122,27 +101,30 @@ const Voting = () => {
         )
     }
 
+    const pollClicked = (p) => {
+        setChosenPoll(p)
+        setShowModal(true)
+    }
+
+    const handleHide = () => {
+        setChosenPoll('')
+        setChosenNoms([])
+        setShowModal(false)
+    }
 
     return (
         <>
-            <div>
 
-                <h1 className={'text-center'}>Vote</h1>
-                <div className={'container'}>
-                    <h1 className={'text-center'}>Choose position to vote for</h1>
-                    <div className={'row align-items-center'}>
 
-                        <ul className={'list-group mt-2 text-center w-100'}>
-                            {polls.map(i => (<li onClick={() => handleShow(i)} className={'text-center list-group-item list-group-item-action list-group-item-dark'} key={i._id}>{i.position}</li>))}
-                        </ul>
-
-                    </div>
-                </div>
+            <h1 className={'text-center my-5'}>Vote</h1>
+            <div className={'container'}>
+                <h1 className={'text-center'}>Choose position to vote for</h1>
+                <DisplayPolls polls={polls} whenPollClicked={pollClicked}/>
             </div>
-            <Modal show={showModal} fullscreen={fullScreen} onHide={() => setShowModal(false)} contentClassName={styles.votingModal}>
+            <Modal show={showModal} fullscreen onHide={handleHide} contentClassName={styles.modal}>
                 <Modal.Header className={'d-flex justify-content-between'} closeVariant={'white'} style={{border: 'none'}}>
                     <Modal.Title>Voting for {chosenPoll.position}</Modal.Title>
-                    <Button variant={`outline-light ${styles.closeButtonStyle}`} onClick={() => setShowModal(false)}><AiOutlineClose size={25}/></Button>
+                    <Button variant={`outline-light ${styles.closeButtonStyle}`} onClick={handleHide}><AiOutlineClose size={25}/></Button>
                 </Modal.Header>
                 <Modal.Body>
                     <div className={'container'}>
@@ -156,8 +138,6 @@ const Voting = () => {
                         <div className={'row'}>
                             <Nominees chosenPoll={chosenPoll}/>
                         </div>
-
-                        {/*{nominees.map(i => (<VotingCard key={i._id} name={i.name} _id={i._id} votes={i.votes} description={i.description} reps={i.poll.representatives} sendVote={sendVote}/>))}*/}
                     </div>
                 </Modal.Body>
             </Modal>

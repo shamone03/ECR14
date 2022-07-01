@@ -1,6 +1,6 @@
 const model = require("../model/model");
 const uploadPicture = require('../utils/uploadPicture')
-const {pollModel, nomineeModel} = require("../model/model");
+const {pollModel, nomineeModel, voterModel} = require("../model/model");
 
 exports.addPoll = async (req, res) => {
     if (!req.ecr14user.isAdmin) {
@@ -80,6 +80,7 @@ exports.addNominee = async (req, res) => {
         const nominee = new model.nomineeModel({
             name: req.body.name,
             houseNo: req.ecr14user.houseNo,
+            bio: req.body.bio,
             description: req.body.description,
             poll: req.body.pollId
         })
@@ -133,55 +134,55 @@ exports.getNominees = async (req, res) => {
 
 exports.voteNominee = async (req, res) => {
     const nomineeIds = req.body.nomineeIds
+    const nominee = await nomineeModel.findOne({_id: nomineeIds[0]}).populate({path: 'poll'})
+
+    if (nomineeIds.length !== nominee.poll.representatives) {
+        console.log(`sent reps ${nomineeIds.length} and required reps ${nominee.poll.representatives} do not match`)
+        res.status(400).send({message: `sent reps ${nomineeIds.length} and required reps ${nominee.poll.representatives} do not match`})
+        return
+    }
 
     try {
-
-        const nominee = await nomineeModel.findOne({_id: nomineeIds[0]}).populate({path: 'poll'})
-
-        if (nomineeIds.length !== nominee.poll.representatives) {
-            console.log(`sent reps ${nomineeIds.length} and required reps ${nominee.poll.representatives} do not match`)
-            res.status(400).send({message: `sent reps ${nomineeIds.length} and required reps ${nominee.poll.representatives} do not match`})
-            return
+        await new voterModel({
+            userId: req.ecr14user._id,
+            pollId: nominee.poll._id
+        }).save()
+    } catch (e) {
+        if (e.code === 11000) {
+            console.log('already voted for this poll')
+            return res.status(400).send('You have already voted for this poll')
         }
+        console.log(e)
+        return res.status(500).send({e})
+    }
 
 
+    try {
 
         const bulkUpdateArray = nomineeIds.map((id) => {
             return {
                 updateOne: {
                     filter: {
                         _id: id,
-                        voters: {$ne: req.body.houseNo}
                     },
                     update: {
-                        $addToSet: {voters: req.body.houseNo}
+                        $addToSet: {voters: req.ecr14user.houseNo}
                     }
                 }
             }
         })
-        const bulkWriteRes = await nomineeModel.bulkWrite(bulkUpdateArray)
-        // for (let nominee of nomineeIds) {
-        //     await nomineeModel.updateOne({_id: nominee},{ $addToSet: {voters: req.ecr14user.houseNo}})
-        //     console.log(`${nominee.name} updated`)
-        // }
+        await nomineeModel.bulkWrite(bulkUpdateArray)
 
+        // noinspection GrazieInspection
         await model.nomineeModel.aggregate([
+            // replaces votes with length of voters
             { $addFields: {votes: { $size: "$voters" }}},
             { $out: "nominees" }
         ])
-        // TODO: check nModified against nominee.poll.representatives to check if only some of the nominees were voted for
-        if (bulkWriteRes.result.nModified === 0) {
-            return res.status(400).send({message: 'already voted for sent nominees'})
-        } else {
-            console.log('votes count updated')
-            res.status(200).send({message: 'vote increased'})
-        }
 
-        console.log(bulkWriteRes)
-        new Error('unable to verify whether already voted')
     } catch (e) {
         console.log(e)
-        res.status(500).send({message: e})
+        res.status(500).send({e})
     }
 }
 

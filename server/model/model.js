@@ -25,11 +25,19 @@ const tokenSchema = new mongoose.Schema({
     createdAt: {type: Date, default: Date.now(), expires: 300} // 5 mins
 }, {collection: 'tokens'})
 
+const voterSchema = new mongoose.Schema({
+    userId: {type: mongoose.Types.ObjectId, required: true, ref: 'resident'},
+    pollId: {type: mongoose.Types.ObjectId, required: true, ref: 'poll'}
+}, {collection: 'voters'})
+
+voterSchema.index({userId: 1, pollId: 1}, {unique: true})
+
 const nomineeSchema = new mongoose.Schema({
     name: {type: String, required: true},
     houseNo: {type: String, required: true},
     votes: {type: Number, required: true, default: 0},
     voters: [{type: String}],
+    bio: {type: String},
     description: {type: String},
     poll: {type: mongoose.Types.ObjectId, ref: "poll"},
     imgURL: {type: String}
@@ -59,3 +67,4 @@ exports.surveyModel = mongoose.model('survey', surveySchema)
 exports.nomineeModel = mongoose.model('nominee', nomineeSchema)
 exports.userModel = mongoose.model('resident', userSchema)
 exports.tokenModel = mongoose.model('token', tokenSchema)
+exports.voterModel = mongoose.model('voter', voterSchema)

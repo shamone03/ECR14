@@ -19,6 +19,7 @@ import Settings from "./components/Settings";
 import ResetPassword from "./components/ResetPassword";
 import NavBar from "./components/NavBar";
 import Nominate from "./components/Nominate";
+import Voting from "./components/Voting";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -37,7 +38,7 @@ root.render (
                 <Route path={'/home'} element={<Home/>}/>
                 <Route path={'/vote'} element={<VoteMenu/>}/>
                 <Route path={'/settings'} element={<Settings/>}/>
-                <Route path={'/vote/vote-now'} element={<Construction/>}/>
+                <Route path={'/vote/vote-now'} element={<Voting/>}/>
                 <Route path={'/vote/nominate'} element={<Nominate/>}/>
                 <Route path={'/survey'} element={<Survey/>}/>
                 <Route path={'/construction'} element={<Construction/>}/>

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {Button, Form, Modal} from "react-bootstrap";
-import styles from '../css/Nominate.module.css'
+import styles from '../css/PollStyles.module.css'
 import inputStyle from '../css/InputText.module.css'
 import {url} from "../assets/js/url";
 import {AiOutlineClose} from "react-icons/all";
@@ -16,12 +16,14 @@ const Nominate = () => {
     const [showModal, setShowModal] = useState(false)
     const [name, setName] = useState('')
     const [desc, setDesc] = useState('')
+    const [bio, setBio] = useState('')
     const [imgB64, setImgB64] = useState('')
     const [imgFile, setImgFile] = useState(new File([], "", undefined))
     const [loading, setLoading] = useState(false)
     const [picStyle, setPicStyle] = useState(validStyle)
     const [nameStyle, setNameStyle] = useState(validStyle)
     const [descStyle, setDescStyle] = useState(validStyle)
+    const [bioStyle, setBioStyle] = useState(validStyle)
 
     const validatePic = (imgB64) => {
         if (imgB64 !== '') {
@@ -55,6 +57,16 @@ const Nominate = () => {
         return true
     }
 
+    const validateBio = (bio) => {
+        setBio(bio)
+        if (bio.split(/\s+/).length < 10) {
+            setBioStyle(invalidStyle)
+            return false
+        }
+        setBioStyle(validStyle)
+        return true
+    }
+
     useEffect(() => {
         setPicStyle(validStyle)
     }, [imgFile])
@@ -81,12 +93,20 @@ const Nominate = () => {
         } else {
             setDescStyle(validStyle)
         }
+        if (!validateBio(bio)) {
+            setBioStyle(invalidStyle)
+            alert('Bio has to be at least 10 words')
+            return false
+        } else {
+            setBioStyle(validStyle)
+        }
         return true
     }
 
     const handleHide = () => {
         setName('')
         setDesc('')
+        setBio('')
         setChosenPoll('')
         setImgFile(new File([], "", undefined))
         setImgB64('')
@@ -122,6 +142,7 @@ const Nominate = () => {
                 name: name,
                 description: desc,
                 pollId: chosenPoll._id,
+                bio: bio,
                 imgBase64: imgB64 ? imgB64.split(',')[1] : ''
             })
         })
@@ -158,7 +179,8 @@ const Nominate = () => {
     return (
         <>
             <h1 className={'text-center my-5'}>Nominate Yourself</h1>
-            <div className={'w-75 mx-auto'}>
+            <div className={'container'}>
+                <h1 className={'text-center'}>Choose position to run for</h1>
                 <div className={`${styles.allPollsWrapper} mb-5`}>
                     <AllPolls/>
                 </div>
@@ -184,8 +206,12 @@ const Nominate = () => {
                             <Form.Control style={nameStyle} onChange={(e) => validateName(e.target.value)} className={`${inputStyle.inputStyle}`} type={'text'} placeholder={'Enter your name'}/>
                         </Form.Group>
                         <Form.Group className={'mb-3 row justify-content-center'}>
+                            <Form.Label>Biography</Form.Label>
+                            <Form.Control style={bioStyle} onChange={(e) => validateBio(e.target.value)} className={`${inputStyle.inputStyle}`} type={'text'} as={'textarea'} placeholder={'Who are you?'}/>
+                        </Form.Group>
+                        <Form.Group className={'mb-3 row justify-content-center'}>
                             <Form.Label>Description</Form.Label>
-                            <Form.Control style={descStyle} onChange={(e) => validateDesc(e.target.value)} className={`${inputStyle.inputStyle}`} type={'text'} as={'textarea'} placeholder={'Why do you want to run for this position?'}/>
+                            <Form.Control style={{...descStyle, height: '100px'}} onChange={(e) => validateDesc(e.target.value)} className={`${inputStyle.inputStyle}`} type={'text'} as={'textarea'} placeholder={'Why do you want to run for this position? \nWhy are you the best for this position? \nWhat do you promise to do in this position?'}/>
                         </Form.Group>
                         <Form.Group className={'mb-3 row justify-content-center'}>
                             <LoadingButton className={'mb-5 text-center col-lg-3'} type={'submit'} onClick={addNominee} loading={loading} variant={'outline-success'} text={`Run for position`}/>
