@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
     houseNo: {type: String, required: true, unique: true},
     email: { type: String, required: true, unique: true},
     password: {type: String, required: true},
-    names: [{name:{type: String}, age:{type:Number}, residentType:{type: String, enum: ['Owner', 'Family', 'Co-Owner', 'Tenant']}}],
+    names: [{name: {type: String}, age:{type:Number}, residentType: {type: String, enum: ['Owner', 'Family', 'Co-Owner', 'Tenant']}}],
     verified: {type: Boolean, default: false},
     isAdmin: {type: Boolean, default: false},
     number: {type: String},
@@ -15,15 +15,13 @@ const userSchema = new mongoose.Schema({
 }, { collection: 'residentsDEV', timestamps: true })
 
 const tokenSchema = new mongoose.Schema({
-    userId: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: "resident",
-        unique: true
-    },
+    userId: {type: Schema.Types.ObjectId, required: true, ref: "resident"},
     token: {type: String, required: true},
+    tokenType: {type: String, required: true, enum: ['reset', 'email']},
     createdAt: {type: Date, default: Date.now(), expires: 300} // 5 mins
 }, {collection: 'tokens'})
+
+tokenSchema.index({userId: 1, tokenType: 1}, {unique: true})
 
 const voterSchema = new mongoose.Schema({
     userId: {type: mongoose.Types.ObjectId, required: true, ref: 'resident'},

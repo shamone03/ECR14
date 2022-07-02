@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken")
-const {userModel} = require("../model/model")
+const {userModel, tokenModel} = require("../model/model")
 const model = require("../model/model")
 const crypto = require("crypto")
 const sendEmail = require("../utils/sendEmail")
@@ -31,16 +31,12 @@ exports.sendVerificationEmail = async (req, res) => {
     try {
         const user = await model.userModel.findOne({houseNo: houseNo}, {verified: 1, email: 1, _id: 1})
         if (!user.verified) {
-            let token = await model.tokenModel.findOne({userId: user._id})
-            if (token) {
-                await token.remove()
-                console.log('existing token removed')
-            }
-            token = await new model.tokenModel({
-                userId: user._id,
-                token: crypto.randomBytes(32).toString("hex")
-            }).save()
-            const url = `${process.env.CLIENT_URL}/verify/${user._id}/verify/${token.token}`
+
+            const code = crypto.randomBytes(32).toString("hex")
+            const token = await tokenModel.updateOne({userId: user._id, tokenType: 'email'}, {token: code}, {upsert: true})
+            console.log('token uploaded')
+
+            const url = `${process.env.CLIENT_URL}/client/${user._id}/verify/${code}`
             await sendEmail(user.email, `Verification Email for ${houseNo}`, `Click this link to verify your email(expires in 5 minutes):${url}`)
             res.status(200).send({message: 'email sent'})
         } else {

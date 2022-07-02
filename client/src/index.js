@@ -24,26 +24,28 @@ import Voting from "./components/Voting";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render (
-    <BrowserRouter>
-        <Routes>
-            <Route path={'/'} element={<App/>}/>
-            <Route path={'/login'} element={<Login/>}/>
-            <Route path={'/register'} element={<Register/>}/>
-            <Route path={'/verify/:id/verify/:token'} element={<VerifyEmailLink/>}/>
-            <Route path={'/reset/:id/reset/:token'} element={<ResetPassword/>}/>
-            <Route element={<>
-                    <NavBar/>
-                    <Outlet/>
-                </>}>
-                <Route path={'/home'} element={<Home/>}/>
-                <Route path={'/vote'} element={<VoteMenu/>}/>
-                <Route path={'/settings'} element={<Settings/>}/>
-                <Route path={'/vote/vote-now'} element={<Voting/>}/>
-                <Route path={'/vote/nominate'} element={<Nominate/>}/>
-                <Route path={'/survey'} element={<Survey/>}/>
-                <Route path={'/construction'} element={<Construction/>}/>
-            </Route>
-        </Routes>
+    <React.StrictMode>
+        <BrowserRouter>
+            <Routes>
+                <Route path={'/'} element={<App/>}/>
+                <Route path={'/login'} element={<Login/>}/>
+                <Route path={'/register'} element={<Register/>}/>
+                <Route path={'/client/:id/verify/:token'} element={<VerifyEmailLink/>}/>
+                <Route path={'/client/:id/reset/:token'} element={<ResetPassword/>}/>
+                <Route element={<>
+                        <NavBar/>
+                        <Outlet/>
+                    </>}>
+                    <Route path={'/home'} element={<Home/>}/>
+                    <Route path={'/vote'} element={<VoteMenu/>}/>
+                    <Route path={'/profile'} element={<Settings/>}/>
+                    <Route path={'/vote/vote-now'} element={<Voting/>}/>
+                    <Route path={'/vote/nominate'} element={<Nominate/>}/>
+                    <Route path={'/survey'} element={<Survey/>}/>
+                    <Route path={'/construction'} element={<Construction/>}/>
+                </Route>
+            </Routes>
 
-    </BrowserRouter>
+        </BrowserRouter>
+    </React.StrictMode>
 )

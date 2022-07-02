@@ -18,10 +18,10 @@ exports.resetPassword = async (req, res) => {
 
         const code = crypto.randomBytes(32).toString("hex")
 
-        await tokenModel.updateOne({userId: user._id}, {token: code}, {upsert: true})
+        await tokenModel.updateOne({userId: user._id, tokenType: 'reset'}, {token: code}, {upsert: true})
         console.log('token uploaded')
 
-        const url = `${process.env.CLIENT_URL}/reset/${user._id}/reset/${code}`
+        const url = `${process.env.CLIENT_URL}/client/${user._id}/reset/${code}`
         await sendEmail(user.email, `Reset Password for ${req.body.houseNo}`, `Click this link to reset your password(expires in 5 minutes): ${url}`)
         return res.status(200).send()
     } catch (e) {
@@ -37,13 +37,13 @@ exports.verifyReset = async (req, res) => {
             res.status(400).send({message: 'no user found'})
             return
         }
-        const token = await tokenModel.findOne({userId: user._id, token: req.params.token})
+        const token = await tokenModel.findOne({userId: user._id, token: req.params.token, tokenType: 'reset'})
         if (!token) {
             res.status(400).send({message: 'reset failed'})
             return
         }
 
-        await userModel.updateOne({_id: user._id}, {verified: true, password: await bcrypt.hash(req.body.password, 10), registeredArtificially: false})
+        await userModel.updateOne({_id: user._id}, {password: await bcrypt.hash(req.body.password, 10), registeredArtificially: false})
         console.log('email verified password reset')
         await token.remove()
         console.log('token removed')
@@ -76,13 +76,11 @@ exports.register = async (req, res) => {
         if (req.body.imgBase64.length > 0) {
             uploadPicture(req.body.imgBase64, 'profilepics', newUser._id)
         }
+        const code = crypto.randomBytes(32).toString("hex")
+        const token = await tokenModel.updateOne({userId: newUser._id, tokenType: 'email'}, {token: code}, {upsert: true})
+        console.log('token uploaded')
 
-        const token = await new tokenModel({
-            userId: newUser._id,
-            token: crypto.randomBytes(32).toString("hex")
-        }).save()
-
-        const url = `${process.env.CLIENT_URL}/verify/${newUser._id}/verify/${token.token}`
+        const url = `${process.env.CLIENT_URL}/client/${newUser._id}/verify/${token.token}`
         await sendEmail(newUser.email, `Verification Email for ${req.body.houseNo}`, `Click this link to verify your email(expires in 5 minutes):${url}`)
 
         return res.status(200).send({message: 'user saved'})
@@ -101,7 +99,7 @@ exports.verifyEmailLink = async (req, res) => {
             res.status(400).send({message: 'no user found'})
             return
         }
-        const token = await tokenModel.findOne({userId: user._id, token: req.params.token})
+        const token = await tokenModel.findOne({userId: user._id, token: req.params.token, tokenType: 'email'})
         if (!token) {
             console.log('no token found')
             res.status(400).send({message: 'verification failed'})
