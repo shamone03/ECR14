@@ -52,7 +52,7 @@ const NavBar = () => {
                         <div className={'d-flex flex-column h-100 text-center'}>
                             <NavLink style={linkStyle} onClick={() => setShowMenu(false)} to={'/home'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Home</NavLink>
                             <NavLink style={linkStyle} onClick={() => setShowMenu(false)} to={'/vote'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Vote<Badge bg={'warning'} pill>WIP</Badge></NavLink>
-                            <NavLink style={linkStyle} onClick={() => setShowMenu(false)} to={'/settings'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Profile</NavLink>
+                            <NavLink style={linkStyle} onClick={() => setShowMenu(false)} to={'/profile'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Profile</NavLink>
                             <Dropdown>
                                 <Dropdown.Toggle className={`btn ${styles1.buttonStyle}`} style={linkStyle}>
                                     Tools
@@ -113,7 +113,7 @@ const NavBar = () => {
                         </Dropdown>
                         <NavLink to={'/home'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Home</NavLink>
                         <NavLink to={'/vote'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Vote<Badge bg={'warning'} pill>WIP</Badge></NavLink>
-                        <NavLink to={'/settings'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Profile</NavLink>
+                        <NavLink to={'/profile'} className={({ isActive }) => isActive ? activeClassName : inActiveClassName}>Profile</NavLink>
                         <Button variant={'outline-danger'} className={'mx-2'} onClick={logout}><FiLogOut size={'25'}/></Button>
                     </>
                 )}

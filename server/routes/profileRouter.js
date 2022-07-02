@@ -1,12 +1,12 @@
 const express = require('express')
-const verifyToken = require("../authMiddleware/verifyToken");
+const verifyJWT = require("../authMiddleware/verifyJWT");
 const {updateUser, sendVerificationEmail, getUser} = require("../controllers/profile");
 const profileRouter = express.Router()
 
-profileRouter.post('/api/update', verifyToken, updateUser)
+profileRouter.post('/api/update', verifyJWT, updateUser)
 
-profileRouter.get('/api/verifyEmail', verifyToken, sendVerificationEmail)
+profileRouter.get('/api/verifyEmail', verifyJWT, sendVerificationEmail)
 
-profileRouter.get('/api/getUser', verifyToken, getUser)
+profileRouter.get('/api/getUser', verifyJWT, getUser)
 
 module.exports = profileRouter

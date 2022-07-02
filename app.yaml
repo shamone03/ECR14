@@ -29,14 +29,14 @@ handlers:
     secure: always
     static_files: client/build/index.html
     upload: client/build/index.html
-  - url: /settings
+  - url: /profile
     secure: always
     static_files: client/build/index.html
     upload: client/build/index.html
-  - url: /verify/(.*)/verify/(.*)
+  - url: /client/(.*)/verify/(.*)
     static_files: client/build/index.html
     upload: client/build/index.html
-  - url: /reset/(.*)/reset/(.*)
+  - url: /client/(.*)/reset/(.*)
     static_files: client/build/index.html
     upload: client/build/index.html
   - url: /static
