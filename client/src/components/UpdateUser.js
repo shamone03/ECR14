@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {Button, Form} from "react-bootstrap";
 import styles from "../css/InputText.module.css";
-import {AiOutlineClose} from "react-icons/all";
+import {AiOutlineClose} from "react-icons/ai";
 import validator from "validator/es";
 import {url} from "../assets/js/url";
 import LoadingButton from "./LoadingButton";

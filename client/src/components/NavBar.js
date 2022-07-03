@@ -2,7 +2,8 @@ import {useMediaQuery} from "react-responsive";
 import React, {useState} from "react";
 import {Badge, Button, Dropdown, Offcanvas} from "react-bootstrap";
 import styles1 from "../css/NavBar.module.css";
-import {AiOutlineClose, AiOutlineMenu, FiLogOut} from "react-icons/all";
+import {AiOutlineClose, AiOutlineMenu} from "react-icons/ai";
+import {FiLogOut} from "react-icons/fi";
 import {NavLink, useNavigate} from "react-router-dom";
 import {url} from "../assets/js/url";
 

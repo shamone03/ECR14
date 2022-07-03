@@ -3,7 +3,7 @@ import VotingCard from "./VotingCard";
 import {url} from "../assets/js/url";
 import {Button, Modal} from "react-bootstrap";
 import styles from "../css/PollStyles.module.css";
-import {AiOutlineClose} from "react-icons/all";
+import {AiOutlineClose} from "react-icons/ai";
 import LoadingButton from "./LoadingButton";
 import DisplayPolls from "./DisplayPolls";
 

@@ -20,11 +20,14 @@ import ResetPassword from "./components/ResetPassword";
 import NavBar from "./components/NavBar";
 import Nominate from "./components/Nominate";
 import Voting from "./components/Voting";
+import '../node_modules/react-toastify/dist/ReactToastify.css';
+import {ToastContainer} from "react-toastify";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render (
     <React.StrictMode>
+        <ToastContainer/>
         <BrowserRouter>
             <Routes>
                 <Route path={'/'} element={<App/>}/>

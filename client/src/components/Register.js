@@ -4,7 +4,7 @@ import styles from '../css/Register.module.css'
 import validator from "validator/es"
 import {url} from "../assets/js/url";
 import RedirectLogin from "./RedirectLogin";
-import {AiOutlineRight} from "react-icons/all";
+import {AiOutlineRight} from "react-icons/ai";
 import {useNavigate} from "react-router-dom";
 import LoadingButton from "./LoadingButton";
 import PrivacyPolicy from "./PrivacyPolicy";

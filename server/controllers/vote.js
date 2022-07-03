@@ -36,7 +36,7 @@ exports.addPoll = async (req, res) => {
 
 exports.getPolls = async (req, res) => {
     try {
-        const polls = await pollModel.find().populate({path: 'createdBy', select: 'houseNo'}).
+        const polls = await pollModel.find({}, {createdAt: 0, updatedAt: 0, __v: 0}).populate({path: 'createdBy', select: 'houseNo'}).
                                              populate({path: 'nominees',  select: 'houseNo votes voters'})
 
         console.log('polls found')
@@ -172,14 +172,12 @@ exports.voteNominee = async (req, res) => {
             }
         })
         await nomineeModel.bulkWrite(bulkUpdateArray)
-
-        // noinspection GrazieInspection
         await model.nomineeModel.aggregate([
             // replaces votes with length of voters
             { $addFields: {votes: { $size: "$voters" }}},
             { $out: "nominees" }
         ])
-
+        return res.status(200).send()
     } catch (e) {
         console.log(e)
         res.status(500).send({e})

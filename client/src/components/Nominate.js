@@ -3,9 +3,11 @@ import {Button, Form, Modal} from "react-bootstrap";
 import styles from '../css/PollStyles.module.css'
 import inputStyle from '../css/InputText.module.css'
 import {url} from "../assets/js/url";
-import {AiOutlineClose} from "react-icons/all";
+import {AiOutlineClose} from "react-icons/ai";
 import CropPicture from "./CropPicture";
 import LoadingButton from "./LoadingButton";
+import {useNavigate} from "react-router-dom";
+import {toast} from 'react-toastify'
 
 const Nominate = () => {
     const validStyle = {border: '3px #161b22 solid'}
@@ -24,6 +26,7 @@ const Nominate = () => {
     const [nameStyle, setNameStyle] = useState(validStyle)
     const [descStyle, setDescStyle] = useState(validStyle)
     const [bioStyle, setBioStyle] = useState(validStyle)
+    const navigate = useNavigate()
 
     const validatePic = (imgB64) => {
         if (imgB64 !== '') {
@@ -147,15 +150,31 @@ const Nominate = () => {
             })
         })
 
+        setLoading(false)
         if (res.status === 200) {
-            setLoading(false)
-            alert('You have been signed up!')
+            toast('You are now running for this position', {
+                theme: "colored",
+                hideProgressBar: true,
+                type: "success",
+                draggable: true,
+                autoClose: 3000
+            })
         }
         if (res.status === 400) {
-            setLoading(false)
-            alert('You have already signed up for this position')
+            toast('You have already signed up for this position', {
+                theme: 'colored',
+                hideProgressBar: true,
+                type: 'error',
+                draggable: true,
+                autoClose: 3000
+            })
         }
-        setLoading(false)
+        if (res.status === 401) {
+            if (window.confirm('Verify your email from the profile page to run for this position')) {
+                navigate('/profile')
+            }
+        }
+
 
     }
 

@@ -1,7 +1,6 @@
 import {Button, Card, Image} from "react-bootstrap";
-import image from "../assets/images/placeholder.webp";
-import React, {useEffect} from "react";
-import {BsDot} from "react-icons/all";
+import React from "react";
+import {BsDot} from "react-icons/bs";
 
 const VotingCard = ({addNom, nom, disabled}) => {
     return (
