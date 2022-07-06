@@ -1,9 +1,9 @@
-import React, {useRef, useState} from 'react'
-import {Button, Form} from "react-bootstrap";
-import {url} from '../assets/js/url'
-import LoadingButton from "./LoadingButton";
+import React, {useState} from 'react'
+import {Form} from "react-bootstrap";
+import {url} from '../../assets/js/url'
+import LoadingButton from "../utils/LoadingButton";
 import {useNavigate} from "react-router-dom";
-import styles from '../css/InputText.module.css'
+import styles from '../../css/InputText.module.css'
 
 const Survey = () => {
     const [responses, setResponses] = useState([

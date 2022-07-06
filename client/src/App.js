@@ -2,16 +2,13 @@ import './App.css';
 import React, {useState} from 'react';
 import {Link, useNavigate} from "react-router-dom"
 import styles from './css/App.module.css'
-import {Badge, Button, Dropdown, DropdownButton, Offcanvas} from "react-bootstrap";
+import {Badge, Button, Dropdown, Offcanvas} from "react-bootstrap";
 import { useMediaQuery } from 'react-responsive'
-import {
-    AiOutlineClose,
-    AiOutlineMenu,
-    FaVoteYea,
-    GoReport,
-    IoDocumentsOutline,
-    RiSurveyLine
-} from "react-icons/all";
+import {AiOutlineClose, AiOutlineMenu} from "react-icons/ai";
+import {FaVoteYea} from 'react-icons/fa'
+import {GoReport} from 'react-icons/go'
+import {RiSurveyLine} from 'react-icons/ri'
+import {IoDocumentsOutline} from "react-icons/io5";
 
 function App() {
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 600px)' })

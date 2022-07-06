@@ -1,0 +1,63 @@
+.pollStyle {
+    border-radius: 10px;
+    background-color: lightblue;
+    color: #161b22;
+    transform: scale(1);
+    transition: all;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.2s;
+}
+
+.pollStyle:hover {
+    background-color: #dc3545;
+    cursor: pointer;
+    /*transform: scale(1.03);*/
+    border-radius: 0;
+}
+
+.allPollsWrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 25%);
+    grid-auto-rows: 1fr;
+    gap: 7px 7px;
+    justify-content: center;
+}
+
+.closeButtonStyle {
+    border: none !important;
+    background-color: transparent !important;
+}
+
+.closeButtonStyle:hover {
+    background-color: transparent !important;
+    border: none !important;
+    color: gray !important;
+}
+
+.closeButtonStyle:focus {
+    box-shadow: none !important;
+}
+
+.modal {
+    background-color: #181a1b;
+    background-size: 800px 800px;
+    background-image: url("../assets/images/background.webp");
+    background-repeat: repeat;
+}
+
+.modalHeader {
+    background-color: #161b22;
+    border: none;
+}
+
+@media only screen and (max-width: 1000px) {
+    .allPollsWrapper {
+        grid-template-columns: repeat(2, 40%);
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .allPollsWrapper {
+        grid-template-columns: repeat(1, 90%);
+    }
+}

@@ -1,21 +1,21 @@
 const express = require('express')
-const verifyToken = require("../authMiddleware/verifyToken");
+const verifyJWT = require("../authMiddleware/verifyJWT");
 const checkEmailVerified = require("../authMiddleware/checkEmailVerified");
 const {addPoll, getPolls, addNominee, getNominees, voteNominee, getVotes} = require("../controllers/vote");
 
 const router = express.Router()
 
-router.post('/api/addPoll', verifyToken, checkEmailVerified, addPoll)
+router.post('/api/addPoll', verifyJWT, checkEmailVerified, addPoll)
 
-router.get('/api/getPolls', verifyToken, getPolls)
+router.get('/api/getPolls', verifyJWT, getPolls)
 
-router.post('/api/addNominee', verifyToken, checkEmailVerified, addNominee)
+router.post('/api/addNominee', verifyJWT, checkEmailVerified, addNominee)
 
-router.get('/api/getNominees', verifyToken, getNominees)
+router.get('/api/getNominees', verifyJWT, getNominees)
 
-router.post('/api/vote', verifyToken, checkEmailVerified, voteNominee)
+router.post('/api/vote', verifyJWT, checkEmailVerified, voteNominee)
 
-router.get('/api/getVotes', verifyToken, checkEmailVerified, getVotes)
+router.get('/api/getVotes', verifyJWT, checkEmailVerified, getVotes)
 
 module.exports = router
 

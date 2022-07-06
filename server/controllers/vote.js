@@ -1,48 +1,50 @@
-const jwt = require("jsonwebtoken");
 const model = require("../model/model");
-const {pollModel, nomineeModel} = require("../model/model");
+const uploadPicture = require('../utils/uploadPicture')
+const {pollModel, nomineeModel, voterModel} = require("../model/model");
 
 exports.addPoll = async (req, res) => {
-    const _id = jwt.decode(req.cookies['jwtToken'])._id
-    const isAdmin = jwt.decode(req.cookies['jwtToken']).isAdmin
-    if (!isAdmin) {
+    if (!req.ecr14user.isAdmin) {
         console.log('not admin')
         res.status(401).send({message: 'not admin'})
         return
     }
-    const poll = new model.pollModel({
-        createdBy: _id,
-        position: req.body.position,
-        forBlock: req.body.forBlock,
-        representatives: req.body.representatives
-    })
 
     try {
+        const poll = new pollModel({
+            createdBy: req.ecr14user._id,
+            position: req.body.position,
+            forBlock: req.body.forBlock,
+            representatives: req.body.representatives,
+            description: req.body.description
+        })
         const savedPoll = await poll.save()
         console.log('poll saved')
-        res.status(200).send(savedPoll)
+        return res.status(200).send(savedPoll)
     } catch (e) {
+        if (e.code === 11000) {
+            console.log('poll not saved')
+            console.log(`position ${req.body.position} for block ${req.body.forBlock} already exists`)
+            return res.status(400).send({e})
+        }
         console.log('poll not saved')
         console.log(e)
-        res.status(500).send(e)
+        return res.status(500).send({e})
     }
+
+
 }
 
 exports.getPolls = async (req, res) => {
-    const isAdmin = jwt.decode(req.cookies['jwtToken']).isAdmin
-    const block = jwt.decode(req.cookies['jwtToken']).houseNo.charAt(0).toUpperCase()
     try {
-        const polls = await pollModel.find()
+        const polls = await pollModel.find({}, {createdAt: 0, updatedAt: 0, __v: 0}).populate({path: 'createdBy', select: 'houseNo'}).
+                                             populate({path: 'nominees',  select: 'houseNo votes voters'})
+
         console.log('polls found')
-        const userPolls = []
-        for (let poll of polls) {
-            if (poll.forBlock === block) {
-                userPolls.push(poll)
-            }
-        }
-        if (isAdmin) {
+        const userPolls = polls.filter(p => p.forBlock === req.ecr14user.houseBlock || p.forBlock === 'all')
+
+        if (req.ecr14user.isAdmin) {
             console.log('isAdmin polls and userPolls sent')
-            return res.status(200).send({polls, userPolls})
+            return res.status(200).send({userPolls, polls})
         } else {
             console.log('userPolls sent')
             return res.status(200).send({userPolls})
@@ -56,31 +58,68 @@ exports.getPolls = async (req, res) => {
 }
 
 exports.addNominee = async (req, res) => {
-    const nominee = new model.nomineeModel({
-        name: req.body.name,
-        houseNo: req.body.houseNo,
-        description: req.body.description,
-        poll: req.body.pollId
-    })
+    // check if user is in the same block as poll they are nominating for or if poll is for all blocks
+    try {
+        const forBlock = await pollModel.findOne({_id: req.body.pollId}, {forBlock: 1})
+        // if (forBlock.forBlock !== jwt.decode(req.cookies['jwtToken']).houseNo.charAt(0).toUpperCase()) {
+        if (forBlock.forBlock !== 'all') {
+            // houseNo.chatAt(0).toUpperCase to be replaced with req.ecr14user.houseBlock
+            if (forBlock.forBlock !== req.ecr14user.houseBlock.toUpperCase()) {
+                // houseNo.chatAt(0).toUpperCase to be replaced with req.ecr14user.houseBlock
+                return res.status(400).send({message: `${forBlock.forBlock} block poll signup not available for sent block ${req.ecr14user.houseBlock}`})
+            }
+        }
+    } catch (e) {
+        console.log(e)
+        return res.status(500).send({e})
+    }
+
 
     try {
-        await nominee.save()
-        console.log('nominee saved')
-        res.status(200).send({message: 'nominee saved'})
+        // saving user to nominees collection, which will also check if they have already nominated for this poll using compound index houseNo and poll
+        const nominee = new model.nomineeModel({
+            name: req.body.name,
+            houseNo: req.ecr14user.houseNo,
+            bio: req.body.bio,
+            description: req.body.description,
+            poll: req.body.pollId
+        })
+        const newNom = await nominee.save()
+        console.log('nominee doc saved')
+        if (req.body.hasOwnProperty('imgBase64')) {
+            if (req.body.imgBase64.length > 0) {
+                if (!uploadPicture(req.body.imgBase64, 'nomineepics', newNom._id)) {
+                    return res.status(500).send({message: 'error uploading pic'})
+                }
+            }
+        }
+
+        // if user has not already nominated then add them to the list of nominees in poll collection for applied poll
+        try {
+            await pollModel.findOneAndUpdate({_id: req.body.pollId}, {$addToSet: {nominees: newNom._id}})
+            console.log('added id to poll nominees')
+            return res.status(200).send()
+        } catch (e) {
+            console.log(e)
+            return res.status(500).send({e})
+        }
     } catch (e) {
-        console.log('nominee not saved')
         console.log(e)
-        res.status(500).send({message: 'nominee not saved', e})
+        if (e.code === 11000) {
+            console.log(`${req.ecr14user.houseNo} already signed up for poll ${req.body.pollId}`)
+            return res.status(400).send(`${req.body.houseNo} already signed up for poll ${req.body.pollId}`)
+        }
+        return res.status(500).send({e})
     }
+
+
 }
 
 exports.getNominees = async (req, res) => {
-    const block = jwt.decode(req.cookies['jwtToken']).houseNo.charAt(0)
-    const isAdmin = jwt.decode(req.cookies['jwtToken']).isAdmin
     try {
-        const nominees = await model.nomineeModel.find().populate('poll')
-        const userNominees = nominees.filter((n) => n.poll.forBlock === block)
-        if (isAdmin) {
+        const nominees = await nomineeModel.find().populate('poll', 'forBlock position')
+        const userNominees = nominees.filter((n) => n.poll.forBlock === req.ecr14user.houseBlock || n.poll.forBlock === 'all')
+        if (req.ecr14user.isAdmin) {
             console.log('isAdmin userNominees nominees sent')
             res.status(200).send({userNominees, nominees})
         } else {
@@ -94,33 +133,54 @@ exports.getNominees = async (req, res) => {
 }
 
 exports.voteNominee = async (req, res) => {
-    const houseNo = jwt.decode(req.cookies['jwtToken']).houseNo
     const nomineeIds = req.body.nomineeIds
+    const nominee = await nomineeModel.findOne({_id: nomineeIds[0]}).populate({path: 'poll'})
+
+    if (nomineeIds.length !== nominee.poll.representatives) {
+        console.log(`sent reps ${nomineeIds.length} and required reps ${nominee.poll.representatives} do not match`)
+        res.status(400).send({message: `sent reps ${nomineeIds.length} and required reps ${nominee.poll.representatives} do not match`})
+        return
+    }
+
+    try {
+        await new voterModel({
+            userId: req.ecr14user._id,
+            pollId: nominee.poll._id
+        }).save()
+    } catch (e) {
+        if (e.code === 11000) {
+            console.log('already voted for this poll')
+            return res.status(400).send('You have already voted for this poll')
+        }
+        console.log(e)
+        return res.status(500).send({e})
+    }
+
 
     try {
 
-        const nominee = await nomineeModel.findOne({_id: nomineeIds[0]}).populate('poll').exec()
-
-        if (nomineeIds.length !== nominee.poll.representatives) {
-            console.log(`sent reps ${nomineeIds.length} and required reps ${nominee.poll.representatives} do not match`)
-            res.status(400).send({message: `sent reps ${nomineeIds.length} and required reps ${nominee.poll.representatives} do not match`})
-            return
-        }
-
-        for (let nominee of nomineeIds) {
-            await nomineeModel.updateOne({_id: nominee},{ $addToSet: {voters: houseNo}})
-            console.log(`${nominee.name} updated`)
-        }
-
+        const bulkUpdateArray = nomineeIds.map((id) => {
+            return {
+                updateOne: {
+                    filter: {
+                        _id: id,
+                    },
+                    update: {
+                        $addToSet: {voters: req.ecr14user.houseNo}
+                    }
+                }
+            }
+        })
+        await nomineeModel.bulkWrite(bulkUpdateArray)
         await model.nomineeModel.aggregate([
-            { $addFields: {votes: {$size: "$voters"}}},
-            { $out: "nominees"}
+            // replaces votes with length of voters
+            { $addFields: {votes: { $size: "$voters" }}},
+            { $out: "nominees" }
         ])
-        console.log('votes count updated')
-        res.status(200).send({message: 'vote increased'})
+        return res.status(200).send()
     } catch (e) {
         console.log(e)
-        res.status(500).send({message: e})
+        res.status(500).send({e})
     }
 }
 

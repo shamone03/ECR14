@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {useNavigate, useParams} from "react-router-dom";
 import {url} from "../assets/js/url";
 import {Button, Form, Spinner} from "react-bootstrap";
@@ -36,7 +36,7 @@ const ResetPassword = () => {
                 })
             })
             if (res.status === 200) {
-                const data = await res.json()
+                await res.json()
                 setValidURL(true)
                 setLoading(false)
                 navigate('/login')

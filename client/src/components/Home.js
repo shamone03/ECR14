@@ -1,9 +1,7 @@
 import {useEffect, useState} from "react";
 import React from 'react';
-import {Link, Navigate} from "react-router-dom";
-import {Button, Image, Offcanvas} from "react-bootstrap";
-import styles from '../css/Home.module.css'
-import RedirectLogin from "./RedirectLogin";
+import {Image} from "react-bootstrap";
+import RedirectLogin from "./utils/RedirectLogin";
 import {url} from "../assets/js/url";
 import placeholder from "../assets/images/placeholder.webp";
 
