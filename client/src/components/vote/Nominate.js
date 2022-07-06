@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import {Button, Form, Modal} from "react-bootstrap";
-import styles from '../css/PollStyles.module.css'
-import inputStyle from '../css/InputText.module.css'
-import {url} from "../assets/js/url";
+import styles from '../../css/PollStyles.module.css'
+import inputStyle from '../../css/InputText.module.css'
+import {url} from "../../assets/js/url";
 import {AiOutlineClose} from "react-icons/ai";
-import CropPicture from "./CropPicture";
-import LoadingButton from "./LoadingButton";
+import CropPicture from "../utils/CropPicture";
+import LoadingButton from "../utils/LoadingButton";
 import {useNavigate} from "react-router-dom";
 import {toast} from 'react-toastify'
 

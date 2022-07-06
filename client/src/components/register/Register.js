@@ -1,14 +1,14 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
-import styles from '../css/Register.module.css'
+import styles from '../../css/Register.module.css'
 import validator from "validator/es"
-import {url} from "../assets/js/url";
-import RedirectLogin from "./RedirectLogin";
+import {url} from "../../assets/js/url";
+import RedirectLogin from "../utils/RedirectLogin";
 import {AiOutlineRight} from "react-icons/ai";
 import {useNavigate} from "react-router-dom";
-import LoadingButton from "./LoadingButton";
+import LoadingButton from "../utils/LoadingButton";
 import PrivacyPolicy from "./PrivacyPolicy";
-import CropPicture from "./CropPicture";
+import CropPicture from "../utils/CropPicture";
 
 
 

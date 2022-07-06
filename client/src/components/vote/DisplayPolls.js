@@ -1,4 +1,4 @@
-import styles from "../css/PollStyles.module.css";
+import styles from "../../css/PollStyles.module.css";
 import React from "react";
 
 const DisplayPolls = ({polls, whenPollClicked}) => {

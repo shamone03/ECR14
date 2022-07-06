@@ -1,6 +1,6 @@
 import {Image} from "react-bootstrap";
 import React, {useEffect, useRef} from "react";
-import placeholder from "../assets/images/placeholder.webp";
+import placeholder from "../../assets/images/placeholder.webp";
 
 const CropPicture = ({imgFile, imgB64, setImgB64, defaultImg}) => {
 

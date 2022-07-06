@@ -8,18 +8,18 @@ import {
 } from "react-router-dom";
 import App from './App';
 import Login from "./components/Login";
-import Register from "./components/Register";
+import Register from "./components/register/Register";
 import Home from "./components/Home";
 import VerifyEmailLink from "./components/VerifyEmailLink";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
-import VoteMenu from "./components/VoteMenu";
-import Survey from "./components/Survey";
-import Construction from "./components/Construction";
-import Settings from "./components/Settings";
+import VoteMenu from "./components/vote/VoteMenu";
+import Survey from "./components/survey/Survey";
+import Construction from "./components/utils/Construction";
+import Settings from "./components/profile/Settings";
 import ResetPassword from "./components/ResetPassword";
 import NavBar from "./components/NavBar";
-import Nominate from "./components/Nominate";
-import Voting from "./components/Voting";
+import Nominate from "./components/vote/Nominate";
+import Voting from "./components/vote/Voting";
 import '../node_modules/react-toastify/dist/ReactToastify.css';
 import {ToastContainer} from "react-toastify";
 

@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react'
 import VotingCard from "./VotingCard";
-import {url} from "../assets/js/url";
+import {url} from "../../assets/js/url";
 import {Button, Modal} from "react-bootstrap";
-import styles from "../css/PollStyles.module.css";
+import styles from "../../css/PollStyles.module.css";
 import {AiOutlineClose} from "react-icons/ai";
-import LoadingButton from "./LoadingButton";
+import LoadingButton from "../utils/LoadingButton";
 import DisplayPolls from "./DisplayPolls";
+import {toast} from 'react-toastify'
 
 
 const Voting = () => {
@@ -50,8 +51,21 @@ const Voting = () => {
 
     }, [])
 
+    const validateChosen = () => {
+        return chosenNoms.length === chosenPoll.representatives
+    }
 
     const sendVote = async () => {
+        if (!validateChosen()) {
+            toast(`Choose ${chosenPoll.representatives} representatives`, {
+                theme: "colored",
+                hideProgressBar: true,
+                type: "error",
+                draggable: true,
+                autoClose: 3000
+            })
+            return
+        }
         setLoading(true)
         const res = await fetch(`${url}/api/vote`, {
             method: 'POST',
@@ -65,24 +79,52 @@ const Voting = () => {
         })
         setLoading(false)
         if (res.status === 401) {
-            alert('Verify your email from the profile page to vote')
+            toast('Verify your email from the profile page to vote', {
+                theme: "colored",
+                hideProgressBar: true,
+                type: "error",
+                draggable: true,
+                autoClose: 3000
+            })
             return
         }
         if (res.status === 400) {
-            alert('You have already voted for this poll')
+            toast('You have already voted for this poll', {
+                theme: "colored",
+                hideProgressBar: true,
+                type: "error",
+                draggable: true,
+                autoClose: 3000
+            })
             return
         }
         if (res.status === 500) {
-            alert('Server error try again later')
+            toast('Server error try again later', {
+                theme: "colored",
+                hideProgressBar: true,
+                type: "error",
+                draggable: true,
+                autoClose: 3000
+            })
             return
         }
         if (res.status === 200) {
-            alert('Voted Successfully')
+            toast('Voted Successfully', {
+                theme: "colored",
+                hideProgressBar: true,
+                type: "success",
+                draggable: true,
+                autoClose: 3000
+            })
         }
     }
 
     const addNom = (nom) => {
         setChosenNoms([...chosenNoms, nom])
+    }
+
+    const removeNom = (nom) => {
+        setChosenNoms([...chosenNoms.filter((i) => i._id !== nom._id)])
     }
 
     const Nominees = ({chosenPoll}) => {
@@ -102,7 +144,7 @@ const Voting = () => {
 
     const ChosenNoms = () => {
         return (
-            chosenNoms.map(i => (<VotingCard addNom={addNom} key={i._id} nom={i} disabled={true}/>))
+            chosenNoms.map(i => (<VotingCard addNom={addNom} key={i._id} nom={i} disabled={true} removeNom={removeNom}/>))
         )
     }
 
@@ -131,14 +173,14 @@ const Voting = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <div className={'container'}>
-                        <div className={'row'}>
+                        <div className={'row g-3'}>
                             <ChosenNoms/>
                         </div>
                         <LoadingButton variant={'outline-light'} className={'my-5'} loading={loading} onClick={sendVote} text={'Submit Vote'}/>
                         <h1 className={'text-center'}>Nominees</h1>
 
                         <h2 className={'text-center'}>Choose {chosenPoll.representatives} representatives</h2>
-                        <div className={'row'}>
+                        <div className={'row g-3'}>
                             <Nominees chosenPoll={chosenPoll}/>
                         </div>
                     </div>

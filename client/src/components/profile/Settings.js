@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react'
 import {Button, Image} from "react-bootstrap";
-import RedirectLogin from "./RedirectLogin";
-import {url} from "../assets/js/url";
+import RedirectLogin from "../utils/RedirectLogin";
+import {url} from "../../assets/js/url";
 import {useNavigate} from "react-router-dom";
 import {AiOutlineClose, AiOutlineEdit} from "react-icons/ai";
 import {FiLogOut} from "react-icons/fi";
 import {MdVerified} from "react-icons/md";
 import UpdateUser from "./UpdateUser";
-import LoadingButton from "./LoadingButton";
-import placeholder from "../assets/images/placeholder.webp";
+import LoadingButton from "../utils/LoadingButton";
+import placeholder from "../../assets/images/placeholder.webp";
 
 
 const Settings = () => {

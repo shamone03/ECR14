@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import React from 'react';
 import {Image} from "react-bootstrap";
-import RedirectLogin from "./RedirectLogin";
+import RedirectLogin from "./utils/RedirectLogin";
 import {url} from "../assets/js/url";
 import placeholder from "../assets/images/placeholder.webp";
 

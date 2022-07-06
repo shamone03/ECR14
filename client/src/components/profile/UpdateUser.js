@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import {Button, Form} from "react-bootstrap";
-import styles from "../css/InputText.module.css";
+import styles from "../../css/InputText.module.css";
 import {AiOutlineClose} from "react-icons/ai";
 import validator from "validator/es";
-import {url} from "../assets/js/url";
-import LoadingButton from "./LoadingButton";
-import CropPicture from "./CropPicture";
+import {url} from "../../assets/js/url";
+import LoadingButton from "../utils/LoadingButton";
+import CropPicture from "../utils/CropPicture";
 
 
 const UpdateUser = ({img, members1, number1, parkings}) => {

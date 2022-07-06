@@ -4,7 +4,7 @@ import {Form, Spinner} from "react-bootstrap";
 import {Navigate} from "react-router-dom";
 import styles from '../css/Login.module.css'
 import {url} from "../assets/js/url";
-import LoadingButton from "./LoadingButton";
+import LoadingButton from "./utils/LoadingButton";
 
 const Login = () => {
     const [houseNo, setHouseNo] = useState('')
